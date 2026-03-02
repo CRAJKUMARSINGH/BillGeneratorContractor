@@ -324,6 +324,10 @@ with st.sidebar:
     # Mode selection
     modes = ["📊 Excel Upload", "💻 Online Entry"]
     
+    # Add document upload mode
+    if config.features.is_enabled('document_upload'):
+        modes.append("📄 Document Upload")
+    
     if config.features.is_enabled('batch_processing'):
         modes.append("📦 Batch Processing")
     modes.append("📥 Download Center")
@@ -407,8 +411,24 @@ if "📊 Excel Upload" in selected_mode:
     try:
         from core.ui.excel_mode_fixed import show_excel_mode
         show_excel_mode(config)
-    except ImportError:
-        st.error("❌ Excel mode not available. Please check installation.")
+    except ImportError as e:
+        st.error(f"❌ Excel mode not available. Import error: {e}")
+        st.info("💡 Trying to import dependencies...")
+        import traceback
+        st.code(traceback.format_exc())
+    except Exception as e:
+        st.error(f"❌ Excel mode error: {e}")
+        import traceback
+        st.code(traceback.format_exc())
+
+elif "📄 Document Upload" in selected_mode:
+    try:
+        from core.ui.document_mode import DocumentUploadUI
+        doc_ui = DocumentUploadUI()
+        doc_ui.show_document_mode(config)
+    except Exception as e:
+        st.error(f"❌ Document upload mode error: {e}")
+        st.info("💡 Make sure all dependencies are installed")
 
 elif "💻 Online Entry" in selected_mode:
     try:
