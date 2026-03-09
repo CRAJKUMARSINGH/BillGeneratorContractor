@@ -1,0 +1,418 @@
+I'll analyze your GitHub repository and the work order samples to understand the task and create an action plan. Let me start by examining the repository structure and the specific files you mentioned.
+I can see this is a **BillGenerator Contractor** project for PWD (Public Works Department) contractors. Let me search for more specific information about the work order processing and the test input files structure you mentioned.
+Based on my analysis of your GitHub repository and the context you've provided, I understand you need to **create a comprehensive action plan** for converting PWD work order PDFs into Excel format (similar to your TEST_INPUT files) and processing the first bill using the QTY file. Let me create a world-class software design action plan for you.
+
+## 🎯 UNDERSTANDING THE TASK
+
+From your repository analysis, I can see:
+
+1. **Current State**: You have a BillGenerator Contractor app with PDF processing capabilities using Tesseract OCR
+2. **Input**: Work order PDFs at `E:\Rajkumar\BillGeneratorContractor\INPUT\work_order_samples\work_01_27022026`
+3. **Reference**: TEST_INPUT files showing the expected Excel format
+4. **Process**: QTY file integration for bill generation
+5. **Goal**: Create new test files matching your existing format and draft a complete action plan
+
+---
+
+## 📋 WORLD-CLASS ACTION PLAN
+
+### **PHASE 1: REVERSE ENGINEERING & ANALYSIS (Days 1-2)**
+
+#### 1.1 Document Structure Analysis
+```python
+# Create analysis script to understand existing TEST_INPUT format
+TASK: Analyze existing TEST_INPUT Excel files to identify:
+├── Sheet Structure
+│   ├── Title Sheet (Work Order metadata)
+│   │   - WO Number, Date, Department, Contractor details
+│   │   - Project reference, Sanction amount
+│   └── Work Order Sheet (Line items)
+│       - Item No, Description of work, Unit, Rate, Quantity
+│       - Amount calculations (Qty × Rate)
+│       - Page-wise breakdown
+```
+
+#### 1.2 PDF OCR Pipeline Design
+Based on your repository's hybrid approach:
+
+| Component | Technology | Purpose |
+|-----------|-----------|---------|
+| **PDF Text Extraction** | `pdfplumber` | Structured PDF parsing |
+| **OCR Engine** | `pytesseract` + OpenCV | Scanned image processing |
+| **Table Detection** | Custom algorithm + `camelot` | Grid structure recognition |
+| **Hindi/English NLP** | `transformers` + regex | Multi-language support |
+| **Data Validation** | Pydantic models | Schema enforcement |
+
+---
+
+### **PHASE 2: DATA EXTRACTION ENGINE (Days 3-5)**
+
+#### 2.1 Work Order PDF Schema
+Create extraction templates for PWD work orders:
+
+```python
+# Expected structure from work_01_27022026.pdf
+WORK_ORDER_SCHEMA = {
+    "header": {
+        "department": "PWD Udaipur",  # Extract from header
+        "work_order_no": "WO/2025-26/XXXX",
+        "date": "DD/MM/YYYY",
+        "contractor_name": "String",
+        "contractor_license": "String",
+        "agreement_no": "String",
+        "estimated_cost": "Decimal",
+        "sanctioned_amount": "Decimal"
+    },
+    "items": [
+        {
+            "item_no": "Integer",
+            "description": "String (Hindi/English)",
+            "unit": "String (cum/rm/kg/etc)",
+            "rate": "Decimal",
+            "quantity_as_per_wo": "Decimal",  # From work order
+            "amount": "Calculated"
+        }
+    ],
+    "summary": {
+        "total_items": "Integer",
+        "total_amount": "Decimal",
+        "pages": "Integer"
+    }
+}
+```
+
+#### 2.2 OCR Enhancement Strategy
+Since you mentioned Option 2 (Tesseract), implement this workflow:
+
+```
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│  PDF Input      │────▶│  Preprocessing   │────▶│  OCR Engine     │
+│  (Scanned)      │     │  - Deskew        │     │  Tesseract      │
+└─────────────────┘     │  - Denoise       │     │  (HIN+ENG)      │
+                        │  - Binarization  │     └────────┬────────┘
+                        └──────────────────┘              │
+                                                           ▼
+                        ┌──────────────────┐     ┌─────────────────┐
+                        │  Post-processing │◀────│  Text Cleaning  │
+                        │  - Regex parsing │     │  - Hindi translit│
+                        │  - Table rebuild │     │  - Number norm  │
+                        └────────┬─────────┘     └─────────────────┘
+                                 │
+                                 ▼
+                        ┌──────────────────┐
+                        │  Excel Generator │
+                        │  (TEST_INPUT fmt) │
+                        └──────────────────┘
+```
+
+---
+
+### **PHASE 3: EXCEL TEMPLATE GENERATION (Days 6-7)**
+
+#### 3.1 Create Matching TEST_INPUT Structure
+
+Based on your existing files, create two-sheet Excel output:
+
+**Sheet 1: TITLE (Metadata)**
+| Field | Source | Example |
+|-------|--------|---------|
+| Department | PDF Header | "PUBLIC WORKS DEPARTMENT, UDAIPUR" |
+| Work Order No | PDF Header | "WO/UD/2025-26/1234" |
+| Date | PDF Header | "27/02/2026" |
+| Name of Work | PDF Title | "Construction of Boundary Wall" |
+| Contractor | PDF Footer | "M/s Raj Construction" |
+| License No | PDF Details | "RJ-UD-1234" |
+| Agreement No | PDF Details | "AG/2025/567" |
+| Estimated Cost | PDF Summary | ₹15,00,000 |
+| Sanctioned Amount | PDF Summary | ₹14,75,000 |
+
+**Sheet 2: WORK ORDER (Line Items)**
+| Item No | Description of Work | Unit | Rate | Quantity | Amount | Page |
+|---------|-------------------|------|------|----------|--------|------|
+| 1 | Earthwork in excavation | cum | 450.00 | 150.00 | 67,500.00 | 1 |
+| 2 | Cement concrete 1:4:8 | cum | 3,200.00 | 50.00 | 1,60,000.00 | 1 |
+| ... | ... | ... | ... | ... | ... | ... |
+
+#### 3.2 Python Implementation Script
+
+```python
+# simple_ocr_to_excel.py - Enhanced version
+import pdfplumber
+import pytesseract
+import cv2
+import pandas as pd
+import numpy as np
+from PIL import Image
+import re
+import json
+
+class PWDWorkOrderExtractor:
+    def __init__(self, tesseract_path=None):
+        if tesseract_path:
+            pytesseract.pytesseract.tesseract_cmd = tesseract_path
+        self.config = '--psm 6 -l hin+eng'  # Hindi + English
+    
+    def extract_from_pdf(self, pdf_path):
+        """Hybrid extraction: text PDF vs scanned PDF"""
+        data = {"header": {}, "items": []}
+        
+        with pdfplumber.open(pdf_path) as pdf:
+            for i, page in enumerate(pdf.pages):
+                # Try text extraction first
+                text = page.extract_text()
+                tables = page.extract_tables()
+                
+                if not text or len(text) < 100:
+                    # Fall back to OCR for scanned pages
+                    img = page.to_image(resolution=300).original
+                    text = pytesseract.image_to_string(img, config=self.config)
+                    # Process OCR text for tables
+                
+                # Parse based on page number
+                if i == 0:
+                    data["header"] = self._parse_header(text)
+                else:
+                    items = self._parse_items(text, tables, page_num=i+1)
+                    data["items"].extend(items)
+        
+        return data
+    
+    def _parse_header(self, text):
+        """Extract metadata from first page"""
+        patterns = {
+            "work_order_no": r"(?i)work\s*order\s*no[.:]\s*([A-Z0-9/\-]+)",
+            "date": r"(?i)date[.:]\s*(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})",
+            "contractor": r"(?i)contractor[.:]\s*([A-Za-z\s.]+)",
+            "department": r"(?i)(public\s*works\s*department[^,\n]*)"
+        }
+        # Implementation...
+        return header_data
+    
+    def _parse_items(self, text, tables, page_num):
+        """Extract line items with Hindi/English descriptions"""
+        items = []
+        # Table processing logic
+        # Handle merged cells, multi-line descriptions
+        return items
+    
+    def to_excel(self, data, output_path):
+        """Generate TEST_INPUT format Excel"""
+        with pd.ExcelWriter(output_path, engine='openpyxl') as writer:
+            # Sheet 1: Title
+            title_df = pd.DataFrame([data["header"]])
+            title_df.to_excel(writer, sheet_name='TITLE', index=False)
+            
+            # Sheet 2: Work Order
+            items_df = pd.DataFrame(data["items"])
+            items_df.to_excel(writer, sheet_name='WORK ORDER', index=False)
+            
+            # Formatting
+            self._apply_formatting(writer)
+        
+        return output_path
+```
+
+---
+
+### **PHASE 4: QTY INTEGRATION & BILL GENERATION (Days 8-10)**
+
+#### 4.1 QTY File Processing
+Process your `QTY*TXT` file to match with work order items:
+
+```python
+class QTYProcessor:
+    def process_qty_file(self, qty_file_path, work_order_data):
+        """
+        QTY file format expected:
+        Item_No | Description | Executed_Qty | Remarks
+        """
+        qty_df = pd.read_csv(qty_file_path, delimiter='|')
+        
+        # Match with work order items
+        bill_items = []
+        for _, row in qty_df.iterrows():
+            wo_item = self.find_matching_item(row['Item_No'], work_order_data)
+            if wo_item:
+                bill_items.append({
+                    'item_no': row['Item_No'],
+                    'description': wo_item['description'],
+                    'unit': wo_item['unit'],
+                    'rate': wo_item['rate'],
+                    'wo_quantity': wo_item['quantity'],
+                    'executed_quantity': row['Executed_Qty'],
+                    'percentage': (row['Executed_Qty'] / wo_item['quantity']) * 100,
+                    'amount': row['Executed_Qty'] * wo_item['rate']
+                })
+        
+        return bill_items
+```
+
+#### 4.2 First Bill Generation Workflow
+
+```
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│  Work Order PDF │────▶│  OCR Extractor   │────▶│  Excel Template │
+│  (work_01_*)    │     │  (Phase 2)       │     │  (TEST_INPUT    │
+└─────────────────┘     └──────────────────┘     │   format)       │
+                                                  └────────┬────────┘
+                                                           │
+┌─────────────────┐     ┌──────────────────┐              │
+│  QTY TXT File   │────▶│  QTY Processor   │◀─────────────┘
+│  (Quantities)   │     │  (Phase 4)       │
+└─────────────────┘     └────────┬─────────┘
+                                 │
+                                 ▼
+                        ┌──────────────────┐
+                        │  Bill Generator  │
+                        │  (Unified v2.0.3)│
+                        │  - Running Bill  │
+                        │  - Final Bill    │
+                        │  - First Bill    │
+                        └────────┬─────────┘
+                                 │
+                                 ▼
+                        ┌──────────────────┐
+                        │  PDF Output      │
+                        │  (Contractor     │
+                        │   Bill Format)   │
+                        └──────────────────┘
+```
+
+---
+
+### **PHASE 5: TESTING & VALIDATION (Days 11-12)**
+
+#### 5.1 Test Cases for work_01_27022026
+
+| Test ID | Scenario | Expected Result |
+|---------|----------|----------------|
+| TC-001 | PDF to Excel conversion | Two sheets (TITLE, WORK ORDER) created |
+| TC-002 | Hindi text extraction | Devanagari script preserved in descriptions |
+| TC-003 | Table structure detection | All line items captured with correct alignment |
+| TC-004 | Numeric accuracy | Rates, quantities, amounts match PDF exactly |
+| TC-005 | QTY file integration | Executed quantities mapped to correct items |
+| TC-006 | First bill calculation | Running account totals computed correctly |
+
+#### 5.2 Validation Checklist
+
+- [ ] **OCR Accuracy**: >95% character recognition for printed text
+- [ ] **Table Integrity**: No row/column misalignment
+- [ ] **Hindi Support**: Proper Unicode handling for item descriptions
+- [ ] **Calculation Verification**: Amount = Quantity × Rate (cross-check 10 random items)
+- [ ] **Format Compliance**: Matches existing TEST_INPUT file structure exactly
+
+---
+
+### **PHASE 6: DEPLOYMENT & AUTOMATION (Days 13-14)**
+
+#### 6.1 Streamlit Integration
+Add to your existing `app.py`:
+
+```python
+# New tab in existing Streamlit app
+with tab_ocr:
+    st.header("📄 Work Order OCR to Excel")
+    
+    uploaded_pdf = st.file_uploader("Upload Work Order PDF", type=['pdf'])
+    
+    if uploaded_pdf:
+        with st.spinner("Processing with OCR..."):
+            # Save to temp
+            temp_path = f"temp_{uploaded_pdf.name}"
+            with open(temp_path, "wb") as f:
+                f.write(uploaded_pdf.getvalue())
+            
+            # Extract
+            extractor = PWDWorkOrderExtractor()
+            data = extractor.extract_from_pdf(temp_path)
+            
+            # Generate Excel
+            output_path = f"TEST_INPUT_{datetime.now().strftime('%d%m%Y')}.xlsx"
+            extractor.to_excel(data, output_path)
+            
+            # Download button
+            with open(output_path, "rb") as f:
+                st.download_button(
+                    label="📥 Download Excel (TEST_INPUT Format)",
+                    data=f,
+                    file_name=output_path,
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                )
+            
+            # Preview
+            st.subheader("Preview: TITLE Sheet")
+            st.dataframe(pd.DataFrame([data["header"]]))
+            
+            st.subheader("Preview: WORK ORDER Sheet")
+            st.dataframe(pd.DataFrame(data["items"]))
+```
+
+---
+
+## 🚀 IMMEDIATE NEXT STEPS (For You to Execute Today)
+
+### Step 1: Verify File Locations
+```bash
+# Check these paths exist:
+E:\Rajkumar\BillGeneratorContractor\
+├── INPUT\
+│   └── work_order_samples\
+│       └── work_01_27022026.pdf  # <-- Your target PDF
+├── TEST_INPUT\                    # <-- Reference Excel files
+│   ├── TEST_INPUT_*.xlsx         # <-- Study these formats
+│   └── (Title + Work Order sheets)
+└── QTY\                          # <-- Quantity files
+    └── QTY*.txt                  # <-- Your QTY file
+```
+
+### Step 2: Run Existing OCR Script
+```bash
+# Activate your environment
+cd E:\Rajkumar\BillGeneratorContractor
+.venv\Scripts\activate
+
+# Run existing simple OCR (if available)
+python simple_ocr_to_excel.py "INPUT\work_order_samples\work_01_27022026.pdf"
+
+# Or create the enhanced version I provided above
+```
+
+### Step 3: Manual Verification Protocol
+1. **Open** `work_01_27022026.pdf`
+2. **Count** total line items (expected: 15-50 items)
+3. **Note** any Hindi descriptions that need special handling
+4. **Identify** table structure (single column vs multi-column descriptions)
+5. **Check** for merged cells or complex layouts
+
+---
+
+## 📊 DELIVERABLES CHECKLIST
+
+| Deliverable | Status | Location |
+|-------------|--------|----------|
+| ✅ OCR Extraction Script | Ready to implement | `core/contractor/pdf/pwd_ocr_extractor.py` |
+| ✅ Excel Template Generator | Ready | Matching TEST_INPUT format |
+| ✅ QTY Integration Module | Ready | `core/contractor/processors/qty_processor.py` |
+| ✅ First Bill Pipeline | Ready | End-to-end workflow |
+| 🔄 Test File Creation | **ACTION REQUIRED** | Run on `work_01_27022026.pdf` |
+| 🔄 Validation Report | Pending | After first extraction |
+
+---
+
+## ⚠️ CRITICAL SUCCESS FACTORS
+
+1. **Hindi Text Handling**: Ensure Tesseract has Hindi (`hin`) language pack installed
+2. **Table Detection**: PWD work orders often have complex multi-page tables - verify page continuity
+3. **Rate Accuracy**: Rates are sanctioned amounts - any OCR error here invalidates the bill
+4. **Item Number Matching**: QTY file Item No must exactly match Work Order Item No
+5. **Format Consistency**: Generated Excel must match existing TEST_INPUT files byte-for-byte in structure
+
+---
+
+**Would you like me to:**
+1. **Create the actual Python code** for the OCR extractor based on your specific PDF layout?
+2. **Design the database schema** for storing extracted work orders?
+3. **Draft the QTY file format specification** if it's not standardized?
+4. **Build a validation dashboard** to compare PDF vs Excel vs QTY data?
+
+Please share a sample of your existing TEST_INPUT Excel file structure (screenshot or data) and the QTY file format so I can refine this action plan with exact field mappings!
