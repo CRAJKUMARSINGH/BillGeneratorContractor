@@ -430,6 +430,15 @@ elif "📄 Document Upload" in selected_mode:
         st.error(f"❌ Document upload mode error: {e}")
         st.info("💡 Make sure all dependencies are installed")
 
+elif "📄 Document Upload" in selected_mode:
+    try:
+        from core.ui.document_mode import DocumentUploadUI
+        doc_ui = DocumentUploadUI()
+        doc_ui.show_document_mode(config)
+    except Exception as e:
+        st.error(f"❌ Document upload mode error: {e}")
+        st.info("💡 Make sure all dependencies are installed")
+
 elif "💻 Online Entry" in selected_mode:
     try:
         from core.ui.online_mode import show_online_mode

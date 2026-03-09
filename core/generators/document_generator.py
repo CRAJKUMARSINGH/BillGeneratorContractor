@@ -3,7 +3,7 @@ Document Generator - Main entry point for document generation
 """
 from typing import Dict, Any
 from core.generators.html_generator import HTMLGenerator
-from core.generators.pdf_generator import PDFGenerator
+from core.generators.pdf_generator_fixed import FixedPDFGenerator as PDFGenerator
 from core.generators.doc_generator import DOCGenerator
 
 class DocumentGenerator:
