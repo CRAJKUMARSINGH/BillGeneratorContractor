@@ -1,103 +1,103 @@
+#!/usr/bin/env python3
 """
-AI-POWERED: Use LLM to intelligently parse work order and create Excel
+WORLD-CLASS AUTOMATED SOLUTION
+Create INPUT Excel from Work Order Images + QTY.txt
+Uses Google Gemini Vision API for OCR (no Tesseract needed)
+100% Automated - Zero Manual Entry
 """
+import sys
+import os
 from pathlib import Path
 import pandas as pd
-import pytesseract
-from PIL import Image
+import openpyxl
+from openpyxl.styles import Font, Alignment, Border, Side
 import json
-import os
-from anthropic import Anthropic
+import base64
+from typing import Dict, List, Tuple
+import re
 
-print("=" * 80)
-print("AI-POWERED EXCEL CREATION FROM SCANNED WORK ORDER")
-print("=" * 80)
-print()
+# Try to import google.generativeai
+try:
+    import google.generativeai as genai
+    GEMINI_AVAILABLE = True
+except ImportError:
+    GEMINI_AVAILABLE = False
+    print("⚠️  google-generativeai not installed. Install with: pip install google-generativeai")
 
-# Check for API key
-if not os.getenv('ANTHROPIC_API_KEY'):
-    print("⚠️  ANTHROPIC_API_KEY not found in environment")
-    print("   Please set it in .env file or environment variables")
-    print("   Falling back to manual parsing...")
-    USE_AI = False
-else:
-    USE_AI = True
-    client = Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY'))
 
-folder = Path("INPUT/work_order_samples/work_01_27022026")
+class WorkOrderExtractor:
+    """Extract work order data using AI Vision"""
+    
+    def __init__(self, api_key: str = None):
+        """Initialize with Gemini API key"""
+        self.api_key = api_key or os.getenv('GEMINI_API_KEY')
+        
+        if not self.api_key:
+            raise ValueError(
+                "Gemini API key required. Set GEMINI_API_KEY environment variable or pass api_key parameter.\n"
+                "Get free API key from: https://makersuite.google.com/app/apikey"
+            )
+        
+        if not GEMINI_AVAILABLE:
+            raise ImportError("google-generativeai package not installed")
+        
+        genai.configure(api_key=self.api_key)
+        self.model = genai.GenerativeModel('gemini-1.5-flash')
+    
+    def extract_from_images(self, image_paths: List[Path]) -> Dict:
+        """Extract complete work order data from images using AI"""
+        
+        print(f"\n{'='*80}")
+        print("AI-POWERED WORK ORDER EXTRACTION")
+        print(f"{'='*80}\n")
+        
+        # Prepare images
+        images = []
+        for img_path in image_paths:
+            print(f"Loading image: {img_path.name}")
+            with open(img_path, 'rb') as f:
+                img_data = base64.b64encode(f.read()).decode('utf-8')
+                images.append({
+                    'mime_type': 'image/jpeg',
+                    'data': img_data
+                })
+        
+        # Craft expert prompt for work order extraction
+        prompt = """You are an expert at extracting structured data from Indian PWD (Public Works Department) work order documents.
 
-# Step 1: Read quantities from qty.txt
-print("Step 1: Reading quantities from qty.txt...")
-qty_file = folder / "qty.txt"
-quantities = {}
+Analyze these work order images and extract ALL information in JSON format:
 
-with open(qty_file, 'r') as f:
-    for line in f:
-        parts = line.strip().split()
-        if len(parts) >= 2:
-            quantities[parts[0]] = float(parts[1])
-
-print(f"✓ Loaded {len(quantities)} quantities")
-for item, qty in quantities.items():
-    print(f"   {item}: {qty}")
-print()
-
-# Step 2: Read work order images with OCR
-print("Step 2: Reading work order images with OCR...")
-image_files = sorted(list(folder.glob("*.jpeg")) + list(folder.glob("*.jpg")))
-
-all_text = ""
-for img_file in image_files:
-    print(f"   Processing: {img_file.name}")
-    try:
-        img = Image.open(img_file)
-        text = pytesseract.image_to_string(img, lang='eng+hin')
-        all_text += text + "\n"
-    except Exception as e:
-        print(f"   ⚠️  Error: {e}")
-
-print(f"✓ Extracted text from {len(image_files)} images")
-print()
-
-# Step 3: Use AI to parse work order items
-print("Step 3: Using AI to parse work order items...")
-
-if USE_AI:
-    # Prepare prompt for Claude
-    prompt = f"""You are parsing a PWD (Public Works Department) work order document. 
-The OCR text is messy but contains item codes, descriptions, units, and rates.
-
-I need you to extract information for these specific item codes:
-{', '.join(quantities.keys())}
-
-Here is the OCR text from the work order:
-
-{all_text}
-
-Please extract and return a JSON object with this structure:
-{{
-  "items": [
-    {{
-      "code": "1.1.2",
-      "description": "Full description of the item",
-      "unit": "point/mtr/Each/nos",
-      "rate": 602.0
-    }},
-    ...
+{
+  "title_info": {
+    "contractor_name": "Full contractor/supplier name",
+    "work_name": "Complete work description",
+    "work_order_number": "WO number",
+    "agreement_number": "Agreement number",
+    "work_order_amount": "Total amount in Rs.",
+    "tender_premium_percent": "Premium percentage",
+    "premium_type": "Above or Below"
+  },
+  "work_items": [
+    {
+      "item_no": "Item number (e.g., 1.0, 1.1.2)",
+      "description": "Complete item description in English",
+      "unit": "Unit of measurement (e.g., Each, P. point, Sqm, Cum)",
+      "quantity": "Quantity from work order",
+      "rate": "Rate per unit in Rs.",
+      "amount": "Total amount (quantity × rate)",
+      "bsr_code": "BSR code if available"
+    }
   ]
-}}
+}
 
-IMPORTANT:
-- Extract the FULL description for each item code
-- Find the correct unit (point, mtr, Each, nos, etc.)
-- Find the rate in rupees (look for numbers near the item)
-- If rate is not found, use 0.0
-- Only include items from the list I provided
-- Return ONLY valid JSON, no other text
-"""
-
-    try:
-        print("   Calling Claude API...")
+CRITICAL REQUIREMENTS:
+1. Extract EVERY item from the work order - main items and sub-items
+2. Item numbers must match exactly (1.0, 1.1.2, 1.3.3, 3.4.2, 4.1.23, 18.13, etc.)
+3. Descriptions must be complete and accurate
+4. Units must be standard PWD units
+5. All numerical values must be accurate
+6. If BSR code is visible, include it
+7. Return ONLY valid JSON, no markdow..")
         response = client.messages.create(
             model="claude-3-5-sonnet-20241022",
             max_tokens=2000,

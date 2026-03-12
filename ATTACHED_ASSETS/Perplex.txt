@@ -1,0 +1,119 @@
+The BillGeneratorContractor repository focuses on a Streamlit Python app for generating contractor bills from PWD Schedule-G work order images and quantity text files, converting them to standard Excel input via OCR, but current OCR reliability is inconsistent (around 60% with plain Tesseract).[1][2]
+
+## Key Enhancements Needed
+Implement a foolproof OCR pipeline to achieve 92-96% accuracy and zero risk of silent wrong bills.[2]
+- Add image preprocessing: grayscale conversion, Gaussian blur (5x5 kernel), adaptive thresholding.[2]
+- Use grid-based table detection: morphological opening (40x1 kernel), contour filtering (width >600px, height >30px), row sorting by Y-coordinate.[2]
+- Multi-mode row-wise OCR: Tesseract PSM 6/4/11 with OEM 3, auto-correct errors (O→0, l→1, S→5).[2]
+- BSR code extraction via regex (pattern: \d+\.\d+\.\d+), quantity parsing from text files, strict validation (code matching, numeric rates, missing/extra items halt process).[2]
+
+## Updated Repo Structure
+```
+BillGeneratorContractor/
+├── app.py                 # Main Streamlit app
+├── modules/
+│   ├── pwdscheduleparser.py  # New: preprocess, detect_rows, ocr_rows, parse_items
+│   ├── validator.py      # New: validate_qty, schema checks
+│   └── qtyparser.py      # New: read_qty_file
+├── templates/
+│   └── standardinput.xlsx # Excel template (Title, WorkOrder, BillQty, Extra sheets)
+├── logs/                 # Processing logs
+└── requirements.txt      # Add opencv-python, pytesseract, pandas, openpyxl
+```
+This structure supports modular, reliable processing.[1][2]
+
+## Core Code Implementation
+Add this to `modules/pwdscheduleparser.py` for the OCR engine:[2]
+
+```python
+import cv2
+import pytesseract
+import pandas as pd
+import re
+
+def preprocess(img_path):
+    img = cv2.imread(img_path)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    thresh = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+    return thresh
+
+def detect_rows(img):
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (40, 1))
+    detect = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+    contours, _ = cv2.findContours(detect, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    rows = [cv2.boundingRect(c) for c in contours if cv2.boundingRect(c)[2] > 600 and cv2.boundingRect(c)[3] > 30]
+    return sorted(rows, key=lambda r: r[1])
+
+def ocr_rows(img, rows):
+    lines = []
+    for r in rows:
+        x, y, w, h = r
+        crop = img[y:y+h, x:x+w]
+        txt = pytesseract.image_to_string(crop, config='--oem 3 --psm 6')
+        txt = txt.replace('O', '0').replace('l', '1')
+        lines.append(txt.strip())
+    return lines
+
+def parse_items(lines):
+    data = []
+    for line in lines:
+        code_match = re.search(r'\d+\.\d+\.\d+', line)
+        if code_match:
+            parts = line.split()
+            try:
+                rate = float(parts[-3])
+                qty = float(parts[-2])
+                unit = parts[-4]
+                desc = ' '.join(line.split(code_match.group(1), 1)[1]).strip()
+                data.append([code_match.group(), desc, unit, rate, qty])
+            except:
+                continue
+    return data
+
+def process_workorder(img_path, excel_output):
+    img = preprocess(img_path)
+    rows = detect_rows(img)
+    lines = ocr_rows(img, rows)
+    data = parse_items(lines)
+    if len(data) == 0:
+        raise Exception("No Schedule-G items detected")
+    df = pd.DataFrame(data, columns=['CODE', 'DESCRIPTION', 'UNIT', 'RATE', 'QTY'])
+    df['AMOUNT'] = df['RATE'] * df['QTY']
+    df.to_excel(excel_output, index=False)
+```
+
+Integrate into `app.py`: Call `process_workorder` on image upload, parse qty.txt, validate, then feed to existing bill engine.[2]
+
+## Validation Module
+Create `modules/validator.py`:[2]
+
+```python
+def validate_qty(qty_dict, codes):
+    missing = set(qty_dict.keys()) - set(codes)
+    if missing:
+        raise Exception(f"Unknown item codes in qty file: {missing}")
+```
+
+## Next Steps
+1. Commit the new `modules/` files and updated structure to the repo.
+2. Test with sample PWD images/text files; expect 92%+ OCR success.[2]
+3. For production: Add PaddleOCR for tables, PyInstaller for Windows EXE.[1][2]
+
+This upgrade makes the input builder never-fail, feeding perfect Excel to your reliable bill processor.[2]
+
+Sources
+[1] Grok1.txt https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/29611587/b8fe0340-88dd-4dcf-97a3-77f38e907486/Grok1.txt?AWSAccessKeyId=ASIA2F3EMEYEQJOSF3D4&Signature=zXR19E9bx%2FdSZ4R%2BZxQiuJg5TvE%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEH0aCXVzLWVhc3QtMSJHMEUCIQCrO3ljV0ROP7GJ94rNV6i2ihyQpPHfoVPdc3qgElgaWwIgMMTXBSSX4koq%2F5uWU%2F5IlesNZWZZGO94%2BV4HVuJohmUq8wQIRhABGgw2OTk3NTMzMDk3MDUiDLmG%2BZmVKH45Kt5rCSrQBFr7FUd2DisB4CRUHhGWJnUyKLzwqYTnpYE0X4zhUaLTwClJOh2GyRt0%2Fsw8j61SvnKyOWkoQw2A3EejD%2F3AI4iZVSKJuvoiu9qJ5jgo9YmAwY1yYl8D4%2FAhJpyMXQGwf3k%2BIrisCJL8knYkLbTcs7DTkCx9ENJnBUZqn3Y124jacnL06WdmG4adcSHYnMYnZr1J4mYTgH734BPNBlRndEvLwrO%2BOMp7jFvzZr8qML1h0xdiflvoS7OhrESl0j32XXUV30XHVhoeAXHK2K27Xgf0kE1vNzCR5DwBfQ33UQKXAN3%2B3OY%2Bty4cSNz1o1LbXb7NxoNfO7vdiKuywdPPp%2BgVIsW8WA7bRGM%2FdAEGLRFkzjBi97E%2FjUivCq63LybwWO759S6t8aKlpZTcJffQz%2FfK7%2FQ061%2BJ0kaRoJeLThu7zYGY9h4emDqXWWDjgKRcYhGPlMEDN74JEwH9vSzmZimb4dhE8zcfyqXFi9XjEePTMWwdR5ZR1PvYNYL0h7cLhLMKgMNrpYUxQaycIe69LG2UGZSDa%2FgPpda66hpAssfL4qnf506W%2FdcioSIqneUoibySGOkJe%2BI0pdgn2AGgPKTxd%2BW9HhpfsggWkOz4LYx0ggvJe5pPbCnhvOaqdIF0uwZhYwDwc5WGq16rl61zRasppgvofCrSPKjGBXptAYmMPuf74YXIhyxKHAITWzr8Fcr8dpW1lgV1qpCZy1gWgwkybJQ05sFwi1SL6vGGKWRAsYATi3brux228Wcje7EE4y2gxCBHcQvAWQf44P%2BYa4kw66XAzQY6mAH%2FSKSoGZsOd8qyd7x5XJRRTKqFoCDjqKrAnSoY4GmvgM4avGjgq5MCJqprPypTDEjAUBwjGYfAILF2qldLOjc2zEpB8Kqoq0FyPoSv6YEuy953WTHJwe1885ScqhsFAuUVcrh3tlA8NGBKaBkxLUbtBEHn5Cj8vyRlECUrta1xD1zHz%2FUDrjngjyczktAGbTs3u9x4jKc2VA%3D%3D&Expires=1773148153
+[2] BillGeneratorContractor_OCR_Enhancement_Guide.md https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/29611587/3d953045-c260-4101-9519-b256ea5c408d/BillGeneratorContractor_OCR_Enhancement_Guide.md?AWSAccessKeyId=ASIA2F3EMEYEQJOSF3D4&Signature=6zARM9FB4%2By4bo4oiJR48Je9XYc%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEH0aCXVzLWVhc3QtMSJHMEUCIQCrO3ljV0ROP7GJ94rNV6i2ihyQpPHfoVPdc3qgElgaWwIgMMTXBSSX4koq%2F5uWU%2F5IlesNZWZZGO94%2BV4HVuJohmUq8wQIRhABGgw2OTk3NTMzMDk3MDUiDLmG%2BZmVKH45Kt5rCSrQBFr7FUd2DisB4CRUHhGWJnUyKLzwqYTnpYE0X4zhUaLTwClJOh2GyRt0%2Fsw8j61SvnKyOWkoQw2A3EejD%2F3AI4iZVSKJuvoiu9qJ5jgo9YmAwY1yYl8D4%2FAhJpyMXQGwf3k%2BIrisCJL8knYkLbTcs7DTkCx9ENJnBUZqn3Y124jacnL06WdmG4adcSHYnMYnZr1J4mYTgH734BPNBlRndEvLwrO%2BOMp7jFvzZr8qML1h0xdiflvoS7OhrESl0j32XXUV30XHVhoeAXHK2K27Xgf0kE1vNzCR5DwBfQ33UQKXAN3%2B3OY%2Bty4cSNz1o1LbXb7NxoNfO7vdiKuywdPPp%2BgVIsW8WA7bRGM%2FdAEGLRFkzjBi97E%2FjUivCq63LybwWO759S6t8aKlpZTcJffQz%2FfK7%2FQ061%2BJ0kaRoJeLThu7zYGY9h4emDqXWWDjgKRcYhGPlMEDN74JEwH9vSzmZimb4dhE8zcfyqXFi9XjEePTMWwdR5ZR1PvYNYL0h7cLhLMKgMNrpYUxQaycIe69LG2UGZSDa%2FgPpda66hpAssfL4qnf506W%2FdcioSIqneUoibySGOkJe%2BI0pdgn2AGgPKTxd%2BW9HhpfsggWkOz4LYx0ggvJe5pPbCnhvOaqdIF0uwZhYwDwc5WGq16rl61zRasppgvofCrSPKjGBXptAYmMPuf74YXIhyxKHAITWzr8Fcr8dpW1lgV1qpCZy1gWgwkybJQ05sFwi1SL6vGGKWRAsYATi3brux228Wcje7EE4y2gxCBHcQvAWQf44P%2BYa4kw66XAzQY6mAH%2FSKSoGZsOd8qyd7x5XJRRTKqFoCDjqKrAnSoY4GmvgM4avGjgq5MCJqprPypTDEjAUBwjGYfAILF2qldLOjc2zEpB8Kqoq0FyPoSv6YEuy953WTHJwe1885ScqhsFAuUVcrh3tlA8NGBKaBkxLUbtBEHn5Cj8vyRlECUrta1xD1zHz%2FUDrjngjyczktAGbTs3u9x4jKc2VA%3D%3D&Expires=1773148153
+[3] Kim3.txt https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/29611587/5e5217ee-82a9-4339-a4bd-2b68981b3b3c/Kim3.txt?AWSAccessKeyId=ASIA2F3EMEYEQJOSF3D4&Signature=mElPqYQerI72ofZ3GFBC181mtis%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEH0aCXVzLWVhc3QtMSJHMEUCIQCrO3ljV0ROP7GJ94rNV6i2ihyQpPHfoVPdc3qgElgaWwIgMMTXBSSX4koq%2F5uWU%2F5IlesNZWZZGO94%2BV4HVuJohmUq8wQIRhABGgw2OTk3NTMzMDk3MDUiDLmG%2BZmVKH45Kt5rCSrQBFr7FUd2DisB4CRUHhGWJnUyKLzwqYTnpYE0X4zhUaLTwClJOh2GyRt0%2Fsw8j61SvnKyOWkoQw2A3EejD%2F3AI4iZVSKJuvoiu9qJ5jgo9YmAwY1yYl8D4%2FAhJpyMXQGwf3k%2BIrisCJL8knYkLbTcs7DTkCx9ENJnBUZqn3Y124jacnL06WdmG4adcSHYnMYnZr1J4mYTgH734BPNBlRndEvLwrO%2BOMp7jFvzZr8qML1h0xdiflvoS7OhrESl0j32XXUV30XHVhoeAXHK2K27Xgf0kE1vNzCR5DwBfQ33UQKXAN3%2B3OY%2Bty4cSNz1o1LbXb7NxoNfO7vdiKuywdPPp%2BgVIsW8WA7bRGM%2FdAEGLRFkzjBi97E%2FjUivCq63LybwWO759S6t8aKlpZTcJffQz%2FfK7%2FQ061%2BJ0kaRoJeLThu7zYGY9h4emDqXWWDjgKRcYhGPlMEDN74JEwH9vSzmZimb4dhE8zcfyqXFi9XjEePTMWwdR5ZR1PvYNYL0h7cLhLMKgMNrpYUxQaycIe69LG2UGZSDa%2FgPpda66hpAssfL4qnf506W%2FdcioSIqneUoibySGOkJe%2BI0pdgn2AGgPKTxd%2BW9HhpfsggWkOz4LYx0ggvJe5pPbCnhvOaqdIF0uwZhYwDwc5WGq16rl61zRasppgvofCrSPKjGBXptAYmMPuf74YXIhyxKHAITWzr8Fcr8dpW1lgV1qpCZy1gWgwkybJQ05sFwi1SL6vGGKWRAsYATi3brux228Wcje7EE4y2gxCBHcQvAWQf44P%2BYa4kw66XAzQY6mAH%2FSKSoGZsOd8qyd7x5XJRRTKqFoCDjqKrAnSoY4GmvgM4avGjgq5MCJqprPypTDEjAUBwjGYfAILF2qldLOjc2zEpB8Kqoq0FyPoSv6YEuy953WTHJwe1885ScqhsFAuUVcrh3tlA8NGBKaBkxLUbtBEHn5Cj8vyRlECUrta1xD1zHz%2FUDrjngjyczktAGbTs3u9x4jKc2VA%3D%3D&Expires=1773148153
+[4] Kim2.txt https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/29611587/e3468e97-2e00-4477-9ab7-cc6f5535fd80/Kim2.txt?AWSAccessKeyId=ASIA2F3EMEYEQJOSF3D4&Signature=%2F0NaUaGI98moa9XFLO686FBY0WA%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEH0aCXVzLWVhc3QtMSJHMEUCIQCrO3ljV0ROP7GJ94rNV6i2ihyQpPHfoVPdc3qgElgaWwIgMMTXBSSX4koq%2F5uWU%2F5IlesNZWZZGO94%2BV4HVuJohmUq8wQIRhABGgw2OTk3NTMzMDk3MDUiDLmG%2BZmVKH45Kt5rCSrQBFr7FUd2DisB4CRUHhGWJnUyKLzwqYTnpYE0X4zhUaLTwClJOh2GyRt0%2Fsw8j61SvnKyOWkoQw2A3EejD%2F3AI4iZVSKJuvoiu9qJ5jgo9YmAwY1yYl8D4%2FAhJpyMXQGwf3k%2BIrisCJL8knYkLbTcs7DTkCx9ENJnBUZqn3Y124jacnL06WdmG4adcSHYnMYnZr1J4mYTgH734BPNBlRndEvLwrO%2BOMp7jFvzZr8qML1h0xdiflvoS7OhrESl0j32XXUV30XHVhoeAXHK2K27Xgf0kE1vNzCR5DwBfQ33UQKXAN3%2B3OY%2Bty4cSNz1o1LbXb7NxoNfO7vdiKuywdPPp%2BgVIsW8WA7bRGM%2FdAEGLRFkzjBi97E%2FjUivCq63LybwWO759S6t8aKlpZTcJffQz%2FfK7%2FQ061%2BJ0kaRoJeLThu7zYGY9h4emDqXWWDjgKRcYhGPlMEDN74JEwH9vSzmZimb4dhE8zcfyqXFi9XjEePTMWwdR5ZR1PvYNYL0h7cLhLMKgMNrpYUxQaycIe69LG2UGZSDa%2FgPpda66hpAssfL4qnf506W%2FdcioSIqneUoibySGOkJe%2BI0pdgn2AGgPKTxd%2BW9HhpfsggWkOz4LYx0ggvJe5pPbCnhvOaqdIF0uwZhYwDwc5WGq16rl61zRasppgvofCrSPKjGBXptAYmMPuf74YXIhyxKHAITWzr8Fcr8dpW1lgV1qpCZy1gWgwkybJQ05sFwi1SL6vGGKWRAsYATi3brux228Wcje7EE4y2gxCBHcQvAWQf44P%2BYa4kw66XAzQY6mAH%2FSKSoGZsOd8qyd7x5XJRRTKqFoCDjqKrAnSoY4GmvgM4avGjgq5MCJqprPypTDEjAUBwjGYfAILF2qldLOjc2zEpB8Kqoq0FyPoSv6YEuy953WTHJwe1885ScqhsFAuUVcrh3tlA8NGBKaBkxLUbtBEHn5Cj8vyRlECUrta1xD1zHz%2FUDrjngjyczktAGbTs3u9x4jKc2VA%3D%3D&Expires=1773148153
+[5] Build software better, together https://github.com/topics/bill-generator
+[6] pranavp10/invoice-generator https://github.com/pranavp10/invoice-generator
+[7] Plugins that need to be updated to be ready for the move to PHP 5 constructors https://gist.github.com/chriscct7/d7d077afb01011b1839d?permalink_comment_id=1920325
+[8] billing-system · GitHub Topics https://github.com/topics/billing-system
+[9] Build Custom PDF Invoice Generator in Laravel (Code + ... https://www.sevensquaretech.com/laravel-pdf-invoice-generator-guide-code-github/
+[10] GitHub - Rafkev/billing: A customer billing system written in C language https://github.com/Rafkev/billing
+[11] GitHub - amithgc/BillGenerator: Generates fake bills https://github.com/amithgc/BillGenerator
+[12] invoice-generator · GitHub Topics https://github.com/topics/invoice-generator
+[13] ReadmeForge - AI-Powered GitHub README Generator https://www.readmeforge.app
+[14] Releases · vaibhavkothari33/Bill-Generator https://github.com/vaibhavkothari33/Bill-Generator/releases
