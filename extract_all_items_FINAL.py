@@ -27,6 +27,7 @@ from modules.pwd_database import PWDDatabase
 from modules.api_key_manager import APIKeyManager, APIKey
 from modules.image_quality_checker import ImageQualityChecker
 from modules.image_preprocessor import ImagePreprocessor
+from modules.completeness_checker import CompletenessChecker
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment
 from datetime import datetime
@@ -245,6 +246,10 @@ def main():
         log_message("  ✓ Image Quality Checker initialized")
         log_message("  ✓ Image Preprocessor initialized")
         
+        # Week 7: Completeness checker
+        completeness_checker = CompletenessChecker(db)
+        log_message("  ✓ Completeness Checker initialized")
+        
         # Get images
         image_files = sorted(INPUT_FOLDER.glob("*.jpg")) + sorted(INPUT_FOLDER.glob("*.jpeg"))
         log_message(f"\n📁 Found {len(image_files)} images to process")
@@ -291,11 +296,6 @@ def main():
                 if result and result.success and result.items:
                     all_items.extend(result.items)
                     stats['success'] += 1
-                    
-                    # Week 7: Completeness check
-                    is_complete, missing_count, warnings = validate_completeness(result.items, db)
-                    if not is_complete:
-                        log_message(f"  ⚠ Completeness warnings: {'; '.join(warnings)}", "WARNING")
                 else:
                     stats['failed'] += 1
                     log_message(f"  ✗ Extraction failed", "ERROR")
@@ -329,6 +329,24 @@ def main():
         log_message(f"Unique items: {len(items_list)}")
         log_message(f"Average confidence: {report['average_confidence']:.2f}")
         log_message(f"Auto-accept rate: {report['recommended_actions']['auto_accept']['percentage']:.1f}%")
+        
+        # Week 7: Completeness check
+        log_message("\n" + "="*80)
+        log_message("✓ COMPLETENESS CHECK")
+        log_message("="*80)
+        
+        completeness_result = completeness_checker.check_completeness(items_list)
+        count_estimate = completeness_checker.estimate_item_count(items_list)
+        
+        log_message(f"Completeness score: {completeness_result.completeness_score:.2%}")
+        log_message(f"Valid items: {completeness_result.valid_items}/{completeness_result.total_items}")
+        log_message(f"Estimated range: {count_estimate['estimated_min']}-{count_estimate['estimated_max']} items")
+        log_message(f"Confidence: {count_estimate['confidence'].upper()}")
+        
+        if completeness_result.warnings:
+            log_message(f"Warnings: {len(completeness_result.warnings)}")
+            for warning in completeness_result.warnings[:3]:
+                log_message(f"  ⚠ {warning}", "WARNING")
         
         # Read quantities
         qty_data = read_qty_file(QTY_FILE)
@@ -366,6 +384,12 @@ def main():
             ["Quick Review (0.85-0.95)", f"{report['recommended_actions']['quick_review']['percentage']:.1f}%"],
             ["Review (0.70-0.85)", f"{report['recommended_actions']['review']['percentage']:.1f}%"],
             ["Detailed Review (<0.70)", f"{report['recommended_actions']['detailed_review']['percentage']:.1f}%"],
+            ["", ""],
+            ["COMPLETENESS STATISTICS", ""],
+            ["Completeness Score", f"{completeness_result.completeness_score:.2%}"],
+            ["Valid Items", f"{completeness_result.valid_items}/{completeness_result.total_items}"],
+            ["Estimated Range", f"{count_estimate['estimated_min']}-{count_estimate['estimated_max']} items"],
+            ["Count Confidence", count_estimate['confidence'].upper()],
             ["", ""],
             ["SYSTEM FEATURES", ""],
             ["Week 1", "PWD BSR Database (229 items)"],
@@ -475,6 +499,7 @@ def main():
         log_message(f"Processing time: {elapsed_time:.1f}s")
         log_message(f"Success rate: {(stats['success']/stats['total']*100):.1f}%")
         log_message(f"Average confidence: {report['average_confidence']*100:.1f}%")
+        log_message(f"Completeness score: {completeness_result.completeness_score*100:.1f}%")
         log_message(f"Auto-accept rate: {report['recommended_actions']['auto_accept']['percentage']:.1f}%")
         log_message(f"Unique items: {len(items_list)}")
         log_message("="*80)
