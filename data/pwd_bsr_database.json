@@ -1,0 +1,244 @@
+{
+  "version": "2024",
+  "last_updated": "2026-03-13",
+  "description": "PWD BSR Database for Bill Generator - Electrical Works",
+  "total_items": 30,
+  "categories": {
+    "electrical_wiring": {
+      "1.1.1": {
+        "description": "Wiring of light point/ fan point/ exhaust fan point/ call bell point - Short point (up to 3 mtr.)",
+        "unit": "P. point",
+        "rate_2024": 343,
+        "rate_range": [300, 400],
+        "category": "electrical_wiring",
+        "subcategory": "light_points"
+      },
+      "1.1.2": {
+        "description": "Wiring of light point/ fan point/ exhaust fan point/ call bell point - Medium point (up to 6 mtr.)",
+        "unit": "P. point",
+        "rate_2024": 601,
+        "rate_range": [550, 650],
+        "category": "electrical_wiring",
+        "subcategory": "light_points"
+      },
+      "1.1.3": {
+        "description": "Wiring of light point/ fan point/ exhaust fan point/ call bell point - Long point (up to 10 mtr.)",
+        "unit": "P. point",
+        "rate_2024": 825,
+        "rate_range": [750, 900],
+        "category": "electrical_wiring",
+        "subcategory": "light_points"
+      },
+      "1.3.1": {
+        "description": "Wiring of 3/5 pin 6 amp. Light plug point - Short point (up to 3 mtr.)",
+        "unit": "P. point",
+        "rate_2024": 382,
+        "rate_range": [350, 450],
+        "category": "electrical_wiring",
+        "subcategory": "plug_points"
+      },
+      "1.3.3": {
+        "description": "Wiring of 3/5 pin 6 amp. Light plug point - Medium point (up to 6 mtr.)",
+        "unit": "P. point",
+        "rate_2024": 808,
+        "rate_range": [750, 900],
+        "category": "electrical_wiring",
+        "subcategory": "plug_points"
+      },
+      "1.4.2": {
+        "description": "S&F following sizes (dia.) of ISI marked MMS PVC conduit - 25 mm",
+        "unit": "Mtr.",
+        "rate_2024": 55,
+        "rate_range": [45, 65],
+        "category": "electrical_wiring",
+        "subcategory": "conduit"
+      }
+    },
+    "cables_wires": {
+      "3.4.2": {
+        "description": "S&F following sizes of ISI marked (IS:14927 P - II) FR PVC flexible conductor - 25 mm x 12 mm",
+        "unit": "Mtr.",
+        "rate_2024": 42,
+        "rate_range": [35, 50],
+        "category": "cables_wires",
+        "subcategory": "flexible_conductor"
+      },
+      "4.1.1": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 1 x 1.5 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 26,
+        "rate_range": [20, 35],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.7": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 2 x 2.5 sq. mm. + 1x1.5sqmm",
+        "unit": "Mtr.",
+        "rate_2024": 106,
+        "rate_range": [95, 120],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.10": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 1 x 4.0 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 64,
+        "rate_range": [55, 75],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.14": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 2 x 4.0 sq. mm. + 1 x 2.5 sq. mm.",
+        "unit": "Mtr.",
+        "rate_2024": 168,
+        "rate_range": [150, 190],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.23": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 4 x 10.0 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 596,
+        "rate_range": [550, 650],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      }
+    },
+    "mcb_distribution": {
+      "6.1.1.2": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Single pole MCB - 6 A to 32 A rating",
+        "unit": "Each",
+        "rate_2024": 199,
+        "rate_range": [180, 220],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.4.3": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Four pole MCB - 40 A rating",
+        "unit": "Each",
+        "rate_2024": 2024,
+        "rate_range": [1900, 2200],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.10.3.2": {
+        "description": "Providing & Fixing of Recessed/surface mounting heavy duty distribution board - Metal door (Three phase) - 6 Way (8 Incomer + 18 Outgoing)",
+        "unit": "Each",
+        "rate_2024": 5645,
+        "rate_range": [5200, 6000],
+        "category": "mcb_distribution",
+        "subcategory": "distribution_board"
+      }
+    },
+    "switches_accessories": {
+      "7.24": {
+        "description": "Providing & Fixing of single / multi tone electronic door bell",
+        "unit": "Each",
+        "rate_2024": 566,
+        "rate_range": [500, 650],
+        "category": "switches_accessories",
+        "subcategory": "door_bell"
+      },
+      "7.27": {
+        "description": "Providing & Fixing of IS:1293 marked modular type 6 A 3 pin shuttered socket",
+        "unit": "Each",
+        "rate_2024": 5,
+        "rate_range": [3, 10],
+        "category": "switches_accessories",
+        "subcategory": "socket"
+      },
+      "7.28": {
+        "description": "Providing & Fixing of modular type 100W Step Fan regulator",
+        "unit": "Each",
+        "rate_2024": 387,
+        "rate_range": [350, 450],
+        "category": "switches_accessories",
+        "subcategory": "regulator"
+      },
+      "7.30.6": {
+        "description": "Providing & Fixing of following modular accessories - Blanking plate",
+        "unit": "Each",
+        "rate_2024": 20,
+        "rate_range": [15, 30],
+        "category": "switches_accessories",
+        "subcategory": "accessories"
+      },
+      "7.31.5": {
+        "description": "Providing & Fixing of following size mounting grid - 6 Module",
+        "unit": "Each",
+        "rate_2024": 155,
+        "rate_range": [140, 180],
+        "category": "switches_accessories",
+        "subcategory": "mounting_grid"
+      },
+      "7.38": {
+        "description": "Supplying and fixing of power plug point with Modular switch",
+        "unit": "Each",
+        "rate_2024": 543,
+        "rate_range": [500, 600],
+        "category": "switches_accessories",
+        "subcategory": "plug_point"
+      }
+    },
+    "fans": {
+      "15.7.1": {
+        "description": "Providing & Fixing of BEE Star rated copper wounded ceiling fan - 1200 mm Sweep BEE 1 Star rated (service value >=4.5)",
+        "unit": "Each",
+        "rate_2024": 2063,
+        "rate_range": [1900, 2200],
+        "category": "fans",
+        "subcategory": "ceiling_fan"
+      }
+    },
+    "led_lighting": {
+      "17.1.1": {
+        "description": "SITC of IP20 SMD Mid Power LED batten type integrated luminaire - 1170mm(+/-10%) LED batten with min. lumen output 2000 lm",
+        "unit": "Each",
+        "rate_2024": 467,
+        "rate_range": [420, 520],
+        "category": "led_lighting",
+        "subcategory": "led_batten"
+      },
+      "17.3.1": {
+        "description": "SITC of IP-20 Recessed / Surface Mounted, Round / Square LED Down light - Recessed Mounting - Minimum lumen output 600 lm",
+        "unit": "Each",
+        "rate_2024": 668,
+        "rate_range": [600, 750],
+        "category": "led_lighting",
+        "subcategory": "downlight"
+      },
+      "17.3.2.4": {
+        "description": "SITC of IP-20 Recessed / Surface Mounted, Round / Square LED Down light - Surface Mounting - Minimum lumen output 1200 lm",
+        "unit": "Each",
+        "rate_2024": 1429,
+        "rate_range": [1300, 1600],
+        "category": "led_lighting",
+        "subcategory": "downlight"
+      },
+      "18.13": {
+        "description": "Providing & Fixing of IK0B, IP 66 protected LED Street light fixture - Minimum lumen output 11250 lm (90W)",
+        "unit": "Each",
+        "rate_2024": 5617,
+        "rate_range": [5200, 6000],
+        "category": "led_lighting",
+        "subcategory": "street_light"
+      },
+      "18.13.6": {
+        "description": "Providing & Fixing of IK0B, IP 66 protected LED Street light fixture - Minimum lumen output 11250 lm (90W)",
+        "unit": "Each",
+        "rate_2024": 5617,
+        "rate_range": [5200, 6000],
+        "category": "led_lighting",
+        "subcategory": "street_light"
+      },
+      "18.19": {
+        "description": "Providing & Fixing of Street light bracket made out of MS tube",
+        "unit": "Mtr.",
+        "rate_2024": 569,
+        "rate_range": [500, 650],
+        "category": "led_lighting",
+        "subcategory": "street_light_bracket"
+      }
+    }
+  }
+}
