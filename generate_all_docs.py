@@ -17,7 +17,7 @@ print("COMPLETE BILL PACKAGE GENERATOR - ALL DOCUMENTS")
 print("="*80 + "\n")
 
 # Input file
-test_file = Path("TEST_INPUT_FILES/FirstFINALvidExtra.xlsx")
+test_file = Path("INPUT_FILES_LEVEL_02/FirstFINALvidExtra.xlsx")
 print(f"📁 Input file: {test_file.name}\n")
 
 # Process Excel

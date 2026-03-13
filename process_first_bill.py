@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Quick script to process the first bill from TEST_INPUT_FILES
+Quick script to process the first bill from INPUT_FILES_LEVEL_02
 """
 import sys
 from pathlib import Path
@@ -118,7 +118,7 @@ def process_first_bill(input_file: str, output_dir: str = "OUTPUT"):
 
 if __name__ == '__main__':
     # Process the first bill file
-    input_file = "TEST_INPUT_FILES/FirstFINALnoExtra.xlsx"
+    input_file = "INPUT_FILES_LEVEL_02/FirstFINALnoExtra.xlsx"
     
     if len(sys.argv) > 1:
         input_file = sys.argv[1]

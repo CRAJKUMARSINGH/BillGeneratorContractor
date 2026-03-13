@@ -27,7 +27,7 @@ from core.validation.error_diagnostics_enterprise import ComprehensiveValidator
 
 
 # Test configuration
-TEST_INPUT_DIR = Path("TEST_INPUT_FILES")
+TEST_INPUT_DIR = Path("INPUT_FILES_LEVEL_02")
 TEST_OUTPUT_DIR = Path("OUTPUT/robot_tests")
 TEMPLATE_DIR = Path("templates")
 

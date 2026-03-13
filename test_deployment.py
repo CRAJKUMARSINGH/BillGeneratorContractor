@@ -81,7 +81,7 @@ class DeploymentTester:
             '.streamlit/config.toml',
             'core/',
             'templates/',
-            'TEST_INPUT_FILES/'
+            'INPUT_FILES_LEVEL_02/'
         ]
         
         for item in required:
@@ -95,7 +95,7 @@ class DeploymentTester:
         def test_processor():
             from core.processors.excel_processor import ExcelProcessor
             processor = ExcelProcessor()
-            test_file = Path("TEST_INPUT_FILES/FirstFINALvidExtra.xlsx")
+            test_file = Path("INPUT_FILES_LEVEL_02/FirstFINALvidExtra.xlsx")
             if not test_file.exists():
                 raise FileNotFoundError("Test file not found")
             data = processor.process_excel(test_file)
@@ -115,7 +115,7 @@ class DeploymentTester:
             from core.generators.document_generator import DocumentGenerator
             
             processor = ExcelProcessor()
-            test_file = Path("TEST_INPUT_FILES/FirstFINALvidExtra.xlsx")
+            test_file = Path("INPUT_FILES_LEVEL_02/FirstFINALvidExtra.xlsx")
             data = processor.process_excel(test_file)
             
             doc_gen = DocumentGenerator(data)

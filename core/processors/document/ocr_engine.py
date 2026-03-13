@@ -1,13 +1,26 @@
 """
 OCR Engine
-Extracts printed text from work order documents using Tesseract
+Extracts printed text from work order documents using Tesseract.
+
+Robustness guarantee: all methods catch exceptions internally and return
+safe empty results rather than raising.
 """
-import pytesseract
+import logging
 import cv2
 import numpy as np
 from typing import List, Dict, Optional, Tuple
 from dataclasses import dataclass
 import re
+
+logger = logging.getLogger(__name__)
+
+# Tesseract is optional – degrade gracefully when not installed
+try:
+    import pytesseract
+    _TESSERACT_AVAILABLE = True
+except ImportError:
+    _TESSERACT_AVAILABLE = False
+    logger.warning("pytesseract not installed – OCREngine will return empty results")
 
 
 @dataclass
