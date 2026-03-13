@@ -68,7 +68,8 @@ PWD_ITEMS_DATABASE = {
 def read_qty_file(qty_file_path):
     """Read QTY.txt and return dict of {item_no: quantity}"""
     qty_data = {}
-    print(f"\n📄 Reading: {qty_file_path}")
+    # Avoid emojis in console output for Windows compatibility
+    print(f"\nReading: {qty_file_path}")
     
     with open(qty_file_path, 'r', encoding='utf-8') as f:
         for line_no, line in enumerate(f, 1):
@@ -84,16 +85,17 @@ def read_qty_file(qty_file_path):
                     except ValueError:
                         print(f"   ⚠️  Line {line_no}: Invalid quantity '{parts[1]}'")
     
-    print(f"✅ Found {len(qty_data)} items with quantities\n")
+    print(f"Found {len(qty_data)} items with quantities\n")
     return qty_data
 
 def extract_text_from_images_easyocr(image_dir):
     """Extract text from all images using EasyOCR"""
-    print("\n🔍 Initializing EasyOCR (English + Hindi)...")
+    # Avoid emojis in console output for Windows compatibility
+    print("\nInitializing EasyOCR (English + Hindi)...")
     print("   First run will download models (~100MB)")
     
     reader = easyocr.Reader(['en', 'hi'], gpu=False)
-    print("✅ OCR engine ready\n")
+    print("OCR engine ready\n")
     
     image_path = Path(image_dir)
     image_files = []
@@ -103,10 +105,10 @@ def extract_text_from_images_easyocr(image_dir):
     image_files = sorted(image_files)
     
     if not image_files:
-        print(f"❌ No images found in {image_dir}")
+        print(f"No images found in {image_dir}")
         return ""
     
-    print(f"📸 Processing {len(image_files)} images...\n")
+    print(f"Processing {len(image_files)} images...\n")
     
     all_text = []
     for idx, img_file in enumerate(image_files, 1):
@@ -115,9 +117,10 @@ def extract_text_from_images_easyocr(image_dir):
             result = reader.readtext(str(img_file), detail=0)
             text = '\n'.join(result)
             all_text.append(f"=== {img_file.name} ===\n{text}\n")
-            print(f"       ✅ Extracted {len(text)} characters")
+            print(f"       Extracted {len(text)} characters")
         except Exception as e:
-            print(f"       ❌ Error: {e}")
+            safe_msg = str(e).encode("ascii", "replace").decode("ascii")
+            print(f"       Error: {safe_msg}")
     
     return '\n\n'.join(all_text)
 
@@ -172,7 +175,8 @@ def create_excel_fully_automated(work_order_dir, output_file):
     """Create Excel using EasyOCR + QTY.txt - FULLY AUTOMATED"""
     
     print(f"\n{'='*80}")
-    print("🚀 FULLY AUTOMATED INPUT EXCEL GENERATION")
+    # Avoid emojis in console output for Windows compatibility
+    print("FULLY AUTOMATED INPUT EXCEL GENERATION")
     print(f"{'='*80}\n")
     
     work_order_path = Path(work_order_dir)

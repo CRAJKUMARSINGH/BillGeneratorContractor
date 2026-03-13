@@ -53,100 +53,102 @@ class StructuredOCRResult:
 
 class OCREngine:
     """OCR engine for extracting printed text from documents"""
-    
+
     def __init__(self, language: str = "eng+hin"):
         """
-        Initialize Tesseract OCR with language support
-        
+        Initialize Tesseract OCR with language support.
+
         Args:
-            language: Language codes (e.g., "eng" for English, "hin" for Hindi, "eng+hin" for both)
+            language: Language codes (e.g., "eng", "hin", "eng+hin")
         """
         self.language = language
-        
-        # Configure Tesseract
-        self.config = r'--oem 3 --psm 6'  # OEM 3 = Default, PSM 6 = Assume uniform block of text
-    
-    def extract_text(self, image: np.ndarray) -> OCRResult:
+        self.config = r'--oem 3 --psm 6'
+
+        if not _TESSERACT_AVAILABLE:
+            logger.warning("OCREngine: Tesseract (pytesseract) not available – degraded mode")
+
+    def _empty_ocr_result(self) -> "OCRResult":
+        return OCRResult(text="", words=[], confidence=0.0, language=self.language)
+
+    def _empty_structured_result(self) -> "StructuredOCRResult":
+        return StructuredOCRResult(items=[], confidence_scores={}, raw_text="")
+
+    def extract_text(self, image: np.ndarray) -> "OCRResult":
         """
-        Extract all text from image with bounding boxes
-        
+        Extract all text from image with bounding boxes.
+        Never raises – returns empty OCRResult on any failure.
+
         Args:
             image: Input image as numpy array
-        
+
         Returns:
             OCRResult with text, words, and confidence scores
         """
-        # Get detailed OCR data
-        data = pytesseract.image_to_data(
-            image,
-            lang=self.language,
-            config=self.config,
-            output_type=pytesseract.Output.DICT
-        )
-        
-        # Extract words with confidence scores
-        words = []
-        n_boxes = len(data['text'])
-        
-        for i in range(n_boxes):
-            text = data['text'][i].strip()
-            conf = float(data['conf'][i])
-            
-            # Skip empty text or low confidence
-            if text and conf > 0:
-                word = Word(
-                    text=text,
-                    confidence=conf / 100.0,  # Convert to 0-1 range
-                    x=data['left'][i],
-                    y=data['top'][i],
-                    width=data['width'][i],
-                    height=data['height'][i]
+        if not _TESSERACT_AVAILABLE:
+            return self._empty_ocr_result()
+
+        if image is None or (isinstance(image, np.ndarray) and image.size == 0):
+            logger.warning("extract_text: empty/None image")
+            return self._empty_ocr_result()
+
+        try:
+            # Ensure grayscale or BGR for Tesseract
+            if image.ndim == 3 and image.shape[2] == 4:
+                image = cv2.cvtColor(image, cv2.COLOR_BGRA2BGR)
+
+            data = pytesseract.image_to_data(
+                image,
+                lang=self.language,
+                config=self.config,
+                output_type=pytesseract.Output.DICT
+            )
+
+            words = []
+            n_boxes = len(data['text'])
+            for i in range(n_boxes):
+                text = data['text'][i].strip()
+                conf = float(data['conf'][i])
+                if text and conf > 0:
+                    words.append(Word(
+                        text=text,
+                        confidence=conf / 100.0,
+                        x=data['left'][i],
+                        y=data['top'][i],
+                        width=data['width'][i],
+                        height=data['height'][i]
+                    ))
+
+            try:
+                full_text = pytesseract.image_to_string(
+                    image, lang=self.language, config=self.config
                 )
-                words.append(word)
-        
-        # Get full text
-        full_text = pytesseract.image_to_string(
-            image,
-            lang=self.language,
-            config=self.config
-        )
-        
-        # Calculate average confidence
-        avg_confidence = sum(w.confidence for w in words) / len(words) if words else 0.0
-        
-        return OCRResult(
-            text=full_text,
-            words=words,
-            confidence=avg_confidence,
-            language=self.language
-        )
-    
-    def extract_structured_data(self, image: np.ndarray, 
-                               template: Optional[str] = None) -> StructuredOCRResult:
+            except Exception as e:
+                logger.warning(f"image_to_string failed, using word join: {e}")
+                full_text = " ".join(w.text for w in words)
+
+            avg_confidence = sum(w.confidence for w in words) / len(words) if words else 0.0
+            return OCRResult(text=full_text, words=words,
+                             confidence=avg_confidence, language=self.language)
+
+        except Exception as e:
+            logger.error(f"extract_text failed: {e}")
+            return self._empty_ocr_result()
+
+    def extract_structured_data(self, image: np.ndarray,
+                                template: Optional[str] = None) -> "StructuredOCRResult":
         """
-        Extract specific fields based on document template
-        
-        Args:
-            image: Input image
-            template: Document template type (currently unused, for future enhancement)
-        
-        Returns:
-            StructuredOCRResult with extracted items
+        Extract specific fields based on document template.
+        Never raises – returns empty StructuredOCRResult on any failure.
         """
-        # Extract all text first
-        ocr_result = self.extract_text(image)
-        
-        # Parse items from text
-        items = self._parse_work_order_items(ocr_result)
-        
-        # Calculate confidence scores for each field
-        confidence_scores = self._calculate_field_confidences(items, ocr_result.words)
-        
-        return StructuredOCRResult(
-            items=items,
-            confidence_scores=confidence_scores,
-            raw_text=ocr_result.text
-        )
+        try:
+            ocr_result = self.extract_text(image)
+            items = self._parse_work_order_items(ocr_result)
+            confidence_scores = self._calculate_field_confidences(items, ocr_result.words)
+            return StructuredOCRResult(items=items, confidence_scores=confidence_scores,
+                                       raw_text=ocr_result.text)
+        except Exception as e:
+            logger.error(f"extract_structured_data failed: {e}")
+            return self._empty_structured_result()
     
     def _parse_work_order_items(self, ocr_result: OCRResult) -> List[Dict[str, any]]:
         """

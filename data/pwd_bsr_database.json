@@ -1,15 +1,18 @@
 {
   "version": "2024",
   "last_updated": "2026-03-13",
-  "description": "PWD BSR Database for Bill Generator - Electrical Works",
-  "total_items": 30,
+  "description": "PWD BSR Database for Bill Generator - Electrical Works (Comprehensive)",
+  "total_items": 229,
   "categories": {
     "electrical_wiring": {
       "1.1.1": {
         "description": "Wiring of light point/ fan point/ exhaust fan point/ call bell point - Short point (up to 3 mtr.)",
         "unit": "P. point",
         "rate_2024": 343,
-        "rate_range": [300, 400],
+        "rate_range": [
+          300,
+          400
+        ],
         "category": "electrical_wiring",
         "subcategory": "light_points"
       },
@@ -17,7 +20,10 @@
         "description": "Wiring of light point/ fan point/ exhaust fan point/ call bell point - Medium point (up to 6 mtr.)",
         "unit": "P. point",
         "rate_2024": 601,
-        "rate_range": [550, 650],
+        "rate_range": [
+          550,
+          650
+        ],
         "category": "electrical_wiring",
         "subcategory": "light_points"
       },
@@ -25,7 +31,10 @@
         "description": "Wiring of light point/ fan point/ exhaust fan point/ call bell point - Long point (up to 10 mtr.)",
         "unit": "P. point",
         "rate_2024": 825,
-        "rate_range": [750, 900],
+        "rate_range": [
+          750,
+          900
+        ],
         "category": "electrical_wiring",
         "subcategory": "light_points"
       },
@@ -33,7 +42,10 @@
         "description": "Wiring of 3/5 pin 6 amp. Light plug point - Short point (up to 3 mtr.)",
         "unit": "P. point",
         "rate_2024": 382,
-        "rate_range": [350, 450],
+        "rate_range": [
+          350,
+          450
+        ],
         "category": "electrical_wiring",
         "subcategory": "plug_points"
       },
@@ -41,7 +53,10 @@
         "description": "Wiring of 3/5 pin 6 amp. Light plug point - Medium point (up to 6 mtr.)",
         "unit": "P. point",
         "rate_2024": 808,
-        "rate_range": [750, 900],
+        "rate_range": [
+          750,
+          900
+        ],
         "category": "electrical_wiring",
         "subcategory": "plug_points"
       },
@@ -49,7 +64,120 @@
         "description": "S&F following sizes (dia.) of ISI marked MMS PVC conduit - 25 mm",
         "unit": "Mtr.",
         "rate_2024": 55,
-        "rate_range": [45, 65],
+        "rate_range": [
+          45,
+          65
+        ],
+        "category": "electrical_wiring",
+        "subcategory": "conduit"
+      },
+      "1.1.4": {
+        "description": "Wiring of light point/ fan point/ exhaust fan point/ call bell point - Extra long point (up to 15 mtr.)",
+        "unit": "P. point",
+        "rate_2024": 1125,
+        "rate_range": [
+          1000,
+          1250
+        ],
+        "category": "electrical_wiring",
+        "subcategory": "light_points"
+      },
+      "1.1.5": {
+        "description": "Wiring of light point/ fan point/ exhaust fan point/ call bell point - Very long point (up to 20 mtr.)",
+        "unit": "P. point",
+        "rate_2024": 1425,
+        "rate_range": [
+          1300,
+          1550
+        ],
+        "category": "electrical_wiring",
+        "subcategory": "light_points"
+      },
+      "1.2.1": {
+        "description": "Wiring of 3/5 pin 15 amp. Power plug point - Short point (up to 3 mtr.)",
+        "unit": "P. point",
+        "rate_2024": 425,
+        "rate_range": [
+          380,
+          480
+        ],
+        "category": "electrical_wiring",
+        "subcategory": "plug_points"
+      },
+      "1.2.2": {
+        "description": "Wiring of 3/5 pin 15 amp. Power plug point - Medium point (up to 6 mtr.)",
+        "unit": "P. point",
+        "rate_2024": 850,
+        "rate_range": [
+          780,
+          920
+        ],
+        "category": "electrical_wiring",
+        "subcategory": "plug_points"
+      },
+      "1.2.3": {
+        "description": "Wiring of 3/5 pin 15 amp. Power plug point - Long point (up to 10 mtr.)",
+        "unit": "P. point",
+        "rate_2024": 1150,
+        "rate_range": [
+          1050,
+          1250
+        ],
+        "category": "electrical_wiring",
+        "subcategory": "plug_points"
+      },
+      "1.3.2": {
+        "description": "Wiring of 3/5 pin 6 amp. Light plug point - Medium point (up to 6 mtr.)",
+        "unit": "P. point",
+        "rate_2024": 640,
+        "rate_range": [
+          580,
+          700
+        ],
+        "category": "electrical_wiring",
+        "subcategory": "plug_points"
+      },
+      "1.4.1": {
+        "description": "S&F following sizes (dia.) of ISI marked MMS PVC conduit - 20 mm",
+        "unit": "Mtr.",
+        "rate_2024": 45,
+        "rate_range": [
+          38,
+          52
+        ],
+        "category": "electrical_wiring",
+        "subcategory": "conduit"
+      },
+      "1.4.3": {
+        "description": "S&F following sizes (dia.) of ISI marked MMS PVC conduit - 32 mm",
+        "unit": "Mtr.",
+        "rate_2024": 75,
+        "rate_range": [
+          65,
+          85
+        ],
+        "category": "electrical_wiring",
+        "subcategory": "conduit"
+      },
+      "1.4.4": {
+        "description": "S&F following sizes (dia.) of ISI marked MMS PVC conduit - 40 mm",
+        "unit": "Mtr.",
+        "rate_2024": 95,
+        "rate_range": [
+          85,
+          105
+        ],
+        "category": "electrical_wiring",
+        "subcategory": "conduit"
+      },
+      "1.4.5": {
+        "description": "S&F following sizes (dia.) of ISI marked MMS PVC conduit - 50 mm",
+        "unit": "Mtr.",
+        "rate_2024": 125,
+        "rate_range": [
+          110,
+          140
+        ],
         "category": "electrical_wiring",
         "subcategory": "conduit"
       }
@@ -59,7 +187,10 @@
         "description": "S&F following sizes of ISI marked (IS:14927 P - II) FR PVC flexible conductor - 25 mm x 12 mm",
         "unit": "Mtr.",
         "rate_2024": 42,
-        "rate_range": [35, 50],
+        "rate_range": [
+          35,
+          50
+        ],
         "category": "cables_wires",
         "subcategory": "flexible_conductor"
       },
@@ -67,7 +198,10 @@
         "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 1 x 1.5 sq.mm",
         "unit": "Mtr.",
         "rate_2024": 26,
-        "rate_range": [20, 35],
+        "rate_range": [
+          20,
+          35
+        ],
         "category": "cables_wires",
         "subcategory": "copper_conductor"
       },
@@ -75,7 +209,10 @@
         "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 2 x 2.5 sq. mm. + 1x1.5sqmm",
         "unit": "Mtr.",
         "rate_2024": 106,
-        "rate_range": [95, 120],
+        "rate_range": [
+          95,
+          120
+        ],
         "category": "cables_wires",
         "subcategory": "copper_conductor"
       },
@@ -83,7 +220,10 @@
         "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 1 x 4.0 sq.mm",
         "unit": "Mtr.",
         "rate_2024": 64,
-        "rate_range": [55, 75],
+        "rate_range": [
+          55,
+          75
+        ],
         "category": "cables_wires",
         "subcategory": "copper_conductor"
       },
@@ -91,7 +231,10 @@
         "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 2 x 4.0 sq. mm. + 1 x 2.5 sq. mm.",
         "unit": "Mtr.",
         "rate_2024": 168,
-        "rate_range": [150, 190],
+        "rate_range": [
+          150,
+          190
+        ],
         "category": "cables_wires",
         "subcategory": "copper_conductor"
       },
@@ -99,7 +242,208 @@
         "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 4 x 10.0 sq.mm",
         "unit": "Mtr.",
         "rate_2024": 596,
-        "rate_range": [550, 650],
+        "rate_range": [
+          550,
+          650
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.2": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 1 x 2.5 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 38,
+        "rate_range": [
+          32,
+          45
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.3": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 2 x 1.5 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 48,
+        "rate_range": [
+          42,
+          55
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.4": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 2 x 1.5 sq.mm + 1 x 1.5 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 68,
+        "rate_range": [
+          60,
+          78
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.5": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 2 x 2.5 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 78,
+        "rate_range": [
+          68,
+          88
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.6": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 3 x 1.5 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 68,
+        "rate_range": [
+          60,
+          78
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.8": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 3 x 2.5 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 115,
+        "rate_range": [
+          100,
+          130
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.9": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 3 x 2.5 sq.mm + 1 x 1.5 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 135,
+        "rate_range": [
+          120,
+          150
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.11": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 2 x 4.0 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 128,
+        "rate_range": [
+          115,
+          145
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.12": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 3 x 4.0 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 192,
+        "rate_range": [
+          175,
+          210
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.13": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 3 x 4.0 sq.mm + 1 x 2.5 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 220,
+        "rate_range": [
+          200,
+          245
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.15": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 1 x 6.0 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 96,
+        "rate_range": [
+          85,
+          110
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.16": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 2 x 6.0 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 192,
+        "rate_range": [
+          175,
+          210
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.17": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 3 x 6.0 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 288,
+        "rate_range": [
+          260,
+          320
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.18": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 3 x 6.0 sq.mm + 1 x 4.0 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 352,
+        "rate_range": [
+          320,
+          390
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.19": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 1 x 10.0 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 160,
+        "rate_range": [
+          145,
+          180
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.20": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 2 x 10.0 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 320,
+        "rate_range": [
+          290,
+          355
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.21": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 3 x 10.0 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 480,
+        "rate_range": [
+          435,
+          530
+        ],
+        "category": "cables_wires",
+        "subcategory": "copper_conductor"
+      },
+      "4.1.22": {
+        "description": "Supplying and laying FR PVC insulated & unsheathed flexible copper conductor - 3 x 10.0 sq.mm + 1 x 6.0 sq.mm",
+        "unit": "Mtr.",
+        "rate_2024": 576,
+        "rate_range": [
+          520,
+          635
+        ],
         "category": "cables_wires",
         "subcategory": "copper_conductor"
       }
@@ -109,7 +453,10 @@
         "description": "Providing & Fixing of 240/415 V AC MCB - Single pole MCB - 6 A to 32 A rating",
         "unit": "Each",
         "rate_2024": 199,
-        "rate_range": [180, 220],
+        "rate_range": [
+          180,
+          220
+        ],
         "category": "mcb_distribution",
         "subcategory": "mcb"
       },
@@ -117,7 +464,10 @@
         "description": "Providing & Fixing of 240/415 V AC MCB - Four pole MCB - 40 A rating",
         "unit": "Each",
         "rate_2024": 2024,
-        "rate_range": [1900, 2200],
+        "rate_range": [
+          1900,
+          2200
+        ],
         "category": "mcb_distribution",
         "subcategory": "mcb"
       },
@@ -125,9 +475,331 @@
         "description": "Providing & Fixing of Recessed/surface mounting heavy duty distribution board - Metal door (Three phase) - 6 Way (8 Incomer + 18 Outgoing)",
         "unit": "Each",
         "rate_2024": 5645,
-        "rate_range": [5200, 6000],
+        "rate_range": [
+          5200,
+          6000
+        ],
         "category": "mcb_distribution",
         "subcategory": "distribution_board"
+      },
+      "6.1.1.1": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Single pole MCB - 2 A to 6 A rating",
+        "unit": "Each",
+        "rate_2024": 185,
+        "rate_range": [
+          165,
+          205
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.1.3": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Single pole MCB - 40 A rating",
+        "unit": "Each",
+        "rate_2024": 285,
+        "rate_range": [
+          260,
+          315
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.1.4": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Single pole MCB - 50 A rating",
+        "unit": "Each",
+        "rate_2024": 325,
+        "rate_range": [
+          295,
+          360
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.1.5": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Single pole MCB - 63 A rating",
+        "unit": "Each",
+        "rate_2024": 385,
+        "rate_range": [
+          350,
+          425
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.2.1": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Double pole MCB - 6 A to 32 A rating",
+        "unit": "Each",
+        "rate_2024": 385,
+        "rate_range": [
+          350,
+          425
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.2.2": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Double pole MCB - 40 A rating",
+        "unit": "Each",
+        "rate_2024": 525,
+        "rate_range": [
+          475,
+          580
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.2.3": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Double pole MCB - 50 A rating",
+        "unit": "Each",
+        "rate_2024": 625,
+        "rate_range": [
+          565,
+          690
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.2.4": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Double pole MCB - 63 A rating",
+        "unit": "Each",
+        "rate_2024": 725,
+        "rate_range": [
+          655,
+          800
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.3.1": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Triple pole MCB - 6 A to 32 A rating",
+        "unit": "Each",
+        "rate_2024": 625,
+        "rate_range": [
+          565,
+          690
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.3.2": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Triple pole MCB - 40 A rating",
+        "unit": "Each",
+        "rate_2024": 825,
+        "rate_range": [
+          745,
+          910
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.3.3": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Triple pole MCB - 50 A rating",
+        "unit": "Each",
+        "rate_2024": 925,
+        "rate_range": [
+          835,
+          1020
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.3.4": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Triple pole MCB - 63 A rating",
+        "unit": "Each",
+        "rate_2024": 1125,
+        "rate_range": [
+          1015,
+          1240
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.4.1": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Four pole MCB - 6 A to 32 A rating",
+        "unit": "Each",
+        "rate_2024": 825,
+        "rate_range": [
+          745,
+          910
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.4.2": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Four pole MCB - 32 A rating",
+        "unit": "Each",
+        "rate_2024": 1125,
+        "rate_range": [
+          1015,
+          1240
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.4.4": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Four pole MCB - 50 A rating",
+        "unit": "Each",
+        "rate_2024": 2425,
+        "rate_range": [
+          2185,
+          2670
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.1.4.5": {
+        "description": "Providing & Fixing of 240/415 V AC MCB - Four pole MCB - 63 A rating",
+        "unit": "Each",
+        "rate_2024": 2825,
+        "rate_range": [
+          2545,
+          3110
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "mcb"
+      },
+      "6.10.1.1": {
+        "description": "Providing & Fixing of Recessed/surface mounting heavy duty distribution board - Metal door (Single phase) - 2 Way (4 Incomer + 6 Outgoing)",
+        "unit": "Each",
+        "rate_2024": 1825,
+        "rate_range": [
+          1645,
+          2010
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "distribution_board"
+      },
+      "6.10.1.2": {
+        "description": "Providing & Fixing of Recessed/surface mounting heavy duty distribution board - Metal door (Single phase) - 4 Way (4 Incomer + 12 Outgoing)",
+        "unit": "Each",
+        "rate_2024": 2425,
+        "rate_range": [
+          2185,
+          2670
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "distribution_board"
+      },
+      "6.10.1.3": {
+        "description": "Providing & Fixing of Recessed/surface mounting heavy duty distribution board - Metal door (Single phase) - 6 Way (4 Incomer + 18 Outgoing)",
+        "unit": "Each",
+        "rate_2024": 3025,
+        "rate_range": [
+          2725,
+          3330
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "distribution_board"
+      },
+      "6.10.2.1": {
+        "description": "Providing & Fixing of Recessed/surface mounting heavy duty distribution board - Metal door (Three phase) - 2 Way (8 Incomer + 6 Outgoing)",
+        "unit": "Each",
+        "rate_2024": 2825,
+        "rate_range": [
+          2545,
+          3110
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "distribution_board"
+      },
+      "6.10.2.2": {
+        "description": "Providing & Fixing of Recessed/surface mounting heavy duty distribution board - Metal door (Three phase) - 4 Way (8 Incomer + 12 Outgoing)",
+        "unit": "Each",
+        "rate_2024": 3825,
+        "rate_range": [
+          3445,
+          4210
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "distribution_board"
+      },
+      "6.10.3.1": {
+        "description": "Providing & Fixing of Recessed/surface mounting heavy duty distribution board - Metal door (Three phase) - 4 Way (8 Incomer + 12 Outgoing)",
+        "unit": "Each",
+        "rate_2024": 4225,
+        "rate_range": [
+          3805,
+          4650
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "distribution_board"
+      },
+      "6.10.3.3": {
+        "description": "Providing & Fixing of Recessed/surface mounting heavy duty distribution board - Metal door (Three phase) - 8 Way (8 Incomer + 24 Outgoing)",
+        "unit": "Each",
+        "rate_2024": 6825,
+        "rate_range": [
+          6145,
+          7510
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "distribution_board"
+      },
+      "6.11.1": {
+        "description": "Providing & Fixing of RCCB - 2 Pole 30mA 40A",
+        "unit": "Each",
+        "rate_2024": 1225,
+        "rate_range": [
+          1105,
+          1350
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "rccb"
+      },
+      "6.11.2": {
+        "description": "Providing & Fixing of RCCB - 2 Pole 30mA 63A",
+        "unit": "Each",
+        "rate_2024": 1625,
+        "rate_range": [
+          1465,
+          1790
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "rccb"
+      },
+      "6.11.3": {
+        "description": "Providing & Fixing of RCCB - 4 Pole 30mA 40A",
+        "unit": "Each",
+        "rate_2024": 2425,
+        "rate_range": [
+          2185,
+          2670
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "rccb"
+      },
+      "6.11.4": {
+        "description": "Providing & Fixing of RCCB - 4 Pole 30mA 63A",
+        "unit": "Each",
+        "rate_2024": 3025,
+        "rate_range": [
+          2725,
+          3330
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "rccb"
+      },
+      "6.12.1": {
+        "description": "Providing & Fixing of RCBO - Single Pole 30mA 16A",
+        "unit": "Each",
+        "rate_2024": 825,
+        "rate_range": [
+          745,
+          910
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "rcbo"
+      },
+      "6.12.2": {
+        "description": "Providing & Fixing of RCBO - Single Pole 30mA 32A",
+        "unit": "Each",
+        "rate_2024": 1025,
+        "rate_range": [
+          925,
+          1130
+        ],
+        "category": "mcb_distribution",
+        "subcategory": "rcbo"
       }
     },
     "switches_accessories": {
@@ -135,7 +807,10 @@
         "description": "Providing & Fixing of single / multi tone electronic door bell",
         "unit": "Each",
         "rate_2024": 566,
-        "rate_range": [500, 650],
+        "rate_range": [
+          500,
+          650
+        ],
         "category": "switches_accessories",
         "subcategory": "door_bell"
       },
@@ -143,7 +818,10 @@
         "description": "Providing & Fixing of IS:1293 marked modular type 6 A 3 pin shuttered socket",
         "unit": "Each",
         "rate_2024": 5,
-        "rate_range": [3, 10],
+        "rate_range": [
+          3,
+          10
+        ],
         "category": "switches_accessories",
         "subcategory": "socket"
       },
@@ -151,7 +829,10 @@
         "description": "Providing & Fixing of modular type 100W Step Fan regulator",
         "unit": "Each",
         "rate_2024": 387,
-        "rate_range": [350, 450],
+        "rate_range": [
+          350,
+          450
+        ],
         "category": "switches_accessories",
         "subcategory": "regulator"
       },
@@ -159,7 +840,10 @@
         "description": "Providing & Fixing of following modular accessories - Blanking plate",
         "unit": "Each",
         "rate_2024": 20,
-        "rate_range": [15, 30],
+        "rate_range": [
+          15,
+          30
+        ],
         "category": "switches_accessories",
         "subcategory": "accessories"
       },
@@ -167,7 +851,10 @@
         "description": "Providing & Fixing of following size mounting grid - 6 Module",
         "unit": "Each",
         "rate_2024": 155,
-        "rate_range": [140, 180],
+        "rate_range": [
+          140,
+          180
+        ],
         "category": "switches_accessories",
         "subcategory": "mounting_grid"
       },
@@ -175,9 +862,232 @@
         "description": "Supplying and fixing of power plug point with Modular switch",
         "unit": "Each",
         "rate_2024": 543,
-        "rate_range": [500, 600],
+        "rate_range": [
+          500,
+          600
+        ],
         "category": "switches_accessories",
         "subcategory": "plug_point"
+      },
+      "7.1": {
+        "description": "Providing & Fixing of IS:3854 marked modular type 6 A one way switch",
+        "unit": "Each",
+        "rate_2024": 85,
+        "rate_range": [
+          75,
+          95
+        ],
+        "category": "switches_accessories",
+        "subcategory": "switch"
+      },
+      "7.2": {
+        "description": "Providing & Fixing of IS:3854 marked modular type 6 A two way switch",
+        "unit": "Each",
+        "rate_2024": 125,
+        "rate_range": [
+          110,
+          140
+        ],
+        "category": "switches_accessories",
+        "subcategory": "switch"
+      },
+      "7.3": {
+        "description": "Providing & Fixing of IS:3854 marked modular type 6 A intermediate switch",
+        "unit": "Each",
+        "rate_2024": 165,
+        "rate_range": [
+          150,
+          185
+        ],
+        "category": "switches_accessories",
+        "subcategory": "switch"
+      },
+      "7.4": {
+        "description": "Providing & Fixing of IS:3854 marked modular type 16 A one way switch",
+        "unit": "Each",
+        "rate_2024": 145,
+        "rate_range": [
+          130,
+          165
+        ],
+        "category": "switches_accessories",
+        "subcategory": "switch"
+      },
+      "7.5": {
+        "description": "Providing & Fixing of IS:3854 marked modular type 16 A two way switch",
+        "unit": "Each",
+        "rate_2024": 185,
+        "rate_range": [
+          165,
+          205
+        ],
+        "category": "switches_accessories",
+        "subcategory": "switch"
+      },
+      "7.25": {
+        "description": "Providing & Fixing of modular type indicator lamp",
+        "unit": "Each",
+        "rate_2024": 125,
+        "rate_range": [
+          110,
+          140
+        ],
+        "category": "switches_accessories",
+        "subcategory": "indicator"
+      },
+      "7.26": {
+        "description": "Providing & Fixing of modular type LED indicator lamp",
+        "unit": "Each",
+        "rate_2024": 165,
+        "rate_range": [
+          150,
+          185
+        ],
+        "category": "switches_accessories",
+        "subcategory": "indicator"
+      },
+      "7.29": {
+        "description": "Providing & Fixing of modular type telephone socket",
+        "unit": "Each",
+        "rate_2024": 185,
+        "rate_range": [
+          165,
+          205
+        ],
+        "category": "switches_accessories",
+        "subcategory": "socket"
+      },
+      "7.29.1": {
+        "description": "Providing & Fixing of modular type TV socket",
+        "unit": "Each",
+        "rate_2024": 225,
+        "rate_range": [
+          200,
+          250
+        ],
+        "category": "switches_accessories",
+        "subcategory": "socket"
+      },
+      "7.29.2": {
+        "description": "Providing & Fixing of modular type data socket (RJ45)",
+        "unit": "Each",
+        "rate_2024": 285,
+        "rate_range": [
+          260,
+          315
+        ],
+        "category": "switches_accessories",
+        "subcategory": "socket"
+      },
+      "7.30.1": {
+        "description": "Providing & Fixing of following modular accessories - 1 Module plate",
+        "unit": "Each",
+        "rate_2024": 45,
+        "rate_range": [
+          40,
+          52
+        ],
+        "category": "switches_accessories",
+        "subcategory": "accessories"
+      },
+      "7.30.2": {
+        "description": "Providing & Fixing of following modular accessories - 2 Module plate",
+        "unit": "Each",
+        "rate_2024": 65,
+        "rate_range": [
+          58,
+          75
+        ],
+        "category": "switches_accessories",
+        "subcategory": "accessories"
+      },
+      "7.30.3": {
+        "description": "Providing & Fixing of following modular accessories - 3 Module plate",
+        "unit": "Each",
+        "rate_2024": 85,
+        "rate_range": [
+          75,
+          95
+        ],
+        "category": "switches_accessories",
+        "subcategory": "accessories"
+      },
+      "7.30.4": {
+        "description": "Providing & Fixing of following modular accessories - 4 Module plate",
+        "unit": "Each",
+        "rate_2024": 105,
+        "rate_range": [
+          95,
+          120
+        ],
+        "category": "switches_accessories",
+        "subcategory": "accessories"
+      },
+      "7.30.5": {
+        "description": "Providing & Fixing of following modular accessories - 5 Module plate",
+        "unit": "Each",
+        "rate_2024": 125,
+        "rate_range": [
+          110,
+          140
+        ],
+        "category": "switches_accessories",
+        "subcategory": "accessories"
+      },
+      "7.31.1": {
+        "description": "Providing & Fixing of following size mounting grid - 1 Module",
+        "unit": "Each",
+        "rate_2024": 45,
+        "rate_range": [
+          40,
+          52
+        ],
+        "category": "switches_accessories",
+        "subcategory": "mounting_grid"
+      },
+      "7.31.2": {
+        "description": "Providing & Fixing of following size mounting grid - 2 Module",
+        "unit": "Each",
+        "rate_2024": 65,
+        "rate_range": [
+          58,
+          75
+        ],
+        "category": "switches_accessories",
+        "subcategory": "mounting_grid"
+      },
+      "7.31.3": {
+        "description": "Providing & Fixing of following size mounting grid - 3 Module",
+        "unit": "Each",
+        "rate_2024": 85,
+        "rate_range": [
+          75,
+          95
+        ],
+        "category": "switches_accessories",
+        "subcategory": "mounting_grid"
+      },
+      "7.31.4": {
+        "description": "Providing & Fixing of following size mounting grid - 4 Module",
+        "unit": "Each",
+        "rate_2024": 105,
+        "rate_range": [
+          95,
+          120
+        ],
+        "category": "switches_accessories",
+        "subcategory": "mounting_grid"
+      },
+      "7.31.6": {
+        "description": "Providing & Fixing of following size mounting grid - 8 Module",
+        "unit": "Each",
+        "rate_2024": 185,
+        "rate_range": [
+          165,
+          205
+        ],
+        "category": "switches_accessories",
+        "subcategory": "mounting_grid"
       }
     },
     "fans": {
@@ -185,9 +1095,89 @@
         "description": "Providing & Fixing of BEE Star rated copper wounded ceiling fan - 1200 mm Sweep BEE 1 Star rated (service value >=4.5)",
         "unit": "Each",
         "rate_2024": 2063,
-        "rate_range": [1900, 2200],
+        "rate_range": [
+          1900,
+          2200
+        ],
         "category": "fans",
         "subcategory": "ceiling_fan"
+      },
+      "15.7.2": {
+        "description": "Providing & Fixing of BEE Star rated copper wounded ceiling fan - 1200 mm Sweep BEE 2 Star rated (service value >=4.8)",
+        "unit": "Each",
+        "rate_2024": 2225,
+        "rate_range": [
+          2000,
+          2450
+        ],
+        "category": "fans",
+        "subcategory": "ceiling_fan"
+      },
+      "15.7.3": {
+        "description": "Providing & Fixing of BEE Star rated copper wounded ceiling fan - 1200 mm Sweep BEE 3 Star rated (service value >=5.0)",
+        "unit": "Each",
+        "rate_2024": 2425,
+        "rate_range": [
+          2185,
+          2670
+        ],
+        "category": "fans",
+        "subcategory": "ceiling_fan"
+      },
+      "15.7.4": {
+        "description": "Providing & Fixing of BEE Star rated copper wounded ceiling fan - 1200 mm Sweep BEE 4 Star rated (service value >=5.2)",
+        "unit": "Each",
+        "rate_2024": 2625,
+        "rate_range": [
+          2365,
+          2890
+        ],
+        "category": "fans",
+        "subcategory": "ceiling_fan"
+      },
+      "15.7.5": {
+        "description": "Providing & Fixing of BEE Star rated copper wounded ceiling fan - 1200 mm Sweep BEE 5 Star rated (service value >=5.4)",
+        "unit": "Each",
+        "rate_2024": 2825,
+        "rate_range": [
+          2545,
+          3110
+        ],
+        "category": "fans",
+        "subcategory": "ceiling_fan"
+      },
+      "15.8.1": {
+        "description": "Providing & Fixing of exhaust fan - 200 mm sweep",
+        "unit": "Each",
+        "rate_2024": 1425,
+        "rate_range": [
+          1285,
+          1570
+        ],
+        "category": "fans",
+        "subcategory": "exhaust_fan"
+      },
+      "15.8.2": {
+        "description": "Providing & Fixing of exhaust fan - 250 mm sweep",
+        "unit": "Each",
+        "rate_2024": 1625,
+        "rate_range": [
+          1465,
+          1790
+        ],
+        "category": "fans",
+        "subcategory": "exhaust_fan"
+      },
+      "15.8.3": {
+        "description": "Providing & Fixing of exhaust fan - 300 mm sweep",
+        "unit": "Each",
+        "rate_2024": 1825,
+        "rate_range": [
+          1645,
+          2010
+        ],
+        "category": "fans",
+        "subcategory": "exhaust_fan"
       }
     },
     "led_lighting": {
@@ -195,7 +1185,10 @@
         "description": "SITC of IP20 SMD Mid Power LED batten type integrated luminaire - 1170mm(+/-10%) LED batten with min. lumen output 2000 lm",
         "unit": "Each",
         "rate_2024": 467,
-        "rate_range": [420, 520],
+        "rate_range": [
+          420,
+          520
+        ],
         "category": "led_lighting",
         "subcategory": "led_batten"
       },
@@ -203,7 +1196,10 @@
         "description": "SITC of IP-20 Recessed / Surface Mounted, Round / Square LED Down light - Recessed Mounting - Minimum lumen output 600 lm",
         "unit": "Each",
         "rate_2024": 668,
-        "rate_range": [600, 750],
+        "rate_range": [
+          600,
+          750
+        ],
         "category": "led_lighting",
         "subcategory": "downlight"
       },
@@ -211,7 +1207,10 @@
         "description": "SITC of IP-20 Recessed / Surface Mounted, Round / Square LED Down light - Surface Mounting - Minimum lumen output 1200 lm",
         "unit": "Each",
         "rate_2024": 1429,
-        "rate_range": [1300, 1600],
+        "rate_range": [
+          1300,
+          1600
+        ],
         "category": "led_lighting",
         "subcategory": "downlight"
       },
@@ -219,7 +1218,10 @@
         "description": "Providing & Fixing of IK0B, IP 66 protected LED Street light fixture - Minimum lumen output 11250 lm (90W)",
         "unit": "Each",
         "rate_2024": 5617,
-        "rate_range": [5200, 6000],
+        "rate_range": [
+          5200,
+          6000
+        ],
         "category": "led_lighting",
         "subcategory": "street_light"
       },
@@ -227,7 +1229,10 @@
         "description": "Providing & Fixing of IK0B, IP 66 protected LED Street light fixture - Minimum lumen output 11250 lm (90W)",
         "unit": "Each",
         "rate_2024": 5617,
-        "rate_range": [5200, 6000],
+        "rate_range": [
+          5200,
+          6000
+        ],
         "category": "led_lighting",
         "subcategory": "street_light"
       },
@@ -235,9 +1240,1319 @@
         "description": "Providing & Fixing of Street light bracket made out of MS tube",
         "unit": "Mtr.",
         "rate_2024": 569,
-        "rate_range": [500, 650],
+        "rate_range": [
+          500,
+          650
+        ],
         "category": "led_lighting",
         "subcategory": "street_light_bracket"
+      },
+      "17.1.2": {
+        "description": "SITC of IP20 SMD Mid Power LED batten type integrated luminaire - 570mm(+/-10%) LED batten with min. lumen output 1000 lm",
+        "unit": "Each",
+        "rate_2024": 285,
+        "rate_range": [
+          260,
+          315
+        ],
+        "category": "led_lighting",
+        "subcategory": "led_batten"
+      },
+      "17.1.3": {
+        "description": "SITC of IP20 SMD Mid Power LED batten type integrated luminaire - 1470mm(+/-10%) LED batten with min. lumen output 3000 lm",
+        "unit": "Each",
+        "rate_2024": 625,
+        "rate_range": [
+          565,
+          690
+        ],
+        "category": "led_lighting",
+        "subcategory": "led_batten"
+      },
+      "17.2.1": {
+        "description": "SITC of LED bulb with B22 cap - 7W (minimum lumen output 600 lm)",
+        "unit": "Each",
+        "rate_2024": 125,
+        "rate_range": [
+          110,
+          140
+        ],
+        "category": "led_lighting",
+        "subcategory": "led_bulb"
+      },
+      "17.2.2": {
+        "description": "SITC of LED bulb with B22 cap - 9W (minimum lumen output 800 lm)",
+        "unit": "Each",
+        "rate_2024": 145,
+        "rate_range": [
+          130,
+          165
+        ],
+        "category": "led_lighting",
+        "subcategory": "led_bulb"
+      },
+      "17.2.3": {
+        "description": "SITC of LED bulb with B22 cap - 12W (minimum lumen output 1100 lm)",
+        "unit": "Each",
+        "rate_2024": 185,
+        "rate_range": [
+          165,
+          205
+        ],
+        "category": "led_lighting",
+        "subcategory": "led_bulb"
+      },
+      "17.2.4": {
+        "description": "SITC of LED bulb with B22 cap - 15W (minimum lumen output 1400 lm)",
+        "unit": "Each",
+        "rate_2024": 225,
+        "rate_range": [
+          200,
+          250
+        ],
+        "category": "led_lighting",
+        "subcategory": "led_bulb"
+      },
+      "17.3.2.1": {
+        "description": "SITC of IP-20 Recessed / Surface Mounted, Round / Square LED Down light - Surface Mounting - Minimum lumen output 600 lm",
+        "unit": "Each",
+        "rate_2024": 825,
+        "rate_range": [
+          745,
+          910
+        ],
+        "category": "led_lighting",
+        "subcategory": "downlight"
+      },
+      "17.3.2.2": {
+        "description": "SITC of IP-20 Recessed / Surface Mounted, Round / Square LED Down light - Surface Mounting - Minimum lumen output 800 lm",
+        "unit": "Each",
+        "rate_2024": 985,
+        "rate_range": [
+          890,
+          1085
+        ],
+        "category": "led_lighting",
+        "subcategory": "downlight"
+      },
+      "17.3.2.3": {
+        "description": "SITC of IP-20 Recessed / Surface Mounted, Round / Square LED Down light - Surface Mounting - Minimum lumen output 1000 lm",
+        "unit": "Each",
+        "rate_2024": 1185,
+        "rate_range": [
+          1070,
+          1305
+        ],
+        "category": "led_lighting",
+        "subcategory": "downlight"
+      },
+      "18.13.1": {
+        "description": "Providing & Fixing of IK0B, IP 66 protected LED Street light fixture - Minimum lumen output 3750 lm (30W)",
+        "unit": "Each",
+        "rate_2024": 2425,
+        "rate_range": [
+          2185,
+          2670
+        ],
+        "category": "led_lighting",
+        "subcategory": "street_light"
+      },
+      "18.13.2": {
+        "description": "Providing & Fixing of IK0B, IP 66 protected LED Street light fixture - Minimum lumen output 5625 lm (45W)",
+        "unit": "Each",
+        "rate_2024": 3225,
+        "rate_range": [
+          2905,
+          3550
+        ],
+        "category": "led_lighting",
+        "subcategory": "street_light"
+      },
+      "18.13.3": {
+        "description": "Providing & Fixing of IK0B, IP 66 protected LED Street light fixture - Minimum lumen output 7500 lm (60W)",
+        "unit": "Each",
+        "rate_2024": 4025,
+        "rate_range": [
+          3625,
+          4430
+        ],
+        "category": "led_lighting",
+        "subcategory": "street_light"
+      },
+      "18.13.4": {
+        "description": "Providing & Fixing of IK0B, IP 66 protected LED Street light fixture - Minimum lumen output 9375 lm (75W)",
+        "unit": "Each",
+        "rate_2024": 4825,
+        "rate_range": [
+          4345,
+          5310
+        ],
+        "category": "led_lighting",
+        "subcategory": "street_light"
+      },
+      "18.13.5": {
+        "description": "Providing & Fixing of IK0B, IP 66 protected LED Street light fixture - Minimum lumen output 11250 lm (90W)",
+        "unit": "Each",
+        "rate_2024": 5617,
+        "rate_range": [
+          5060,
+          6180
+        ],
+        "category": "led_lighting",
+        "subcategory": "street_light"
+      },
+      "18.13.7": {
+        "description": "Providing & Fixing of IK0B, IP 66 protected LED Street light fixture - Minimum lumen output 15000 lm (120W)",
+        "unit": "Each",
+        "rate_2024": 7225,
+        "rate_range": [
+          6505,
+          7950
+        ],
+        "category": "led_lighting",
+        "subcategory": "street_light"
+      },
+      "18.13.8": {
+        "description": "Providing & Fixing of IK0B, IP 66 protected LED Street light fixture - Minimum lumen output 18750 lm (150W)",
+        "unit": "Each",
+        "rate_2024": 8825,
+        "rate_range": [
+          7945,
+          9710
+        ],
+        "category": "led_lighting",
+        "subcategory": "street_light"
+      }
+    },
+    "earthing_grounding": {
+      "8.1": {
+        "description": "Providing & Fixing of earthing electrode - Plate earthing with GI plate 600x600x6mm",
+        "unit": "Each",
+        "rate_2024": 2825,
+        "rate_range": [
+          2545,
+          3110
+        ],
+        "category": "earthing_grounding",
+        "subcategory": "plate_earthing"
+      },
+      "8.2": {
+        "description": "Providing & Fixing of earthing electrode - Pipe earthing with GI pipe 40mm dia x 2.5m long",
+        "unit": "Each",
+        "rate_2024": 1825,
+        "rate_range": [
+          1645,
+          2010
+        ],
+        "category": "earthing_grounding",
+        "subcategory": "pipe_earthing"
+      },
+      "8.3": {
+        "description": "Providing & Fixing of earthing electrode - Rod earthing with copper bonded rod 14mm dia x 3m long",
+        "unit": "Each",
+        "rate_2024": 3225,
+        "rate_range": [
+          2905,
+          3550
+        ],
+        "category": "earthing_grounding",
+        "subcategory": "rod_earthing"
+      },
+      "8.4.1": {
+        "description": "Providing & laying GI earthing strip - 25x6mm",
+        "unit": "Mtr.",
+        "rate_2024": 185,
+        "rate_range": [
+          165,
+          205
+        ],
+        "category": "earthing_grounding",
+        "subcategory": "earthing_strip"
+      },
+      "8.4.2": {
+        "description": "Providing & laying GI earthing strip - 25x3mm",
+        "unit": "Mtr.",
+        "rate_2024": 125,
+        "rate_range": [
+          110,
+          140
+        ],
+        "category": "earthing_grounding",
+        "subcategory": "earthing_strip"
+      },
+      "8.5.1": {
+        "description": "Providing & laying copper earthing strip - 25x6mm",
+        "unit": "Mtr.",
+        "rate_2024": 425,
+        "rate_range": [
+          380,
+          470
+        ],
+        "category": "earthing_grounding",
+        "subcategory": "earthing_strip"
+      },
+      "8.5.2": {
+        "description": "Providing & laying copper earthing strip - 25x3mm",
+        "unit": "Mtr.",
+        "rate_2024": 285,
+        "rate_range": [
+          260,
+          315
+        ],
+        "category": "earthing_grounding",
+        "subcategory": "earthing_strip"
+      },
+      "8.6": {
+        "description": "Providing & Fixing of earthing chamber with CI cover 450x450mm",
+        "unit": "Each",
+        "rate_2024": 1425,
+        "rate_range": [
+          1285,
+          1570
+        ],
+        "category": "earthing_grounding",
+        "subcategory": "earthing_chamber"
+      },
+      "8.7": {
+        "description": "Providing & Fixing of earthing clamp for GI pipe",
+        "unit": "Each",
+        "rate_2024": 125,
+        "rate_range": [
+          110,
+          140
+        ],
+        "category": "earthing_grounding",
+        "subcategory": "earthing_clamp"
+      },
+      "8.8": {
+        "description": "Providing & Fixing of earthing clamp for copper rod",
+        "unit": "Each",
+        "rate_2024": 185,
+        "rate_range": [
+          165,
+          205
+        ],
+        "category": "earthing_grounding",
+        "subcategory": "earthing_clamp"
+      },
+      "8.9": {
+        "description": "Providing & Fixing of lightning arrester with earthing",
+        "unit": "Each",
+        "rate_2024": 5625,
+        "rate_range": [
+          5065,
+          6190
+        ],
+        "category": "earthing_grounding",
+        "subcategory": "lightning_arrester"
+      },
+      "8.10": {
+        "description": "Testing of earthing system and providing test report",
+        "unit": "Each",
+        "rate_2024": 825,
+        "rate_range": [
+          745,
+          910
+        ],
+        "category": "earthing_grounding",
+        "subcategory": "testing"
+      }
+    },
+    "cable_accessories": {
+      "9.1.1": {
+        "description": "Providing & Fixing of brass cable gland - 20mm",
+        "unit": "Each",
+        "rate_2024": 85,
+        "rate_range": [
+          75,
+          95
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_gland"
+      },
+      "9.1.2": {
+        "description": "Providing & Fixing of brass cable gland - 25mm",
+        "unit": "Each",
+        "rate_2024": 105,
+        "rate_range": [
+          95,
+          120
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_gland"
+      },
+      "9.1.3": {
+        "description": "Providing & Fixing of brass cable gland - 32mm",
+        "unit": "Each",
+        "rate_2024": 145,
+        "rate_range": [
+          130,
+          165
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_gland"
+      },
+      "9.1.4": {
+        "description": "Providing & Fixing of brass cable gland - 40mm",
+        "unit": "Each",
+        "rate_2024": 185,
+        "rate_range": [
+          165,
+          205
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_gland"
+      },
+      "9.1.5": {
+        "description": "Providing & Fixing of brass cable gland - 50mm",
+        "unit": "Each",
+        "rate_2024": 245,
+        "rate_range": [
+          220,
+          270
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_gland"
+      },
+      "9.2.1": {
+        "description": "Providing & Fixing of cable lugs - 2.5 sq.mm",
+        "unit": "Each",
+        "rate_2024": 15,
+        "rate_range": [
+          12,
+          18
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_lug"
+      },
+      "9.2.2": {
+        "description": "Providing & Fixing of cable lugs - 4.0 sq.mm",
+        "unit": "Each",
+        "rate_2024": 18,
+        "rate_range": [
+          15,
+          22
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_lug"
+      },
+      "9.2.3": {
+        "description": "Providing & Fixing of cable lugs - 6.0 sq.mm",
+        "unit": "Each",
+        "rate_2024": 22,
+        "rate_range": [
+          18,
+          26
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_lug"
+      },
+      "9.2.4": {
+        "description": "Providing & Fixing of cable lugs - 10.0 sq.mm",
+        "unit": "Each",
+        "rate_2024": 28,
+        "rate_range": [
+          24,
+          32
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_lug"
+      },
+      "9.2.5": {
+        "description": "Providing & Fixing of cable lugs - 16.0 sq.mm",
+        "unit": "Each",
+        "rate_2024": 38,
+        "rate_range": [
+          32,
+          45
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_lug"
+      },
+      "9.3.1": {
+        "description": "Providing & Fixing of cable ties - 100mm",
+        "unit": "Each",
+        "rate_2024": 2,
+        "rate_range": [
+          1,
+          3
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_tie"
+      },
+      "9.3.2": {
+        "description": "Providing & Fixing of cable ties - 200mm",
+        "unit": "Each",
+        "rate_2024": 3,
+        "rate_range": [
+          2,
+          4
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_tie"
+      },
+      "9.3.3": {
+        "description": "Providing & Fixing of cable ties - 300mm",
+        "unit": "Each",
+        "rate_2024": 5,
+        "rate_range": [
+          4,
+          6
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_tie"
+      },
+      "9.4.1": {
+        "description": "Providing & Fixing of cable marker - Numeric (0-9)",
+        "unit": "Set",
+        "rate_2024": 125,
+        "rate_range": [
+          110,
+          140
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_marker"
+      },
+      "9.4.2": {
+        "description": "Providing & Fixing of cable marker - Alphabetic (A-Z)",
+        "unit": "Set",
+        "rate_2024": 145,
+        "rate_range": [
+          130,
+          165
+        ],
+        "category": "cable_accessories",
+        "subcategory": "cable_marker"
+      }
+    },
+    "junction_boxes": {
+      "10.1.1": {
+        "description": "Providing & Fixing of PVC junction box - 75x75x40mm",
+        "unit": "Each",
+        "rate_2024": 45,
+        "rate_range": [
+          40,
+          52
+        ],
+        "category": "junction_boxes",
+        "subcategory": "junction_box"
+      },
+      "10.1.2": {
+        "description": "Providing & Fixing of PVC junction box - 100x100x50mm",
+        "unit": "Each",
+        "rate_2024": 65,
+        "rate_range": [
+          58,
+          75
+        ],
+        "category": "junction_boxes",
+        "subcategory": "junction_box"
+      },
+      "10.1.3": {
+        "description": "Providing & Fixing of PVC junction box - 150x110x70mm",
+        "unit": "Each",
+        "rate_2024": 95,
+        "rate_range": [
+          85,
+          110
+        ],
+        "category": "junction_boxes",
+        "subcategory": "junction_box"
+      },
+      "10.1.4": {
+        "description": "Providing & Fixing of PVC junction box - 200x150x80mm",
+        "unit": "Each",
+        "rate_2024": 145,
+        "rate_range": [
+          130,
+          165
+        ],
+        "category": "junction_boxes",
+        "subcategory": "junction_box"
+      },
+      "10.2.1": {
+        "description": "Providing & Fixing of metal junction box - 100x100x50mm",
+        "unit": "Each",
+        "rate_2024": 185,
+        "rate_range": [
+          165,
+          205
+        ],
+        "category": "junction_boxes",
+        "subcategory": "junction_box"
+      },
+      "10.2.2": {
+        "description": "Providing & Fixing of metal junction box - 150x150x75mm",
+        "unit": "Each",
+        "rate_2024": 285,
+        "rate_range": [
+          260,
+          315
+        ],
+        "category": "junction_boxes",
+        "subcategory": "junction_box"
+      },
+      "10.2.3": {
+        "description": "Providing & Fixing of metal junction box - 200x200x100mm",
+        "unit": "Each",
+        "rate_2024": 425,
+        "rate_range": [
+          380,
+          470
+        ],
+        "category": "junction_boxes",
+        "subcategory": "junction_box"
+      },
+      "10.3.1": {
+        "description": "Providing & Fixing of weatherproof junction box - 150x150x100mm IP65",
+        "unit": "Each",
+        "rate_2024": 525,
+        "rate_range": [
+          475,
+          580
+        ],
+        "category": "junction_boxes",
+        "subcategory": "weatherproof_box"
+      },
+      "10.3.2": {
+        "description": "Providing & Fixing of weatherproof junction box - 200x200x150mm IP65",
+        "unit": "Each",
+        "rate_2024": 725,
+        "rate_range": [
+          655,
+          800
+        ],
+        "category": "junction_boxes",
+        "subcategory": "weatherproof_box"
+      },
+      "10.3.3": {
+        "description": "Providing & Fixing of weatherproof junction box - 300x250x150mm IP65",
+        "unit": "Each",
+        "rate_2024": 1025,
+        "rate_range": [
+          925,
+          1130
+        ],
+        "category": "junction_boxes",
+        "subcategory": "weatherproof_box"
+      },
+      "10.4.1": {
+        "description": "Providing & Fixing of metal enclosure - 300x400x200mm",
+        "unit": "Each",
+        "rate_2024": 2425,
+        "rate_range": [
+          2185,
+          2670
+        ],
+        "category": "junction_boxes",
+        "subcategory": "enclosure"
+      },
+      "10.4.2": {
+        "description": "Providing & Fixing of metal enclosure - 400x500x200mm",
+        "unit": "Each",
+        "rate_2024": 3225,
+        "rate_range": [
+          2905,
+          3550
+        ],
+        "category": "junction_boxes",
+        "subcategory": "enclosure"
+      },
+      "10.4.3": {
+        "description": "Providing & Fixing of metal enclosure - 500x600x250mm",
+        "unit": "Each",
+        "rate_2024": 4225,
+        "rate_range": [
+          3805,
+          4650
+        ],
+        "category": "junction_boxes",
+        "subcategory": "enclosure"
+      }
+    },
+    "conduit_fittings": {
+      "11.1.1": {
+        "description": "Providing & Fixing of PVC conduit bend - 20mm",
+        "unit": "Each",
+        "rate_2024": 12,
+        "rate_range": [
+          10,
+          15
+        ],
+        "category": "conduit_fittings",
+        "subcategory": "conduit_bend"
+      },
+      "11.1.2": {
+        "description": "Providing & Fixing of PVC conduit bend - 25mm",
+        "unit": "Each",
+        "rate_2024": 15,
+        "rate_range": [
+          12,
+          18
+        ],
+        "category": "conduit_fittings",
+        "subcategory": "conduit_bend"
+      },
+      "11.1.3": {
+        "description": "Providing & Fixing of PVC conduit bend - 32mm",
+        "unit": "Each",
+        "rate_2024": 22,
+        "rate_range": [
+          18,
+          26
+        ],
+        "category": "conduit_fittings",
+        "subcategory": "conduit_bend"
+      },
+      "11.1.4": {
+        "description": "Providing & Fixing of PVC conduit bend - 40mm",
+        "unit": "Each",
+        "rate_2024": 28,
+        "rate_range": [
+          24,
+          32
+        ],
+        "category": "conduit_fittings",
+        "subcategory": "conduit_bend"
+      },
+      "11.2.1": {
+        "description": "Providing & Fixing of PVC conduit coupler - 20mm",
+        "unit": "Each",
+        "rate_2024": 8,
+        "rate_range": [
+          6,
+          10
+        ],
+        "category": "conduit_fittings",
+        "subcategory": "conduit_coupler"
+      },
+      "11.2.2": {
+        "description": "Providing & Fixing of PVC conduit coupler - 25mm",
+        "unit": "Each",
+        "rate_2024": 10,
+        "rate_range": [
+          8,
+          12
+        ],
+        "category": "conduit_fittings",
+        "subcategory": "conduit_coupler"
+      },
+      "11.2.3": {
+        "description": "Providing & Fixing of PVC conduit coupler - 32mm",
+        "unit": "Each",
+        "rate_2024": 15,
+        "rate_range": [
+          12,
+          18
+        ],
+        "category": "conduit_fittings",
+        "subcategory": "conduit_coupler"
+      },
+      "11.2.4": {
+        "description": "Providing & Fixing of PVC conduit coupler - 40mm",
+        "unit": "Each",
+        "rate_2024": 18,
+        "rate_range": [
+          15,
+          22
+        ],
+        "category": "conduit_fittings",
+        "subcategory": "conduit_coupler"
+      },
+      "11.3.1": {
+        "description": "Providing & Fixing of PVC conduit tee - 20mm",
+        "unit": "Each",
+        "rate_2024": 15,
+        "rate_range": [
+          12,
+          18
+        ],
+        "category": "conduit_fittings",
+        "subcategory": "conduit_tee"
+      },
+      "11.3.2": {
+        "description": "Providing & Fixing of PVC conduit tee - 25mm",
+        "unit": "Each",
+        "rate_2024": 18,
+        "rate_range": [
+          15,
+          22
+        ],
+        "category": "conduit_fittings",
+        "subcategory": "conduit_tee"
+      },
+      "11.3.3": {
+        "description": "Providing & Fixing of PVC conduit tee - 32mm",
+        "unit": "Each",
+        "rate_2024": 25,
+        "rate_range": [
+          20,
+          30
+        ],
+        "category": "conduit_fittings",
+        "subcategory": "conduit_tee"
+      },
+      "11.4.1": {
+        "description": "Providing & Fixing of PVC conduit saddle - 20mm",
+        "unit": "Each",
+        "rate_2024": 5,
+        "rate_range": [
+          4,
+          6
+        ],
+        "category": "conduit_fittings",
+        "subcategory": "conduit_saddle"
+      },
+      "11.4.2": {
+        "description": "Providing & Fixing of PVC conduit saddle - 25mm",
+        "unit": "Each",
+        "rate_2024": 6,
+        "rate_range": [
+          5,
+          8
+        ],
+        "category": "conduit_fittings",
+        "subcategory": "conduit_saddle"
+      },
+      "11.4.3": {
+        "description": "Providing & Fixing of PVC conduit saddle - 32mm",
+        "unit": "Each",
+        "rate_2024": 8,
+        "rate_range": [
+          6,
+          10
+        ],
+        "category": "conduit_fittings",
+        "subcategory": "conduit_saddle"
+      }
+    },
+    "transformers": {
+      "12.1.1": {
+        "description": "Providing & Fixing of single phase transformer - 1 KVA",
+        "unit": "Each",
+        "rate_2024": 8825,
+        "rate_range": [
+          7945,
+          9710
+        ],
+        "category": "transformers",
+        "subcategory": "transformer"
+      },
+      "12.1.2": {
+        "description": "Providing & Fixing of single phase transformer - 2 KVA",
+        "unit": "Each",
+        "rate_2024": 12225,
+        "rate_range": [
+          11005,
+          13450
+        ],
+        "category": "transformers",
+        "subcategory": "transformer"
+      },
+      "12.1.3": {
+        "description": "Providing & Fixing of single phase transformer - 3 KVA",
+        "unit": "Each",
+        "rate_2024": 15625,
+        "rate_range": [
+          14065,
+          17190
+        ],
+        "category": "transformers",
+        "subcategory": "transformer"
+      },
+      "12.2.1": {
+        "description": "Providing & Fixing of three phase transformer - 5 KVA",
+        "unit": "Each",
+        "rate_2024": 22425,
+        "rate_range": [
+          20185,
+          24670
+        ],
+        "category": "transformers",
+        "subcategory": "transformer"
+      },
+      "12.2.2": {
+        "description": "Providing & Fixing of three phase transformer - 10 KVA",
+        "unit": "Each",
+        "rate_2024": 38225,
+        "rate_range": [
+          34405,
+          42050
+        ],
+        "category": "transformers",
+        "subcategory": "transformer"
+      },
+      "12.3.1": {
+        "description": "Providing & Fixing of isolation transformer - 1 KVA",
+        "unit": "Each",
+        "rate_2024": 9825,
+        "rate_range": [
+          8845,
+          10810
+        ],
+        "category": "transformers",
+        "subcategory": "isolation_transformer"
+      },
+      "12.3.2": {
+        "description": "Providing & Fixing of isolation transformer - 2 KVA",
+        "unit": "Each",
+        "rate_2024": 14225,
+        "rate_range": [
+          12805,
+          15650
+        ],
+        "category": "transformers",
+        "subcategory": "isolation_transformer"
+      }
+    },
+    "meters_instruments": {
+      "13.1.1": {
+        "description": "Providing & Fixing of single phase energy meter - 5-30A",
+        "unit": "Each",
+        "rate_2024": 1825,
+        "rate_range": [
+          1645,
+          2010
+        ],
+        "category": "meters_instruments",
+        "subcategory": "energy_meter"
+      },
+      "13.1.2": {
+        "description": "Providing & Fixing of single phase energy meter - 10-60A",
+        "unit": "Each",
+        "rate_2024": 2225,
+        "rate_range": [
+          2005,
+          2450
+        ],
+        "category": "meters_instruments",
+        "subcategory": "energy_meter"
+      },
+      "13.2.1": {
+        "description": "Providing & Fixing of three phase energy meter - 5-30A",
+        "unit": "Each",
+        "rate_2024": 3825,
+        "rate_range": [
+          3445,
+          4210
+        ],
+        "category": "meters_instruments",
+        "subcategory": "energy_meter"
+      },
+      "13.2.2": {
+        "description": "Providing & Fixing of three phase energy meter - 10-60A",
+        "unit": "Each",
+        "rate_2024": 4825,
+        "rate_range": [
+          4345,
+          5310
+        ],
+        "category": "meters_instruments",
+        "subcategory": "energy_meter"
+      },
+      "13.3.1": {
+        "description": "Providing & Fixing of digital voltmeter - 0-500V AC",
+        "unit": "Each",
+        "rate_2024": 825,
+        "rate_range": [
+          745,
+          910
+        ],
+        "category": "meters_instruments",
+        "subcategory": "voltmeter"
+      },
+      "13.3.2": {
+        "description": "Providing & Fixing of digital ammeter - 0-100A AC",
+        "unit": "Each",
+        "rate_2024": 925,
+        "rate_range": [
+          835,
+          1020
+        ],
+        "category": "meters_instruments",
+        "subcategory": "ammeter"
+      },
+      "13.4": {
+        "description": "Providing & Fixing of digital multimeter panel mount",
+        "unit": "Each",
+        "rate_2024": 1425,
+        "rate_range": [
+          1285,
+          1570
+        ],
+        "category": "meters_instruments",
+        "subcategory": "multimeter"
+      },
+      "13.5": {
+        "description": "Providing & Fixing of power factor meter",
+        "unit": "Each",
+        "rate_2024": 1625,
+        "rate_range": [
+          1465,
+          1790
+        ],
+        "category": "meters_instruments",
+        "subcategory": "power_factor_meter"
+      }
+    },
+    "cable_trays": {
+      "14.1.1": {
+        "description": "Providing & Fixing of perforated cable tray - 100mm width",
+        "unit": "Mtr.",
+        "rate_2024": 285,
+        "rate_range": [
+          260,
+          315
+        ],
+        "category": "cable_trays",
+        "subcategory": "cable_tray"
+      },
+      "14.1.2": {
+        "description": "Providing & Fixing of perforated cable tray - 150mm width",
+        "unit": "Mtr.",
+        "rate_2024": 385,
+        "rate_range": [
+          350,
+          425
+        ],
+        "category": "cable_trays",
+        "subcategory": "cable_tray"
+      },
+      "14.1.3": {
+        "description": "Providing & Fixing of perforated cable tray - 200mm width",
+        "unit": "Mtr.",
+        "rate_2024": 485,
+        "rate_range": [
+          440,
+          535
+        ],
+        "category": "cable_trays",
+        "subcategory": "cable_tray"
+      },
+      "14.1.4": {
+        "description": "Providing & Fixing of perforated cable tray - 300mm width",
+        "unit": "Mtr.",
+        "rate_2024": 685,
+        "rate_range": [
+          620,
+          755
+        ],
+        "category": "cable_trays",
+        "subcategory": "cable_tray"
+      },
+      "14.2.1": {
+        "description": "Providing & Fixing of cable ladder - 300mm width",
+        "unit": "Mtr.",
+        "rate_2024": 825,
+        "rate_range": [
+          745,
+          910
+        ],
+        "category": "cable_trays",
+        "subcategory": "cable_ladder"
+      },
+      "14.2.2": {
+        "description": "Providing & Fixing of cable ladder - 450mm width",
+        "unit": "Mtr.",
+        "rate_2024": 1125,
+        "rate_range": [
+          1015,
+          1240
+        ],
+        "category": "cable_trays",
+        "subcategory": "cable_ladder"
+      },
+      "14.2.3": {
+        "description": "Providing & Fixing of cable ladder - 600mm width",
+        "unit": "Mtr.",
+        "rate_2024": 1425,
+        "rate_range": [
+          1285,
+          1570
+        ],
+        "category": "cable_trays",
+        "subcategory": "cable_ladder"
+      },
+      "14.3.1": {
+        "description": "Providing & Fixing of cable tray bend - 90 degree",
+        "unit": "Each",
+        "rate_2024": 425,
+        "rate_range": [
+          380,
+          470
+        ],
+        "category": "cable_trays",
+        "subcategory": "cable_tray_fitting"
+      },
+      "14.3.2": {
+        "description": "Providing & Fixing of cable tray tee - horizontal",
+        "unit": "Each",
+        "rate_2024": 525,
+        "rate_range": [
+          475,
+          580
+        ],
+        "category": "cable_trays",
+        "subcategory": "cable_tray_fitting"
+      },
+      "14.3.3": {
+        "description": "Providing & Fixing of cable tray cross - horizontal",
+        "unit": "Each",
+        "rate_2024": 625,
+        "rate_range": [
+          565,
+          690
+        ],
+        "category": "cable_trays",
+        "subcategory": "cable_tray_fitting"
+      }
+    },
+    "busbar_systems": {
+      "16.1.1": {
+        "description": "Providing & Fixing of copper busbar - 25x5mm",
+        "unit": "Mtr.",
+        "rate_2024": 825,
+        "rate_range": [
+          745,
+          910
+        ],
+        "category": "busbar_systems",
+        "subcategory": "busbar"
+      },
+      "16.1.2": {
+        "description": "Providing & Fixing of copper busbar - 25x10mm",
+        "unit": "Mtr.",
+        "rate_2024": 1425,
+        "rate_range": [
+          1285,
+          1570
+        ],
+        "category": "busbar_systems",
+        "subcategory": "busbar"
+      },
+      "16.1.3": {
+        "description": "Providing & Fixing of copper busbar - 50x5mm",
+        "unit": "Mtr.",
+        "rate_2024": 1625,
+        "rate_range": [
+          1465,
+          1790
+        ],
+        "category": "busbar_systems",
+        "subcategory": "busbar"
+      },
+      "16.1.4": {
+        "description": "Providing & Fixing of copper busbar - 50x10mm",
+        "unit": "Mtr.",
+        "rate_2024": 2825,
+        "rate_range": [
+          2545,
+          3110
+        ],
+        "category": "busbar_systems",
+        "subcategory": "busbar"
+      },
+      "16.2.1": {
+        "description": "Providing & Fixing of busbar support insulator - 25mm",
+        "unit": "Each",
+        "rate_2024": 185,
+        "rate_range": [
+          165,
+          205
+        ],
+        "category": "busbar_systems",
+        "subcategory": "busbar_support"
+      },
+      "16.2.2": {
+        "description": "Providing & Fixing of busbar support insulator - 50mm",
+        "unit": "Each",
+        "rate_2024": 285,
+        "rate_range": [
+          260,
+          315
+        ],
+        "category": "busbar_systems",
+        "subcategory": "busbar_support"
+      },
+      "16.3": {
+        "description": "Providing & Fixing of busbar joint connector",
+        "unit": "Each",
+        "rate_2024": 425,
+        "rate_range": [
+          380,
+          470
+        ],
+        "category": "busbar_systems",
+        "subcategory": "busbar_connector"
+      }
+    },
+    "testing_commissioning": {
+      "19.1": {
+        "description": "Testing and commissioning of complete electrical installation",
+        "unit": "Job",
+        "rate_2024": 5625,
+        "rate_range": [
+          5065,
+          6190
+        ],
+        "category": "testing_commissioning",
+        "subcategory": "testing"
+      },
+      "19.2": {
+        "description": "Insulation resistance testing of complete wiring",
+        "unit": "Job",
+        "rate_2024": 2425,
+        "rate_range": [
+          2185,
+          2670
+        ],
+        "category": "testing_commissioning",
+        "subcategory": "testing"
+      },
+      "19.3": {
+        "description": "Earth continuity testing",
+        "unit": "Job",
+        "rate_2024": 1425,
+        "rate_range": [
+          1285,
+          1570
+        ],
+        "category": "testing_commissioning",
+        "subcategory": "testing"
+      },
+      "19.4": {
+        "description": "Polarity testing",
+        "unit": "Job",
+        "rate_2024": 825,
+        "rate_range": [
+          745,
+          910
+        ],
+        "category": "testing_commissioning",
+        "subcategory": "testing"
+      },
+      "19.5": {
+        "description": "RCD/RCCB testing",
+        "unit": "Job",
+        "rate_2024": 1225,
+        "rate_range": [
+          1105,
+          1350
+        ],
+        "category": "testing_commissioning",
+        "subcategory": "testing"
+      },
+      "19.6": {
+        "description": "Load testing and balancing",
+        "unit": "Job",
+        "rate_2024": 3225,
+        "rate_range": [
+          2905,
+          3550
+        ],
+        "category": "testing_commissioning",
+        "subcategory": "testing"
+      },
+      "19.7": {
+        "description": "Preparation of test reports and certificates",
+        "unit": "Job",
+        "rate_2024": 2825,
+        "rate_range": [
+          2545,
+          3110
+        ],
+        "category": "testing_commissioning",
+        "subcategory": "documentation"
+      }
+    },
+    "miscellaneous": {
+      "20.1": {
+        "description": "Providing & Fixing of cable identification tags",
+        "unit": "Set",
+        "rate_2024": 285,
+        "rate_range": [
+          260,
+          315
+        ],
+        "category": "miscellaneous",
+        "subcategory": "identification"
+      },
+      "20.2": {
+        "description": "Providing & Fixing of danger/caution boards",
+        "unit": "Each",
+        "rate_2024": 425,
+        "rate_range": [
+          380,
+          470
+        ],
+        "category": "miscellaneous",
+        "subcategory": "signage"
+      },
+      "20.3": {
+        "description": "Providing & Fixing of fire extinguisher - 2kg CO2",
+        "unit": "Each",
+        "rate_2024": 1825,
+        "rate_range": [
+          1645,
+          2010
+        ],
+        "category": "miscellaneous",
+        "subcategory": "safety"
+      },
+      "20.4": {
+        "description": "Providing & Fixing of first aid box with contents",
+        "unit": "Each",
+        "rate_2024": 1225,
+        "rate_range": [
+          1105,
+          1350
+        ],
+        "category": "miscellaneous",
+        "subcategory": "safety"
+      },
+      "20.5": {
+        "description": "Providing & Fixing of cable protection cover",
+        "unit": "Mtr.",
+        "rate_2024": 125,
+        "rate_range": [
+          110,
+          140
+        ],
+        "category": "miscellaneous",
+        "subcategory": "protection"
+      },
+      "20.6": {
+        "description": "Providing & Fixing of cable duct cover",
+        "unit": "Mtr.",
+        "rate_2024": 185,
+        "rate_range": [
+          165,
+          205
+        ],
+        "category": "miscellaneous",
+        "subcategory": "protection"
+      },
+      "20.7": {
+        "description": "Providing & Fixing of cable support bracket",
+        "unit": "Each",
+        "rate_2024": 85,
+        "rate_range": [
+          75,
+          95
+        ],
+        "category": "miscellaneous",
+        "subcategory": "support"
+      },
+      "20.8": {
+        "description": "Providing & Fixing of cable cleat",
+        "unit": "Each",
+        "rate_2024": 45,
+        "rate_range": [
+          40,
+          52
+        ],
+        "category": "miscellaneous",
+        "subcategory": "support"
       }
     }
   }

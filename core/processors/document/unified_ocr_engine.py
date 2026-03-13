@@ -86,7 +86,8 @@ class UnifiedOCREngine:
             )
             print("⚠️  OCR Engine: no providers available – degraded mode")
         else:
-            print(f"✅ OCR Engine initialized with providers: {', '.join(self.active_providers)}")
+            # Avoid emojis in console output for Windows compatibility
+            print(f"OCR Engine initialized with providers: {', '.join(self.active_providers)}")
 
     # ------------------------------------------------------------------
     # Image normalisation helper
@@ -284,7 +285,8 @@ class UnifiedOCREngine:
 
         for prov in providers_to_try:
             try:
-                print(f"   🔍 Trying {prov.upper()} OCR...")
+                # Avoid emojis in console output for Windows compatibility
+                print(f"   Trying {prov.upper()} OCR...")
 
                 if prov == 'google':
                     result = self._extract_google(img)
@@ -302,32 +304,34 @@ class UnifiedOCREngine:
                 quality_score = self._validate_quality(result)
                 word_count = len(result.words)
 
-                print(f"      ✓ Confidence: {result.confidence:.2%}")
-                print(f"      ✓ Words extracted: {word_count}")
-                print(f"      ✓ Quality score: {quality_score:.2%}")
+                print(f"      Confidence: {result.confidence:.2%}")
+                print(f"      Words extracted: {word_count}")
+                print(f"      Quality score: {quality_score:.2%}")
 
                 if (result.confidence >= min_confidence and
                         word_count >= min_words and
                         quality_score >= 0.6):
-                    print(f"      ✅ {prov.upper()} passed quality check!")
+                    print(f"      {prov.upper()} passed quality check.")
                     return result
                 else:
-                    print(f"      ⚠️  {prov.upper()} quality below threshold, trying next...")
+                    print(f"      {prov.upper()} quality below threshold, trying next...")
 
             except Exception as e:
-                print(f"      ❌ {prov.upper()} failed: {str(e)[:80]}")
+                # Avoid non-ASCII characters in error text
+                safe_msg = str(e).encode("ascii", "replace").decode("ascii")
+                print(f"      {prov.upper()} failed: {safe_msg[:80]}")
                 logger.debug(traceback.format_exc())
                 continue
 
         # ---- 5. Return best result or safe empty ---------------------
         if all_results:
             best = max(all_results, key=lambda r: self._validate_quality(r))
-            print(f"\n   ⚠️  No provider met quality threshold")
-            print(f"   📊 Returning best result from {best.provider.upper()}")
+            print("\n   No provider met quality threshold.")
+            print(f"   Returning best result from {best.provider.upper()}")
             return best
 
         err = "All OCR providers failed to extract text"
-        print(f"   ❌ {err}")
+        print(f"   {err}")
         return _empty_result(error=err)
     
     def _extract_google(self, image: np.ndarray) -> OCRResult:
@@ -665,7 +669,7 @@ class UnifiedOCREngine:
         if not providers:
             return _empty_result(error="No valid providers for consensus")
 
-        print(f"\n🔄 Running consensus OCR with {len(providers)} providers...")
+        print(f"\nRunning consensus OCR with {len(providers)} providers...")
 
         results: List[OCRResult] = []
         for prov in providers:
@@ -673,16 +677,17 @@ class UnifiedOCREngine:
                 print(f"   Running {prov.upper()}...")
                 result = self.extract_text(img, provider=prov, min_confidence=0.0, min_words=0)
                 results.append(result)
-                print(f"      ✓ Confidence: {result.confidence:.2%}, Words: {len(result.words)}")
+                print(f"      Confidence: {result.confidence:.2%}, Words: {len(result.words)}")
             except Exception as e:
-                print(f"      ✗ Failed: {str(e)[:80]}")
+                safe_msg = str(e).encode("ascii", "replace").decode("ascii")
+                print(f"      Failed: {safe_msg[:80]}")
                 continue
 
         if not results:
             return _empty_result(error="All providers failed in consensus mode")
 
         best = max(results, key=lambda r: self._validate_quality(r))
-        print(f"\n   ✅ Best result: {best.provider.upper()}")
+        print(f"\n   Best result: {best.provider.upper()}")
         print(f"      Quality: {self._validate_quality(best):.2%}")
         return best
 
@@ -709,10 +714,10 @@ class UnifiedOCREngine:
             try:
                 if preprocess and attempt > 0:
                     processed = self._preprocess_image(base_img, method=attempt)
-                    print(f"\n   🔄 Attempt {attempt + 1} with preprocessing method {attempt}")
+                    print(f"\n   Attempt {attempt + 1} with preprocessing method {attempt}")
                 else:
                     processed = base_img
-                    print(f"\n   📊 Attempt {attempt + 1} (no preprocessing)")
+                    print(f"\n   Attempt {attempt + 1} (no preprocessing)")
 
                 result = self.extract_text(processed)
                 quality = self._validate_quality(result)
@@ -722,11 +727,12 @@ class UnifiedOCREngine:
                     best_quality = quality
 
                 if quality >= 0.9:
-                    print(f"   ✅ Excellent quality achieved ({quality:.2%})")
+                    print(f"   Excellent quality achieved ({quality:.2%})")
                     break
 
             except Exception as e:
-                print(f"   ❌ Attempt {attempt + 1} failed: {str(e)[:80]}")
+                safe_msg = str(e).encode("ascii", "replace").decode("ascii")
+                print(f"   Attempt {attempt + 1} failed: {safe_msg[:80]}")
                 logger.debug(traceback.format_exc())
                 continue
 

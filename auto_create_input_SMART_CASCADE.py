@@ -59,7 +59,8 @@ PWD_ITEMS_DATABASE = {
 def read_qty_file(qty_file_path):
     """Read QTY.txt and return dict of {item_no: quantity}"""
     qty_data = {}
-    print(f"\n📄 Reading: {qty_file_path}")
+    # Avoid emojis in console output for Windows compatibility
+    print(f"\nReading: {qty_file_path}")
     
     with open(qty_file_path, 'r', encoding='utf-8') as f:
         for line_no, line in enumerate(f, 1):
@@ -75,7 +76,7 @@ def read_qty_file(qty_file_path):
                     except ValueError:
                         print(f"   ⚠️  Line {line_no}: Invalid quantity '{parts[1]}'")
     
-    print(f"✅ Found {len(qty_data)} items with quantities\n")
+    print(f"Found {len(qty_data)} items with quantities\n")
     return qty_data
 
 
@@ -91,7 +92,8 @@ def extract_text_smart_cascade(image_dir, use_consensus=False, use_retry=False):
     Returns:
         Tuple of (all_text, ocr_stats)
     """
-    print("\n🧠 Initializing Smart Cascading OCR Engine...")
+    # Avoid emojis in console output for Windows compatibility
+    print("\nInitializing Smart Cascading OCR Engine...")
     
     # Initialize OCR engine
     ocr_engine = get_ocr_engine(language="en+hi")
@@ -107,7 +109,7 @@ def extract_text_smart_cascade(image_dir, use_consensus=False, use_retry=False):
         print(f"❌ No images found in {image_dir}")
         return "", {}
     
-    print(f"📸 Processing {len(image_files)} images with smart OCR...\n")
+    print(f"Processing {len(image_files)} images with smart OCR...\n")
     
     all_text = []
     ocr_stats = {
@@ -120,9 +122,10 @@ def extract_text_smart_cascade(image_dir, use_consensus=False, use_retry=False):
     total_confidence = 0.0
     
     for idx, img_file in enumerate(image_files, 1):
-        print(f"\n{'─'*60}")
-        print(f"📄 [{idx}/{len(image_files)}] {img_file.name}")
-        print(f"{'─'*60}")
+        # Use simple ASCII separators for Windows console compatibility
+        print("\n" + "-" * 60)
+        print(f"[{idx}/{len(image_files)}] {img_file.name}")
+        print("-" * 60)
         
         try:
             # Load image
@@ -133,13 +136,13 @@ def extract_text_smart_cascade(image_dir, use_consensus=False, use_retry=False):
             
             # Choose extraction method
             if use_consensus:
-                print("   🔄 Using CONSENSUS mode (multiple providers)...")
+                print("   Using CONSENSUS mode (multiple providers)...")
                 result = ocr_engine.extract_with_consensus(image)
             elif use_retry:
-                print("   🔄 Using RETRY mode (with preprocessing)...")
+                print("   Using RETRY mode (with preprocessing)...")
                 result = ocr_engine.extract_with_retry(image, max_attempts=3, preprocess=True)
             else:
-                print("   🔄 Using SMART CASCADE mode (automatic fallback)...")
+                print("   Using SMART CASCADE mode (automatic fallback)...")
                 result = ocr_engine.extract_text(image, min_confidence=0.7, min_words=5)
             
             # Store result
@@ -158,7 +161,9 @@ def extract_text_smart_cascade(image_dir, use_consensus=False, use_retry=False):
             print(f"      Characters: {len(result.text)}")
             
         except Exception as e:
-            print(f"   ❌ Error: {str(e)[:100]}")
+            # Avoid non-ASCII characters in error messages for Windows consoles
+            safe_msg = str(e).encode("ascii", "replace").decode("ascii")
+            print(f"   Error: {safe_msg[:100]}")
             continue
     
     # Calculate average confidence
@@ -169,7 +174,7 @@ def extract_text_smart_cascade(image_dir, use_consensus=False, use_retry=False):
     
     # Print summary
     print(f"\n{'='*60}")
-    print("📊 OCR PROCESSING SUMMARY")
+    print("OCR PROCESSING SUMMARY")
     print(f"{'='*60}")
     print(f"Images processed: {ocr_stats['total_images']}")
     print(f"Average confidence: {ocr_stats['avg_confidence']:.2%}")
@@ -241,7 +246,8 @@ def create_excel_smart_cascade(work_order_dir, output_file, mode='cascade'):
     """
     
     print(f"\n{'='*80}")
-    print("🚀 SMART CASCADE OCR - INPUT EXCEL GENERATION")
+    # Avoid emojis for Windows console compatibility
+    print("SMART CASCADE OCR - INPUT EXCEL GENERATION")
     print(f"{'='*80}")
     print(f"Mode: {mode.upper()}")
     print(f"{'='*80}\n")
@@ -269,7 +275,7 @@ def create_excel_smart_cascade(work_order_dir, output_file, mode='cascade'):
     )
     
     if not all_text:
-        print("❌ No text extracted from images")
+        print("No text extracted from images")
         return False
     
     # Save raw OCR text with stats
@@ -433,7 +439,8 @@ def main():
     if len(sys.argv) > 3:
         mode = sys.argv[3]
     
-    print("\n🧠 Smart Cascade OCR Modes:")
+    # Note: Avoid emojis in console output for Windows cp1252 compatibility
+    print("\nSmart Cascade OCR Modes:")
     print("   cascade   - Fast, automatic fallback (default)")
     print("   consensus - Multiple providers, pick best (slower, more accurate)")
     print("   retry     - Retry with preprocessing (best for poor quality images)")
