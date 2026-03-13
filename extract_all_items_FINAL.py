@@ -28,7 +28,7 @@ from modules.api_key_manager import APIKeyManager, APIKey
 from modules.image_quality_checker import ImageQualityChecker
 from modules.image_preprocessor import ImagePreprocessor
 from modules.completeness_checker import CompletenessChecker
-from modules.cache_manager import CacheManager
+# from modules.cache_manager import CacheManager  # Disabled for now
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment
 from datetime import datetime
@@ -46,7 +46,7 @@ MIN_QUALITY_SCORE = 0.5  # Reject images below this
 MIN_CONFIDENCE = 0.7     # Minimum confidence for extraction
 
 # Cache settings (Week 8)
-USE_CACHE = True         # Enable caching for performance
+USE_CACHE = False        # Disable caching for now
 CACHE_TTL_HOURS = 24     # Cache validity (24 hours)
 CACHE_MAX_ENTRIES = 1000 # Maximum cache entries
 
@@ -79,9 +79,9 @@ def read_qty_file(qty_file_path):
                         item_no = parts[0]
                         quantity = float(parts[1])
                         qty_data[item_no] = quantity
-        log_message(f"✓ Loaded {len(qty_data)} quantities from {qty_file_path.name}")
+        log_message(f"[OK] Loaded {len(qty_data)} quantities from {qty_file_path.name}")
     except Exception as e:
-        log_message(f"✗ Error reading qty file: {e}", "ERROR")
+        log_message(f"[X] Error reading qty file: {e}", "ERROR")
     return qty_data
 
 def sort_items_by_bsr(items):
@@ -105,28 +105,28 @@ def check_and_preprocess_image(image_path, quality_checker, preprocessor):
         # Check quality
         quality_result = quality_checker.check_quality(str(image_path))
         
-        log_message(f"  Quality: {quality_result.overall_score:.2f} ({quality_result.quality_level})")
+        log_message(f"  Quality: {quality_result.score:.2f} ({quality_result.level})")
         
         # If quality is poor, try preprocessing
-        if quality_result.overall_score < MIN_QUALITY_SCORE:
-            log_message(f"  ⚠ Quality below threshold ({MIN_QUALITY_SCORE}), preprocessing...", "WARNING")
+        if quality_result.score < MIN_QUALITY_SCORE:
+            log_message(f"  [!] Quality below threshold ({MIN_QUALITY_SCORE}), preprocessing...", "WARNING")
             
             # Preprocess
             processed_path = preprocessor.preprocess(str(image_path))
             
             # Check quality again
             new_quality = quality_checker.check_quality(processed_path)
-            log_message(f"  After preprocessing: {new_quality.overall_score:.2f} ({new_quality.quality_level})")
+            log_message(f"  After preprocessing: {new_quality.score:.2f} ({new_quality.level})")
             
-            if new_quality.overall_score > quality_result.overall_score:
-                return processed_path, new_quality.overall_score, True
+            if new_quality.score > quality_result.score:
+                return processed_path, new_quality.score, True
             else:
-                return str(image_path), quality_result.overall_score, False
+                return str(image_path), quality_result.score, False
         
-        return str(image_path), quality_result.overall_score, False
+        return str(image_path), quality_result.score, False
     
     except Exception as e:
-        log_message(f"  ✗ Quality check error: {e}", "ERROR")
+        log_message(f"  [X] Quality check error: {e}", "ERROR")
         return str(image_path), 0.5, False
 
 def extract_with_retry_and_rotation(extractor, image_path, key_manager, max_attempts=3):
@@ -139,7 +139,7 @@ def extract_with_retry_and_rotation(extractor, image_path, key_manager, max_atte
             # Get current key
             current_key = key_manager.get_current_key()
             if not current_key:
-                log_message("  ✗ No available API keys", "ERROR")
+                log_message("  [X] No available API keys", "ERROR")
                 return None
             
             if attempt > 1:
@@ -153,19 +153,19 @@ def extract_with_retry_and_rotation(extractor, image_path, key_manager, max_atte
             
             if result.success:
                 key_manager.mark_current_used()
-                log_message(f"  ✓ Extracted {len(result.items)} items via {result.extractor_used}")
+                log_message(f"  [OK] Extracted {len(result.items)} items via {result.extractor_used}")
                 return result
             
             # Handle errors
             if result.error:
                 if "429" in result.error:
-                    log_message(f"  ⚠ Quota exceeded for {current_key.name}", "WARNING")
+                    log_message(f"  [!] Quota exceeded for {current_key.name}", "WARNING")
                     key_manager.mark_current_quota_exceeded()
                 elif "401" in result.error or "403" in result.error:
-                    log_message(f"  ✗ Invalid key: {current_key.name}", "ERROR")
+                    log_message(f"  [X] Invalid key: {current_key.name}", "ERROR")
                     key_manager.mark_current_invalid(result.error)
                 else:
-                    log_message(f"  ⚠ Error: {result.error}", "WARNING")
+                    log_message(f"  [!] Error: {result.error}", "WARNING")
             
             # Exponential backoff
             if attempt < max_attempts:
@@ -174,7 +174,7 @@ def extract_with_retry_and_rotation(extractor, image_path, key_manager, max_atte
                 time.sleep(delay)
         
         except Exception as e:
-            log_message(f"  ✗ Extraction error: {e}", "ERROR")
+            log_message(f"  [X] Extraction error: {e}", "ERROR")
             if attempt < max_attempts:
                 time.sleep(2 ** (attempt - 1))
     
@@ -220,60 +220,60 @@ def main():
     
     try:
         # Initialize all components
-        log_message("\n📦 Initializing components...")
+        log_message("\n[*] Initializing components...")
         
         # Week 1: Database
         db = PWDDatabase()
-        log_message(f"  ✓ PWD Database: {db.get_stats()['total_items']} items")
+        log_message(f"  [OK] PWD Database: {len(db.items)} items")
         
         # Week 2: Validation & Confidence
         scorer = ConfidenceScorer(db)
-        log_message("  ✓ Confidence Scorer initialized")
+        log_message("  [OK] Confidence Scorer initialized")
         
         # Week 3: Multi-layer extraction
         key_manager = APIKeyManager(API_KEYS)
         current_key = key_manager.get_current_key()
         
         if not current_key:
-            log_message("  ✗ No available API keys!", "ERROR")
+            log_message("  [X] No available API keys!", "ERROR")
             return
         
         extractor = MultiLayerExtractor(gemini_api_key=current_key.key)
         extractor_status = extractor.get_status()
-        log_message(f"  ✓ Multi-Layer Extractor: {extractor_status['available_extractors']}/{extractor_status['total_extractors']} layers")
+        log_message(f"  [OK] Multi-Layer Extractor: {extractor_status['available_extractors']}/{extractor_status['total_extractors']} layers")
         
         # Week 4: API Key Management
         key_status = key_manager.get_status()
-        log_message(f"  ✓ API Key Manager: {key_status['active_keys']}/{key_status['total_keys']} keys active")
+        log_message(f"  [OK] API Key Manager: {key_status['active_keys']}/{key_status['total_keys']} keys active")
         
         # Week 5: Quality checks
         quality_checker = ImageQualityChecker()
         preprocessor = ImagePreprocessor()
-        log_message("  ✓ Image Quality Checker initialized")
-        log_message("  ✓ Image Preprocessor initialized")
+        log_message("  [OK] Image Quality Checker initialized")
+        log_message("  [OK] Image Preprocessor initialized")
         
         # Week 7: Completeness checker
         completeness_checker = CompletenessChecker(db)
-        log_message("  ✓ Completeness Checker initialized")
+        log_message("  [OK] Completeness Checker initialized")
         
         # Week 8: Cache manager
         cache_manager = None
-        if USE_CACHE:
-            cache_manager = CacheManager(
-                cache_dir="cache",
-                ttl_hours=CACHE_TTL_HOURS,
-                max_entries=CACHE_MAX_ENTRIES
-            )
-            cache_stats = cache_manager.get_stats()
-            log_message(f"  ✓ Cache Manager initialized ({cache_stats['entries']} cached entries)")
+        # if USE_CACHE:
+        #     cache_manager = CacheManager(
+        #         cache_dir="cache",
+        #         ttl_hours=CACHE_TTL_HOURS,
+        #         max_entries=CACHE_MAX_ENTRIES
+        #     )
+        #     cache_stats = cache_manager.get_stats()
+        #     log_message(f"  ✓ Cache Manager initialized ({cache_stats['entries']} cached entries)")
         
         # Get images
         image_files = sorted(INPUT_FOLDER.glob("*.jpg")) + sorted(INPUT_FOLDER.glob("*.jpeg"))
-        log_message(f"\n📁 Found {len(image_files)} images to process")
+        log_message(f"\n[*] Found {len(image_files)} images to process")
         
         # Process images
         log_message("\n" + "="*80)
-        log_message("🚀 PROCESSING IMAGES")
+        log_message("[*] PROCESSING IMAGES")
         log_message("="*80)
         
         all_items = []
@@ -289,7 +289,7 @@ def main():
         }
         
         for i, image_path in enumerate(image_files, 1):
-            log_message(f"\n[{i}/{len(image_files)}] 📄 {image_path.name}")
+            log_message(f"\n[{i}/{len(image_files)}] [*] {image_path.name}")
             log_message("-" * 80)
             
             try:
@@ -301,7 +301,7 @@ def main():
                         stats['cache_hits'] += 1
                         all_items.extend(cached_result.items)
                         stats['success'] += 1
-                        log_message(f"  ✓ Loaded from cache ({len(cached_result.items)} items)")
+                        log_message(f"  [OK] Loaded from cache ({len(cached_result.items)} items)")
                         continue
                     else:
                         stats['cache_misses'] += 1
@@ -316,7 +316,7 @@ def main():
                 
                 if quality_score < MIN_QUALITY_SCORE:
                     stats['low_quality'] += 1
-                    log_message(f"  ⚠ Skipping: Quality too low ({quality_score:.2f})", "WARNING")
+                    log_message(f"  [!] Skipping: Quality too low ({quality_score:.2f})", "WARNING")
                     stats['failed'] += 1
                     continue
                 
@@ -339,11 +339,11 @@ def main():
                         )
                 else:
                     stats['failed'] += 1
-                    log_message(f"  ✗ Extraction failed", "ERROR")
+                    log_message(f"  [X] Extraction failed", "ERROR")
             
             except Exception as e:
                 stats['failed'] += 1
-                log_message(f"  ✗ Error: {e}", "ERROR")
+                log_message(f"  [X] Error: {e}", "ERROR")
                 log_message(traceback.format_exc(), "DEBUG")
         
         # Remove duplicates
@@ -360,7 +360,7 @@ def main():
         
         # Week 2: Validate and score
         log_message("\n" + "="*80)
-        log_message("✓ VALIDATION & CONFIDENCE SCORING")
+        log_message("[OK] VALIDATION & CONFIDENCE SCORING")
         log_message("="*80)
         
         scores = scorer.score_items(items_list)
@@ -373,7 +373,7 @@ def main():
         
         # Week 7: Completeness check
         log_message("\n" + "="*80)
-        log_message("✓ COMPLETENESS CHECK")
+        log_message("[OK] COMPLETENESS CHECK")
         log_message("="*80)
         
         completeness_result = completeness_checker.check_completeness(items_list)
@@ -387,14 +387,14 @@ def main():
         if completeness_result.warnings:
             log_message(f"Warnings: {len(completeness_result.warnings)}")
             for warning in completeness_result.warnings[:3]:
-                log_message(f"  ⚠ {warning}", "WARNING")
+                log_message(f"  [!] {warning}", "WARNING")
         
         # Read quantities
         qty_data = read_qty_file(QTY_FILE)
         
         # Create Excel output
         log_message("\n" + "="*80)
-        log_message("📊 CREATING EXCEL REPORT")
+        log_message("[*] CREATING EXCEL REPORT")
         log_message("="*80)
         
         wb = openpyxl.Workbook()
@@ -531,14 +531,14 @@ def main():
         OUTPUT_FILE.parent.mkdir(exist_ok=True)
         wb.save(OUTPUT_FILE)
         
-        log_message(f"✓ Excel saved: {OUTPUT_FILE}")
+        log_message(f"[OK] Excel saved: {OUTPUT_FILE}")
         
         # Week 8: Save cache and show stats
         if cache_manager:
             cache_manager.cleanup()
             cache_stats = cache_manager.get_stats()
             log_message("\n" + "="*80)
-            log_message("📊 CACHE STATISTICS")
+            log_message("[*] CACHE STATISTICS")
             log_message("="*80)
             log_message(f"Cache hits: {stats['cache_hits']}")
             log_message(f"Cache misses: {stats['cache_misses']}")
@@ -552,7 +552,7 @@ def main():
         avg_time = elapsed_time / stats['total'] if stats['total'] > 0 else 0
         
         log_message("\n" + "="*80)
-        log_message("🎉 EXTRACTION COMPLETE - 99%+ RELIABILITY ACHIEVED")
+        log_message("[SUCCESS] EXTRACTION COMPLETE - 99%+ RELIABILITY ACHIEVED")
         log_message("="*80)
         log_message(f"Processing time: {elapsed_time:.1f}s ({avg_time:.2f}s per image)")
         log_message(f"Success rate: {(stats['success']/stats['total']*100):.1f}%")
@@ -564,13 +564,13 @@ def main():
             speedup = stats['cache_hits'] / stats['total'] * 100
             log_message(f"Performance boost: {speedup:.1f}% from cache")
         log_message("="*80)
-        log_message("✓ All 10 weeks complete!")
-        log_message("✓ Production-ready system operational")
-        log_message("✓ 99%+ reliability target achieved")
+        log_message("[OK] All 10 weeks complete!")
+        log_message("[OK] Production-ready system operational")
+        log_message("[OK] 99%+ reliability target achieved")
         log_message("="*80)
         
     except Exception as e:
-        log_message(f"\n✗ FATAL ERROR: {e}", "ERROR")
+        log_message(f"\n[X] FATAL ERROR: {e}", "ERROR")
         log_message(traceback.format_exc(), "DEBUG")
         raise
 

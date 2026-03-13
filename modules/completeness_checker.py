@@ -95,9 +95,9 @@ class CompletenessChecker:
             # Check BSR code validity
             code = item.get('code', '')
             if code:
-                if not self.db.validate_bsr_code(code):
+                if not self.db.exists(code):
                     # Check if it's a partial match
-                    matches = self.db.search_by_code(code)
+                    matches = self.db.find_partial_matches(code)
                     if not matches:
                         unknown_codes.append(code)
                         item_warnings.append(f"Item {i}: Unknown BSR code '{code}'")
