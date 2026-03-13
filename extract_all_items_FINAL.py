@@ -28,6 +28,7 @@ from modules.api_key_manager import APIKeyManager, APIKey
 from modules.image_quality_checker import ImageQualityChecker
 from modules.image_preprocessor import ImagePreprocessor
 from modules.completeness_checker import CompletenessChecker
+from modules.cache_manager import CacheManager
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment
 from datetime import datetime
@@ -43,6 +44,11 @@ LOG_FILE = Path("OUTPUT/extraction_final_log.txt")
 # Quality thresholds
 MIN_QUALITY_SCORE = 0.5  # Reject images below this
 MIN_CONFIDENCE = 0.7     # Minimum confidence for extraction
+
+# Cache settings (Week 8)
+USE_CACHE = True         # Enable caching for performance
+CACHE_TTL_HOURS = 24     # Cache validity (24 hours)
+CACHE_MAX_ENTRIES = 1000 # Maximum cache entries
 
 # API Keys (with rotation)
 API_KEYS = [
@@ -250,6 +256,17 @@ def main():
         completeness_checker = CompletenessChecker(db)
         log_message("  ✓ Completeness Checker initialized")
         
+        # Week 8: Cache manager
+        cache_manager = None
+        if USE_CACHE:
+            cache_manager = CacheManager(
+                cache_dir="cache",
+                ttl_hours=CACHE_TTL_HOURS,
+                max_entries=CACHE_MAX_ENTRIES
+            )
+            cache_stats = cache_manager.get_stats()
+            log_message(f"  ✓ Cache Manager initialized ({cache_stats['entries']} cached entries)")
+        
         # Get images
         image_files = sorted(INPUT_FOLDER.glob("*.jpg")) + sorted(INPUT_FOLDER.glob("*.jpeg"))
         log_message(f"\n📁 Found {len(image_files)} images to process")
@@ -266,7 +283,9 @@ def main():
             'failed': 0,
             'preprocessed': 0,
             'low_quality': 0,
-            'retries': 0
+            'retries': 0,
+            'cache_hits': 0,
+            'cache_misses': 0
         }
         
         for i, image_path in enumerate(image_files, 1):
@@ -274,6 +293,19 @@ def main():
             log_message("-" * 80)
             
             try:
+                # Week 8: Check cache first
+                cached_result = None
+                if cache_manager:
+                    cached_result = cache_manager.get(str(image_path))
+                    if cached_result:
+                        stats['cache_hits'] += 1
+                        all_items.extend(cached_result.items)
+                        stats['success'] += 1
+                        log_message(f"  ✓ Loaded from cache ({len(cached_result.items)} items)")
+                        continue
+                    else:
+                        stats['cache_misses'] += 1
+                
                 # Week 5: Quality check and preprocessing
                 processed_path, quality_score, was_preprocessed = check_and_preprocess_image(
                     image_path, quality_checker, preprocessor
@@ -296,6 +328,15 @@ def main():
                 if result and result.success and result.items:
                     all_items.extend(result.items)
                     stats['success'] += 1
+                    
+                    # Week 8: Store in cache
+                    if cache_manager:
+                        cache_manager.put(
+                            str(image_path),
+                            result.items,
+                            result.confidence if hasattr(result, 'confidence') else 0.8,
+                            result.extractor_used if hasattr(result, 'extractor_used') else 'unknown'
+                        )
                 else:
                     stats['failed'] += 1
                     log_message(f"  ✗ Extraction failed", "ERROR")
@@ -375,6 +416,8 @@ def main():
             ["Success Rate", f"{(stats['success']/stats['total']*100):.1f}%"],
             ["Images Preprocessed", stats['preprocessed']],
             ["Low Quality Rejected", stats['low_quality']],
+            ["Cache Hits", stats['cache_hits']],
+            ["Cache Misses", stats['cache_misses']],
             ["", ""],
             ["VALIDATION STATISTICS", ""],
             ["Total Items Extracted", len(all_items)],
@@ -490,18 +533,36 @@ def main():
         
         log_message(f"✓ Excel saved: {OUTPUT_FILE}")
         
+        # Week 8: Save cache and show stats
+        if cache_manager:
+            cache_manager.cleanup()
+            cache_stats = cache_manager.get_stats()
+            log_message("\n" + "="*80)
+            log_message("📊 CACHE STATISTICS")
+            log_message("="*80)
+            log_message(f"Cache hits: {stats['cache_hits']}")
+            log_message(f"Cache misses: {stats['cache_misses']}")
+            if stats['cache_hits'] + stats['cache_misses'] > 0:
+                hit_rate = stats['cache_hits'] / (stats['cache_hits'] + stats['cache_misses']) * 100
+                log_message(f"Hit rate: {hit_rate:.1f}%")
+            log_message(f"Total cached entries: {cache_stats['entries']}")
+        
         # Final report
         elapsed_time = time.time() - start_time
+        avg_time = elapsed_time / stats['total'] if stats['total'] > 0 else 0
         
         log_message("\n" + "="*80)
         log_message("🎉 EXTRACTION COMPLETE - 99%+ RELIABILITY ACHIEVED")
         log_message("="*80)
-        log_message(f"Processing time: {elapsed_time:.1f}s")
+        log_message(f"Processing time: {elapsed_time:.1f}s ({avg_time:.2f}s per image)")
         log_message(f"Success rate: {(stats['success']/stats['total']*100):.1f}%")
         log_message(f"Average confidence: {report['average_confidence']*100:.1f}%")
         log_message(f"Completeness score: {completeness_result.completeness_score*100:.1f}%")
         log_message(f"Auto-accept rate: {report['recommended_actions']['auto_accept']['percentage']:.1f}%")
         log_message(f"Unique items: {len(items_list)}")
+        if cache_manager and stats['cache_hits'] > 0:
+            speedup = stats['cache_hits'] / stats['total'] * 100
+            log_message(f"Performance boost: {speedup:.1f}% from cache")
         log_message("="*80)
         log_message("✓ All 10 weeks complete!")
         log_message("✓ Production-ready system operational")
