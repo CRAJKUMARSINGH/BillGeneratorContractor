@@ -1,0 +1,4 @@
+# file: C:\Users\Rajkumar\BillGeneratorUnified\core\ui\excel_mode_fixed.py
+# hypothesis_version: 6.151.9
+
+['#### HTML Documents', '#### PDF Documents', '#### 📦 Bulk Download', '%Y%m%d_%H%M%S', '%Y-%m-%d %H:%M:%S', '---', '.', '<br>', 'Amount', 'Description', 'Item No', 'OUTPUT', 'Processing...', 'Quantity', 'Rate', 'Unit', 'Upload Excel File', 'application/json', 'application/pdf', 'application/zip', 'bill_info', 'bill_serial', 'contractor_name', 'csv_export', 'description', 'deviation', 'docx', 'extra_items', 'file_name', 'generated_date', 'html', 'item_no', 'items', 'json_export', 'pdf', 'primary', 'quantity', 'rate', 'secondary', 'show_debug', 'text/csv', 'text/html', 'totals', 'ui', 'unit', 'w', 'work_name', 'xls', 'xlsm', 'xlsx', 'zip_all', 'zip_subfolder', '💾 Save', '📄 Download CSV', '📄 HTML', '📄 Portrait', '📋 Download JSON', '📕 PDF', '📝 DOCX', '📦 Download All (ZIP)', '📦 Go to Batch Mode', '🔄 Landscape']

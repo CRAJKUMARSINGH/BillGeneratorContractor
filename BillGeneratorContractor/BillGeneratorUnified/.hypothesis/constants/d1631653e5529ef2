@@ -1,0 +1,4 @@
+# file: C:\Users\Rajkumar\BillGeneratorUnified\core\utils\cache_cleaner.py
+# hypothesis_version: 6.151.9
+
+['**', '**/*.pyc', '**/*.pyd', '**/*.pyo', '**/__pycache__', '.', '.mypy_cache', '.pytest_cache', '.ruff_cache']

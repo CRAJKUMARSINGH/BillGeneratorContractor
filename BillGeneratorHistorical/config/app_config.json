@@ -1,0 +1,30 @@
+{
+  "app_name": "BillGenerator Historical",
+  "version": "2.0.0",
+  "mode": "Historical",
+  "features": {
+    "excel_upload": true,
+    "online_entry": false,
+    "batch_processing": true,
+    "advanced_pdf": true,
+    "custom_templates": false,
+    "analytics": false,
+    "api_access": false
+  },
+  "ui": {
+    "theme": "default",
+    "show_debug": false,
+    "branding": {
+      "title": "Bill Generator Historical",
+      "icon": "📄",
+      "color": "#00b894"
+    }
+  },
+  "processing": {
+    "max_file_size_mb": 50,
+    "enable_caching": true,
+    "auto_clean_cache": true,
+    "pdf_engine": "chrome_headless",
+    "enable_macro_sheets": true
+  }
+}

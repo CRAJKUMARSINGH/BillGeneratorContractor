@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Entry Mode - Bill Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            color: white;
+            margin: 0 15px;
+        }
+        
+        .step-number {
+            background: rgba(255,255,255,0.3);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .step.active .step-number {
+            background: #28a745;
+        }
+        
+        .upload-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        .upload-icon {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .upload-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .upload-description {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-input-label {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .file-input-label:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .file-name {
+            margin-top: 15px;
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .requirements {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .requirements h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .requirements ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .requirements li {
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .continue-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .continue-btn.enabled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .continue-btn.enabled:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+        
+        .project-info {
+            background: #e8f5e9;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .project-info.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .upload-card {
+                padding: 20px;
+            }
+            
+            .step-indicator {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .step {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="back-btn" onclick="history.back()">← Back to Mode Selection</button>
+        
+        <div class="header">
+            <h1>🖊️ Online Entry Mode</h1>
+            <p>Upload Work Order and fill bill quantities online</p>
+        </div>
+        
+        <div class="step-indicator">
+            <div class="step active">
+                <div class="step-number">1</div>
+                <span>Upload Work Order</span>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <span>Fill Quantities</span>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <span>Generate Documents</span>
+            </div>
+        </div>
+        
+        <div class="upload-card">
+            <div class="upload-icon">📊</div>
+            <h2 class="upload-title">Upload Work Order Sheet</h2>
+            <p class="upload-description">
+                Upload your Excel file containing the Work Order sheet with project specifications and original quantities. 
+                The system will extract the project information and item details for online bill entry.
+            </p>
+            
+            <form id="work-order-form" action="/upload-work-order" method="POST" enctype="multipart/form-data">
+                <div class="file-input-wrapper">
+                    <input type="file" id="work-order-file" name="work_order_file" 
+                           class="file-input" accept=".xlsx,.xls" required onchange="handleFileSelect(this)">
+                    <label for="work-order-file" class="file-input-label">
+                        📁 Choose Work Order File
+                    </label>
+                </div>
+                
+                <div id="file-name" class="file-name"></div>
+                
+                <div class="requirements">
+                    <h4>📋 File Requirements:</h4>
+                    <ul>
+                        <li>Excel file (.xlsx or .xls)</li>
+                        <li>Must contain "Work Order" sheet with item specifications</li>
+                        <li>Should include "Title" sheet with project information</li>
+                        <li>Original quantities and rates from contract</li>
+                        <li>Item numbers and descriptions</li>
+                    </ul>
+                </div>
+                
+                <div id="project-info" class="project-info">
+                    <h4>📄 Project Information Preview:</h4>
+                    <div id="project-details"></div>
+                </div>
+                
+                <button type="submit" id="continue-btn" class="continue-btn">
+                    ➡️ Continue to Bill Entry
+                </button>
+            </form>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <p style="color: white; opacity: 0.8; font-size: 0.9rem;">
+                Enhanced document formatting powered by Warp AI Terminal
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        function handleFileSelect(input) {
+            const fileNameDiv = document.getElementById('file-name');
+            const continueBtn = document.getElementById('continue-btn');
+            const projectInfo = document.getElementById('project-info');
+            
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                fileNameDiv.textContent = `Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                
+                // Enable continue button
+                continueBtn.classList.add('enabled');
+                
+                // Show placeholder project info (in real implementation, this would come from server)
+                setTimeout(() => {
+                    const projectDetails = document.getElementById('project-details');
+                    projectDetails.innerHTML = `
+                        <p><strong>File:</strong> ${file.name}</p>
+                        <p><strong>Size:</strong> ${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                        <p><strong>Status:</strong> Ready for processing</p>
+                        <p style="color: #28a745;"><strong>✓</strong> File appears valid for processing</p>
+                    `;
+                    projectInfo.classList.add('show');
+                }, 500);
+            } else {
+                fileNameDiv.textContent = '';
+                continueBtn.classList.remove('enabled');
+                projectInfo.classList.remove('show');
+            }
+        }
+        
+        document.getElementById('work-order-form').addEventListener('submit', function(e) {
+            const continueBtn = document.getElementById('continue-btn');
+            continueBtn.textContent = '🔄 Processing...';
+            continueBtn.style.opacity = '0.7';
+        });
+    </script>
+</body>
+</html>

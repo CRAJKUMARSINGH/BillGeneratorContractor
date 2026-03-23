@@ -1,0 +1,594 @@
+I've now read all the key source files. Here is a thorough, structured guidance for the Excel UI implementation in your BillGeneratorUnified app.
+
+🧮 Excel UI Implementation — Complete Guidance
+
+🔍 1. Current State Analysis
+
+Your core/ui/online_mode_grid.py already uses Streamlit's st.data_editor, which is the right foundation. However, there are 5 critical bugs and several UX gaps that need to be fixed:
+
+🐛 2. Critical Bugs Found
+
+Bug #1 — Scope Error in generate_documents()
+❌ BROKEN — edited_df is defined in show_online_mode_grid()
+but referenced inside generate_documents() function which has no access to it
+excel_output = ExcelExporter.create_new_excel(
+    edited_df=items_df,   # ← this is fine
+    ...
+)
+But ChangeLogger.get_changes() works only if initialized in this scope
+Fix: Pass edited_df explicitly as items_df (already done) but also pass changes as a parameter.
+
+Bug #2 — excel_uploaded Flag Never Resets
+❌ BROKEN — Once Excel is uploaded once, this block never fires again
+if excel_file and not st.session_state.online_grid_data['excel_uploaded']:
+    ...
+    st.session_state.online_grid_data['excel_uploaded'] = True
+If the user uploads a different file, nothing happens. Fix by keying on filename.
+
+Bug #3 — Change Tracking Fires Every Render
+❌ Runs on EVERY re-render, not just on actual change
+for idx in edited_df.index:
+    if idx  pd.DataFrame:
+    """Return a blank items DataFrame."""
+    return pd.DataFrame([{
+        "Item No":    f"{offset + i + 1:03d}",
+        "Description": "",
+        "Unit":       "NOS",
+        "Quantity":   0.0,
+        "Rate":       0.0,
+        "Amount":     0.0,
+    } for i in range(n)])
+
+
+def _recalc(df: pd.DataFrame) -> pd.DataFrame:
+    """Recalculate Amount column."""
+    df = df.copy()
+    df["Amount"] = df["Quantity"] * df["Rate"]
+    return df
+
+
+def _diff_log(old: pd.DataFrame, new: pd.DataFrame) -> list[dict]:
+    """Return list of change dicts between two DataFrames."""
+    changes = []
+    for idx in new.index:
+        if idx >= len(old):
+            continue
+        item = new.loc[idx, "Item No"]
+        for col in ["Quantity", "Rate"]:
+            o, n = old.loc[idx, col], new.loc[idx, col]
+            if abs(float(o) - float(n)) > 1e-9:
+                changes.append({
+                    "Item No": item,
+                    "Field": col,
+                    "Old": round(float(o), 3),
+                    "New": round(float(n), 3),
+                    "Timestamp": datetime.now().strftime("%H:%M:%S"),
+                })
+    return changes
+
+── main entry point ──────────────────────────────────────────────────────────
+
+def show_online_mode_grid(config):
+    st.markdown("## 💻 Online Entry Mode — Excel-Like Grid")
+
+── initialise session state ──────────────────────────────────────────────
+    ss = st.session_state
+    if "ogd" not in ss:
+        ss.ogd = {
+            "project_name":   "",
+            "contractor":     "",
+            "bill_date":      None,
+            "tender_premium": 4.0,
+            "df":             _default_df(5),
+            "last_upload":    None,   # track filename to allow re-upload
+            "change_log":     [],
+            "prev_df":        None,   # for diff tracking
+        }
+
+    ogd = ss.ogd  # shortcut
+
+── Step 1 : Project Details ──────────────────────────────────────────────
+    st.markdown("### 📋 Step 1: Project Details")
+
+    col_up, col_rst = st.columns([3, 1])
+
+    with col_up:
+        excel_file = st.file_uploader(
+            "Upload Excel to auto-fill (optional)",
+            type=["xlsx", "xls", "xlsm"],
+            key="ogd_uploader",
+        )
+Re-extract only when a NEW file arrives
+        if excel_file and excel_file.name != ogd["last_upload"]:
+            with st.spinner("Extracting from Excel …"):
+                extracted = _extract_excel(excel_file)
+            if extracted:
+                ogd["project_name"]  = extracted.get("project_name", "")
+                ogd["contractor"]    = extracted.get("contractor", "")
+                if extracted.get("df") is not None:
+                    ogd["df"] = _recalc(extracted["df"])
+                ogd["last_upload"] = excel_file.name
+                st.success(f"✅ Loaded {excel_file.name}")
+                st.rerun()
+
+    with col_rst:
+        st.write("")
+        st.write("")
+        if st.button("🔄 Reset All", use_container_width=True):
+            ss.ogd = {
+                "project_name": "", "contractor": "", "bill_date": None,
+                "tender_premium": 4.0, "df": _default_df(5),
+                "last_upload": None, "change_log": [], "prev_df": None,
+            }
+            st.rerun()
+
+    c1, c2 = st.columns(2)
+    with c1:
+        ogd["project_name"] = st.text_input(
+            "Name of Work *", value=ogd["project_name"], placeholder="Required")
+        ogd["contractor"] = st.text_input(
+            "Contractor Name", value=ogd["contractor"])
+    with c2:
+        ogd["bill_date"] = st.date_input(
+            "Bill Date", value=ogd["bill_date"])
+        ogd["tender_premium"] = st.number_input(
+            "Tender Premium (%)", 0.0, 100.0,
+            value=float(ogd["tender_premium"]), step=0.5)
+
+── Step 2 : Excel-Like Grid ──────────────────────────────────────────────
+    st.markdown("---")
+    st.markdown("### 📊 Step 2: Work Items — Excel-Like Grid")
+
+    _grid_tips()
+
+    cur = ogd["df"]
+    c1, c2, c3 = st.columns([2, 1, 1])
+    active = int((cur["Quantity"] > 0).sum())
+    with c1:
+        st.info(f"📦 Rows: {len(cur)} | Active (Qty>0): {active}")
+    with c2:
+        if st.button("➕ Add 5 Rows", use_container_width=True, key="add5"):
+            ogd["df"] = pd.concat(
+                [cur, _default_df(5, offset=len(cur))], ignore_index=True)
+            st.rerun()
+    with c3:
+        if st.button("➕ Add 10 Rows", use_container_width=True, key="add10"):
+            ogd["df"] = pd.concat(
+                [cur, _default_df(10, offset=len(cur))], ignore_index=True)
+            st.rerun()
+
+Save snapshot BEFORE showing the editor
+    prev_snap = cur.copy()
+
+    edited = st.data_editor(
+        cur,
+        use_container_width=True,
+        num_rows="dynamic",
+        height=550,
+        column_config=_column_config(),
+        hide_index=True,
+        key="ogd_editor",        # stable key — never changes
+    )
+
+Recalculate Amount immediately after edit
+    edited = _recalc(edited)
+
+Track changes (compare ONLY if shape matches)
+    if len(edited) == len(prev_snap):
+        new_changes = _diff_log(prev_snap, edited)
+        if new_changes:
+            ogd["change_log"].extend(new_changes)
+
+Persist updated df
+    ogd["df"] = edited
+
+── Step 3 : Summary & Generation ────────────────────────────────────────
+    st.markdown("---")
+    st.markdown("### 📊 Step 3: Summary & Generate")
+
+    active_df = edited[(edited["Quantity"] > 0) & (edited["Rate"] > 0)].copy()
+    total   = active_df["Amount"].sum()
+    premium = total * ogd["tender_premium"] / 100
+    net     = total + premium
+
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("Total Amount",   f"₹{total:,.2f}")
+    m2.metric("Premium",        f"₹{premium:,.2f}",  delta=f"{ogd['tender_premium']}%")
+    m3.metric("Net Payable",    f"₹{net:,.2f}")
+    m4.metric("Active Items",   f"{len(active_df)}/{len(edited)}")
+
+Change log expander
+    if ogd["change_log"]:
+        with st.expander(f"📝 Change Log ({len(ogd['change_log'])} entries)", expanded=False):
+            st.dataframe(
+                pd.DataFrame(ogd["change_log"]),
+                use_container_width=True, hide_index=True)
+
+Output options
+    st.markdown("#### 📄 Output Options")
+    c1, c2, c3 = st.columns(3)
+    gen_html = c1.checkbox("📄 HTML", value=True)
+    gen_pdf  = c2.checkbox("📕 PDF",  value=True)
+    gen_docx = c3.checkbox("📝 DOCX", value=False)
+
+── Generate ──────────────────────────────────────────────────────────────
+    if st.button("🚀 Generate Documents", type="primary",
+                 use_container_width=True, key="generate_btn"):
+        if not ogd["project_name"]:
+            st.error("❌ Please enter Name of Work")
+        elif len(active_df) == 0:
+            st.error("❌ No active items (Quantity > 0 & Rate > 0)")
+        else:
+            _generate(
+                project_name   = ogd["project_name"],
+                contractor     = ogd["contractor"],
+                bill_date      = ogd["bill_date"],
+                tender_premium = ogd["tender_premium"],
+                items_df       = active_df,
+                change_log     = ogd["change_log"],
+                gen_html=gen_html, gen_pdf=gen_pdf, gen_docx=gen_docx,
+            )
+
+── column config (extracted for readability) ─────────────────────────────────
+
+def _column_config():
+    return {
+        "Item No": st.column_config.TextColumn(
+            "Item No", width="small", required=True),
+        "Description": st.column_config.TextColumn(
+            "Description", width="large", required=True),
+        "Unit": st.column_config.SelectboxColumn(
+            "Unit", width="small",
+            options=["NOS", "CUM", "SQM", "RMT", "MT", "KG",
+                     "LTR", "SET", "LS", "JOB"],
+            required=True),
+        "Quantity": st.column_config.NumberColumn(
+            "✏️ Qty", width="small",
+            min_value=0.0, step=0.01, format="%.2f", required=True),
+        "Rate": st.column_config.NumberColumn(
+            "✏️ Rate (₹)", width="small",
+            min_value=0.0, step=0.01, format="%.2f", required=True),
+        "Amount": st.column_config.NumberColumn(
+            "Amount (₹)", width="medium",
+            format="₹%.2f", disabled=True),
+    }
+
+
+def _grid_tips():
+    st.markdown("""
+    
+        💡 Grid Tips:
+        
+          Click a cell to edit &nbsp;·&nbsp;
+          Tab / Enter to move &nbsp;·&nbsp;
+          Delete to clear &nbsp;·&nbsp;
+          Ctrl+C / V to copy-paste rows &nbsp;·&nbsp;
+          Use ➕ buttons to add rows
+        
+    
+    """, unsafe_allow_html=True)
+
+── Excel extraction helper ───────────────────────────────────────────────────
+
+def _extract_excel(excel_file) -> dict:
+    try:
+        from core.processors.excel_processor import ExcelProcessor
+        processor  = ExcelProcessor()
+        data       = processor.process_excel(excel_file)
+        result     = {}
+
+        title = data.get("title_data", {})
+        result["project_name"] = title.get("Name of Work", "")
+        result["contractor"]   = title.get(
+            "Name of Contractor or supplier",
+            title.get("Contractor", ""))
+
+        wo_df = data.get("work_order_data", pd.DataFrame())
+        if not wo_df.empty:
+            rows = []
+            for _, row in wo_df.iterrows():
+                qty  = _safe_float(row.get("Quantity", 0))
+                rate = _safe_float(row.get("Rate", 0))
+                rows.append({
+                    "Item No":    str(row.get("Item No.", "")),
+                    "Description": str(row.get("Description", "")),
+                    "Unit":       str(row.get("Unit", "NOS")),
+                    "Quantity":   qty,
+                    "Rate":       rate,
+                    "Amount":     qty * rate,
+                })
+            result["df"] = pd.DataFrame(rows)
+        return result
+    except Exception as e:
+        st.error(f"Extraction error: {e}")
+        return {}
+
+
+def _safe_float(val):
+    try:
+        return float(val)
+    except (ValueError, TypeError):
+        return 0.0
+
+── document generation ───────────────────────────────────────────────────────
+
+def _generate(project_name, contractor, bill_date, tender_premium,
+              items_df, change_log, gen_html, gen_pdf, gen_docx):
+    with st.spinner("Generating documents …"):
+        try:
+            from core.generators.document_generator import DocumentGenerator
+
+            bill_date_str = bill_date.strftime("%d/%m/%Y") if bill_date else ""
+            total         = items_df["Amount"].sum()
+            premium_amt   = total * tender_premium / 100
+
+            processed = {
+                "title_data": {
+                    "Name of Work":     project_name,
+                    "Contractor":       contractor,
+                    "Bill Date":        bill_date_str,
+                    "Tender Premium %": tender_premium,
+                },
+                "work_order_data": items_df.rename(
+                    columns={"Item No": "Item No."}).to_dict("records"),
+                "totals": {
+                    "grand_total": total,
+                    "premium":     {"percent": tender_premium / 100,
+                                    "amount":  premium_amt},
+                    "net_payable": total + premium_amt,
+                },
+            }
+
+            gen = DocumentGenerator(processed)
+            html_docs = gen.generate_all_documents() if gen_html else {}
+            pdf_docs  = gen.create_pdf_documents(html_docs) if gen_pdf and html_docs else {}
+            doc_docs  = gen.generate_doc_documents()       if gen_docx else {}
+
+            st.success("✅ Documents generated!")
+
+── ZIP ──────────────────────────────────────────────────────────
+            buf = io.BytesIO()
+            with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+                for name, content in html_docs.items():
+                    b = content.encode() if isinstance(content, str) else content
+                    zf.writestr(f"html/{name}.html", b)
+                for name, content in pdf_docs.items():
+                    zf.writestr(f"pdf/{name}.pdf", content)
+                for name, content in doc_docs.items():
+                    zf.writestr(f"word/{name}", content)
+
+── Bonus: embed change log sheet in Excel inside ZIP ────────
+                if change_log:
+                    cl_df    = pd.DataFrame(change_log)
+                    xl_buf   = io.BytesIO()
+                    with pd.ExcelWriter(xl_buf, engine="openpyxl") as writer:
+                        items_df.to_excel(writer, sheet_name="Items",       index=False)
+                        cl_df.to_excel(   writer, sheet_name="Change Log",  index=False)
+                    zf.writestr("data/bill_with_changelog.xlsx", xl_buf.getvalue())
+
+            buf.seek(0)
+            ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+            st.download_button(
+                "📦 Download All (ZIP)",
+                data=buf.getvalue(),
+                file_name=f"bill_{ts}.zip",
+                mime="application/zip",
+                use_container_width=True,
+            )
+
+── Individual downloads ─────────────────────────────────────────
+            c1, c2, c3 = st.columns(3)
+            if gen_html:
+                with c1:
+                    st.markdown("#### 📄 HTML")
+                    for n, c in html_docs.items():
+                        b = c.encode() if isinstance(c, str) else c
+                        st.download_button(f"📄 {n}", b,
+                            f"{n}.html", "text/html", key=f"h_{n}")
+            if gen_pdf:
+                with c2:
+                    st.markdown("#### 📕 PDF")
+                    for n, c in pdf_docs.items():
+                        st.download_button(f"📕 {n}", c,
+                            f"{n}.pdf", "application/pdf", key=f"p_{n}")
+            if gen_docx:
+                with c3:
+                    st.markdown("#### 📝 DOCX")
+                    mime = ("application/vnd.openxmlformats-"
+                            "officedocument.wordprocessingml.document")
+                    for n, c in doc_docs.items():
+                        st.download_button(f"📝 {n}", c, n, mime, key=f"d_{n}")
+
+        except Exception as e:
+            st.error(f"❌ Generation failed: {e}")
+            import traceback
+            st.code(traceback.format_exc())
+
+🚀 4. Option B — True Excel UI with streamlit-aggrid
+
+If you need freeze panes, column resize, sorting, row grouping, formula-like auto-fill — use streamlit-aggrid:
+
+pip install streamlit-aggrid
+
+from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, DataReturnMode
+
+def show_aggrid_editor(df: pd.DataFrame) -> pd.DataFrame:
+    gb = GridOptionsBuilder.from_dataframe(df)
+Make only Qty and Rate editable
+    gb.configure_default_column(editable=False, resizable=True, sortable=True)
+    gb.configure_column("Quantity", editable=True, type=["numericColumn"], 
+                         precision=2, cellStyle={"background-color": "#fffde7"})
+    gb.configure_column("Rate",     editable=True, type=["numericColumn"], 
+                         precision=2, cellStyle={"background-color": "#fffde7"})
+    gb.configure_column("Amount",   editable=False,
+                         valueGetter="data.Quantity * data.Rate",   # ← live formula!
+                         type=["numericColumn"], precision=2)
+    gb.configure_column("Description", editable=True, width=300)
+Freeze Item No column
+    gb.configure_column("Item No", pinned="left", width=80)
+    
+    gb.configure_grid_options(
+        enableRangeSelection=True,   # Ctrl+C/V like Excel
+        undoRedoCellEditing=True,    # Ctrl+Z support
+        undoRedoCellEditingLimit=20,
+        stopEditingWhenCellsLoseFocus=True,
+    )
+    gb.configure_pagination(paginationAutoPageSize=False, paginationPageSize=50)
+    
+    grid_opts = gb.build()
+    
+    result = AgGrid(
+        df,
+        gridOptions=grid_opts,
+        update_mode=GridUpdateMode.VALUE_CHANGED,
+        data_return_mode=DataReturnMode.FILTERED_AND_SORTED,
+        fit_columns_on_grid_load=True,
+        theme="streamlit",           # or "alpine", "balham", "material"
+        height=500,
+        allow_unsafe_jscode=True,    # needed for valueGetter formula
+    )
+    
+    return result["data"]
+
+ag-Grid vs st.data_editor Comparison
+
+| Feature | st.data_editor | streamlit-aggrid |
+|---|---|---|
+| Built-in (no install) | ✅ | ❌ needs pip |
+| Live formula in cell | ❌ | ✅ valueGetter |
+| Freeze/pin columns | ❌ | ✅ pinned="left" |
+| Column resize | ✅ | ✅ |
+| Range selection (Ctrl+C) | Partial | ✅ Full |
+| Undo/Redo | ❌ | ✅ |
+| Row grouping | ❌ | ✅ |
+| Filter/sort per column | ❌ | ✅ |
+| Custom cell style | ❌ | ✅ |
+
+For your hierarchical items (1.0 / 1.1 / 1.1.1), ag-Grid row grouping is a major advantage.
+
+📋 5. Summary of All Required Changes
+
+| File | Change | Priority |
+|---|---|---|
+| core/ui/online_mode_grid.py | Replace with fixed version above | 🔴 Critical |
+| core/ui/online_mode_grid.py | Fix excel_uploaded flag → use filename tracking | 🔴 Critical |
+| core/ui/online_mode_grid.py | Fix scope of edited_df in generate_documents() | 🔴 Critical |
+| core/ui/online_mode_grid.py | Fix change tracking duplicate firing | 🟡 Important |
+| requirements.txt | Add streamlit-aggrid if choosing ag-Grid | 🟢 Optional |
+| app.py | Remove st.sidebar.checkbox for Excel-Like Grid toggle (make it default) | 🟢 Optional |
+
+🗺️ 6. Architecture Diagram
+
+User Browser
+    │
+    ▼
+app.py  ──► sidebar selects "Online Entry"
+    │
+    ▼
+online_mode_grid.py  (show_online_mode_grid)
+    │
+    ├── _extract_excel()    ← ExcelProcessor
+    ├── st.data_editor      ← Streamlit built-in  (current)
+    │   OR AgGrid()         ← streamlit-aggrid    (recommended upgrade)
+    │
+    ├── _recalc()           ← Amount = Qty × Rate
+    ├── _diff_log()         ← change tracking
+    │
+    └── _generate()
+            ├── DocumentGenerator.generate_all_documents()
+            ├── create_pdf_documents()
+            └── generate_doc_documents()
+                   → ZIP download
+
+✅ Quick-Start Steps
+
+Step 1 — Replace core/ui/online_mode_grid.py with the fixed code above.
+
+Step 2 — For basic Excel-like UI (no extra install): done ✅ — uses st.data_editor.
+
+Step 3 — For full Excel experience, add to requirements.txt:
+streamlit-aggrid>=0.3.4
+Then replace the st.data_editor(...) call in show_online_mode_grid with show_aggrid_editor(ogd["df"]).
+
+Step 4 — Verify with your test file:
+streamlit run app.py
+→ Online Entry → Excel-Like Grid
+Upload TEST_INPUT_FILES/FirstFINALvidExtra.xlsx
+Verify: items load, Amount auto-calculates, change log tracks, ZIP downloads
+
+All four files are ready. Here is the complete delivery summary:
+
+✅ Delivery — ag-Grid Module (40/40 tests passing)
+
+📁 Files
+
+| File | Size | Purpose |
+|---|---|---|
+| online_mode_aggrid.py | 907 lines | Main module — drop-in replacement |
+| app_patch.py | 50 lines | Paste into app.py |
+| requirements_additions.txt | — | Add to your requirements.txt |
+| test_online_mode_aggrid.py | 40 tests | Full unit + integration tests |
+
+🏗️ Architecture of online_mode_aggrid.py
+
+show_online_mode_aggrid(config)          ← Streamlit page entry point
+│
+├─ STEP 1 — Project Details
+│   ├─ _extract_from_excel()             ← ExcelProcessor (auto-fill on upload)
+│   │   Tracks filename → no spurious re-extract on re-render
+│   └─ Project Name / Contractor / Agreement No / Bill No / Date / Premium
+│
+├─ STEP 2 — ag-Grid
+│   ├─ _build_grid_options()             ← Full AG Grid config
+│   │   ├─ Item No: pinned left (freeze-pane style)
+│   │   ├─ Description: editable, wide, auto-height
+│   │   ├─ Unit: dropdown cell editor (NOS/CUM/SQM …)
+│   │   ├─ Quantity: numeric editor, pale-yellow bg
+│   │   ├─ Rate: numeric editor, ₹ formatter, pale-yellow bg
+│   │   └─ Amount: LIVE valueGetter JS (Qty × Rate in browser)
+│   ├─ JsCode: row colouring (green=active, white=zero)
+│   ├─ enableRangeSelection, undoRedoCellEditing, tabToNextCell
+│   └─ _fallback_editor()               ← st.data_editor if aggrid absent
+│
+├─ Change Tracking
+│   ├─ _df_to_json()  — compact snapshot (Item No, Qty, Rate only)
+│   ├─ _diff_changes() — diffing prev vs new, assigns smart reason:
+│   │     "Zero-Qty Activation" / "Part-Rate Payment" /
+│   │     "Quantity Adjustment" / "Rate Adjustment"
+│   └─ No spurious duplicate logs — snapshot updated after each render
+│
+├─ STEP 3 — Summary Metrics
+│   ├─ 5 metric cards: Total / Premium / Net Payable / Active / Zero-Qty
+│   ├─ Change/Audit Log expander (CSV + JSON export)
+│   └─ Zero-qty items preview (excluded from bill)
+│
+└─ STEP 4 — Generation
+    ├─ _generate_documents()
+    │   ├─ DocumentGenerator pipeline (HTML → PDF → DOCX)
+    │   ├─ Excel round-trip (Bill Items + Change Log + Title sheets)
+    │   └─ ZIP with html/ pdf/ word/ data/ subfolders
+    └─ Individual download buttons + master ZIP
+
+🚀 3-Step Installation
+
+Step 1 — Install ag-Grid:
+pip install "streamlit-aggrid>=0.3.4" openpyxl
+
+Step 2 — Drop in the module:
+cp online_mode_aggrid.py  your_project/core/ui/
+
+Step 3 — Patch app.py — replace the elif "🖥️ Online Entry" … block with the contents of app_patch.py.
+
+🔬 Key Design Decisions
+
+| Problem | Solution |
+|---|---|
+| Amount doesn't live-update in grid | valueGetter JS runs Qty × Rate inside the browser — instant |
+| Duplicate change-log entries on re-render | Snapshot is a compact JSON; diff only runs when df actually changes |
+| excel_uploaded flag prevents re-upload | Track by uploaded.name — any new filename triggers extraction |
+| Scope bug (edited_df in generation fn) | _generate_documents() only accepts active_df — no outer-scope access |
+| No freeze pane | pinned="left" on Item No column |
+| No undo/redo | undoRedoCellEditing=True, limit 50 steps |
+| Range copy-paste | enableRangeSelection=True |
+| ag-Grid not installed | Graceful fallback to st.data_editor with a warning banner |
