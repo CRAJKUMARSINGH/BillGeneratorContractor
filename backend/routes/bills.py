@@ -7,15 +7,25 @@ import io
 import logging
 import uuid
 import zipfile
+import time
+from datetime import datetime
+from collections import defaultdict
 from pathlib import Path
 
-from fastapi import APIRouter, BackgroundTasks, File, HTTPException, UploadFile
+from fastapi import APIRouter, File, HTTPException, UploadFile, Request
 from fastapi.responses import StreamingResponse
+import redis.asyncio as aioredis
+import redis
+import os
+import json
 
 from models import (
     BillItem, DocumentInfo, ExtraItem, GenerateRequest,
-    JobStatus, ParsedBillData,
+    JobStatus, ParsedBillData, User, BillRecord, TemplateRequest
 )
+from dependencies import get_current_user
+from database import engine
+from sqlmodel import Session, select
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/bills", tags=["bills"])
@@ -25,8 +35,35 @@ OUTPUT_DIR = Path(__file__).parent.parent / "outputs"
 UPLOAD_DIR.mkdir(exist_ok=True)
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-# In-memory job store (MVP — replace with Redis in Phase 6)
-JOBS: dict = {}
+# Helper for synchronous workers modifying job progress in Redis
+def update_redis_job(job_id: str, **kwargs):
+    sync_redis = redis.from_url(os.getenv("REDIS_URL", "redis://redis:6379/0"))
+    key = f"job:{job_id}"
+    data = sync_redis.get(key)
+    if data:
+        job_data = json.loads(data)
+        job_data.update(kwargs)
+        sync_redis.set(key, json.dumps(job_data), ex=86400)
+    else:
+        sync_redis.set(key, json.dumps(kwargs), ex=86400)
+
+# Simple in-memory rate limiter for job creation
+RATE_LIMIT_STORE = defaultdict(list)
+RATE_LIMIT_MAX_REQUESTS = 10  # max 10 requests
+RATE_LIMIT_WINDOW_SEC = 60    # per minute
+
+def is_rate_limited(ip: str) -> bool:
+    now = time.time()
+    RATE_LIMIT_STORE[ip] = [t for t in RATE_LIMIT_STORE[ip] if now - t < RATE_LIMIT_WINDOW_SEC]
+    if len(RATE_LIMIT_STORE[ip]) >= RATE_LIMIT_MAX_REQUESTS:
+        return True
+    RATE_LIMIT_STORE[ip].append(now)
+    return False
+
+def log_job_event(job_id: str, stage: str, message: str):
+    timestamp = datetime.now().isoformat()
+    # Exact format required: timestamp | job_id | stage | message
+    logger.info(f"{timestamp} | {job_id} | {stage} | {message}")
 
 
 # ── Upload & Parse ────────────────────────────────────────────────────────────
@@ -59,6 +96,67 @@ async def upload_excel(file: UploadFile = File(...)):
         save_path.unlink(missing_ok=True)
         logger.exception("Excel parse failed")
         raise HTTPException(500, f"Failed to parse Excel: {e}")
+
+@router.post("/upload-image", response_model=ParsedBillData)
+async def upload_image(file: UploadFile = File(...)):
+    """Upload an image (scanned handwritten bill), run OCR, return structured data."""
+    if not file.filename:
+        raise HTTPException(400, "No file provided")
+
+    ext = Path(file.filename).suffix.lower()
+    if ext not in {".png", ".jpg", ".jpeg", ".pdf"}:
+        raise HTTPException(400, f"Unsupported image type: {ext}")
+
+    content = await file.read()
+    if len(content) > 20 * 1024 * 1024:
+        raise HTTPException(413, "File too large. Max 20 MB.")
+
+    file_id = str(uuid.uuid4())
+    save_path = UPLOAD_DIR / f"{file_id}{ext}"
+    save_path.write_bytes(content)
+    logger.info(f"Saved image upload {file.filename} → {save_path}")
+
+    try:
+        import sys
+        root_dir = Path(__file__).parent.parent.parent
+        if str(root_dir) not in sys.path:
+            sys.path.insert(0, str(root_dir))
+        
+        from ingestion.ocr_extractor import extract_table_from_image
+        from ingestion.normalizer import normalize_to_unified_model
+
+        raw_data = await asyncio.get_event_loop().run_in_executor(None, extract_table_from_image, str(save_path))
+        unified = normalize_to_unified_model(raw_data, source_type="ocr")
+
+        # Map UnifiedDocumentModel -> ParsedBillData
+        bill_items = []
+        for i, row in enumerate(unified.rows):
+            bill_items.append(BillItem(
+                itemNo=str(i+1),
+                description=row.description,
+                unit=row.unit,
+                quantitySince=row.quantity,
+                quantityUpto=row.quantity,
+                quantity=row.quantity,
+                rate=row.rate,
+                amount=row.amount
+            ))
+
+        return ParsedBillData(
+            fileId=file_id,
+            fileName=file.filename,
+            titleData=unified.raw_metadata,
+            billItems=bill_items,
+            extraItems=[],
+            totalAmount=unified.total_amount,
+            hasExtraItems=False,
+            sheets=["OCR Output"]
+        )
+
+    except Exception as e:
+        logger.exception("OCR parse failed")
+        save_path.unlink(missing_ok=True)
+        raise HTTPException(500, f"Failed to run OCR on image: {e}")
 
 
 def _parse_excel(path: Path, file_id: str, filename: str) -> ParsedBillData:
@@ -159,14 +257,35 @@ def _parse_excel(path: Path, file_id: str, filename: str) -> ParsedBillData:
 
 # ── Generate ──────────────────────────────────────────────────────────────────
 
+@router.post("/generate-template")
+async def generate_template(req: TemplateRequest):
+    """Takes a natural language prompt, runs it against the AI layer, and returns a JSON schema representation."""
+    import sys
+    root_dir = Path(__file__).parent.parent.parent
+    if str(root_dir) not in sys.path:
+        sys.path.insert(0, str(root_dir))
+    
+    from ingestion.template_generator import generate_template_schema
+    
+    try:
+        schema = await asyncio.get_event_loop().run_in_executor(None, generate_template_schema, req.prompt)
+        return schema
+    except Exception as e:
+        logger.exception("Template generation failed")
+        raise HTTPException(500, f"AI generation failed: {e}")
+
 @router.post("/generate", response_model=JobStatus)
-async def generate_bill(req: GenerateRequest, background_tasks: BackgroundTasks):
-    """Enqueue bill document generation. Returns job_id immediately."""
+async def generate_bill(req: GenerateRequest, request: Request, current_user: User = Depends(get_current_user)):
+    """Enqueue bill document generation via ARQ. Returns job_id immediately."""
+    client_ip = request.client.host if request.client else "unknown"
+    if is_rate_limited(client_ip):
+        raise HTTPException(status_code=429, detail="Too many job creation requests. Please try again later.")
+
     job_id = str(uuid.uuid4())
     out_dir = OUTPUT_DIR / job_id
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    JOBS[job_id] = {
+    initial_job_state = {
         "jobId": job_id,
         "status": "pending",
         "progress": 0,
@@ -175,14 +294,26 @@ async def generate_bill(req: GenerateRequest, background_tasks: BackgroundTasks)
         "error": None,
         "output_dir": str(out_dir),
     }
-    background_tasks.add_task(_run_generation, job_id, req)
-    logger.info(f"Job {job_id} queued")
-    return JobStatus(jobId=job_id, status="pending", message="Generation queued")
 
+    # Initialize job in Redis
+    redis_client = aioredis.from_url(os.getenv("REDIS_URL", "redis://redis:6379/0"))
+    await redis_client.set(f"job:{job_id}", json.dumps(initial_job_state), ex=86400)
+    await redis_client.aclose()
+    with Session(engine) as session:
+        bill_record = BillRecord(
+            job_id=job_id,
+            user_id=current_user.id,
+            status="pending",
+            message="Generation queued",
+            total_amount=0.0
+        )
+        session.add(bill_record)
+        session.commit()
 
-async def _run_generation(job_id: str, req: GenerateRequest):
-    loop = asyncio.get_event_loop()
-    await loop.run_in_executor(None, _generate_documents, job_id, req)
+    await request.app.state.redis_pool.enqueue_job("generate_bill_task", job_id, req.model_dump())
+    log_job_event(job_id, "request received", f"Generate req received from {current_user.username}")
+    log_job_event(job_id, "job enqueued", "Job pushed to ARQ worker queue")
+    return JobStatus(**initial_job_state)
 
 
 def _generate_documents(job_id: str, req: GenerateRequest):
@@ -198,12 +329,23 @@ def _generate_documents(job_id: str, req: GenerateRequest):
     from rendering.pdf_generator import PDFGenerator
     import pandas as pd
 
-    job = JOBS[job_id]
-    out_dir = Path(job["output_dir"])
+    out_dir = OUTPUT_DIR / job_id
     opts = req.options
 
+    def update_db_status(status_str, message_str, amount=None):
+        with Session(engine) as session:
+            record = session.exec(select(BillRecord).where(BillRecord.job_id == job_id)).first()
+            if record:
+                record.status = status_str
+                record.message = message_str
+                if amount is not None:
+                    record.total_amount = amount
+                session.add(record)
+                session.commit()
+
     try:
-        job.update(status="processing", progress=10, message="Building document model...")
+        update_redis_job(job_id, status="processing", progress=10, message="Building document model...")
+        update_db_status("processing", "Building document model...")
 
         # ── Reconstruct DataFrames from edited items ──────────────────────────
         # Build minimal DataFrames that process_bill() can consume
@@ -241,7 +383,7 @@ def _generate_documents(job_id: str, req: GenerateRequest):
         ws_wo = pd.concat([header_df, spacer, ws_wo], ignore_index=True)
         ws_bq = pd.concat([header_df, spacer, ws_bq], ignore_index=True)
 
-        job.update(progress=25, message="Running calculation engine...")
+        update_redis_job(job_id, progress=25, message="Running calculation engine...")
 
         first_page, _, deviation, extra_items_data, _ = process_bill(
             ws_wo, ws_bq, ws_extra,
@@ -263,6 +405,8 @@ def _generate_documents(job_id: str, req: GenerateRequest):
         # Extract metadata from titleData
         td = req.titleData
         def _td(key): return td.get(key, "")
+        
+        update_db_status("processing", "Calculation complete", payable)
 
         doc = BillDocument(
             header=header_rows[:19],
@@ -280,7 +424,7 @@ def _generate_documents(job_id: str, req: GenerateRequest):
 
         template_data = doc.to_template_dict()
 
-        job.update(progress=40, message="Rendering HTML templates...")
+        update_redis_job(job_id, progress=40, message="Rendering HTML templates...")
 
         # ── Render HTML ───────────────────────────────────────────────────────
         engine_dir = Path(__file__).parent.parent.parent / "engine"
@@ -313,14 +457,14 @@ def _generate_documents(job_id: str, req: GenerateRequest):
                                      f"{doc_type.value}.html")
             if result.success:
                 html_paths.append(result.output_path)
-            job["progress"] = 40 + int(30 * (i + 1) / len(doc_types))
+            update_redis_job(job_id, progress=40 + int(30 * (i + 1) / len(doc_types)))
 
         docs = [DocumentInfo(name=p.name, format="html",
                              size=p.stat().st_size) for p in html_paths]
 
         # ── Generate PDFs ─────────────────────────────────────────────────────
         if opts.generatePdf and html_paths:
-            job.update(progress=72, message="Generating PDFs...")
+            update_redis_job(job_id, progress=72, message="Generating PDFs...")
             pdf_gen = PDFGenerator(orientation="portrait")
             for html_path in html_paths:
                 pdf_path = out_dir / (html_path.stem + ".pdf")
@@ -338,42 +482,61 @@ def _generate_documents(job_id: str, req: GenerateRequest):
                     logger.warning(f"PDF failed for {html_path.name}: {e}")
 
         # ── ZIP ───────────────────────────────────────────────────────────────
-        job.update(progress=92, message="Creating ZIP archive...")
+        update_redis_job(job_id, progress=92, message="Creating ZIP archive...")
         zip_path = out_dir / "bill_documents.zip"
         with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
             for f in out_dir.glob("*"):
                 if f.suffix in {".html", ".pdf", ".docx"}:
                     zf.write(f, f.name)
 
-        job.update(
+        update_redis_job(
+            job_id,
             status="complete", progress=100,
             message="Generation complete",
             documents=[d.model_dump() for d in docs],
         )
-        logger.info(f"Job {job_id} complete — {len(docs)} documents")
+        update_db_status("complete", "Generation complete")
+        log_job_event(job_id, "job completed", f"{len(docs)} documents generated")
 
     except Exception as e:
-        logger.exception(f"Job {job_id} failed")
-        job.update(status="error", error=str(e), message="Generation failed")
+        update_db_status("error", f"Generation failed: {e}")
+        log_job_event(job_id, "job failed", str(e))
+        update_redis_job(job_id, status="error", error=str(e), message="Generation failed")
 
 
 # ── Job Status & Download ─────────────────────────────────────────────────────
 
 @router.get("/jobs/{job_id}", response_model=JobStatus)
 async def get_job_status(job_id: str):
-    job = JOBS.get(job_id)
-    if not job:
-        raise HTTPException(404, "Job not found")
+    redis_client = aioredis.from_url(os.getenv("REDIS_URL", "redis://redis:6379/0"))
+    data = await redis_client.get(f"job:{job_id}")
+    await redis_client.aclose()
+    
+    if not data:
+        raise HTTPException(404, "Job not found in queue")
+    
+    job = json.loads(data)
     return JobStatus(**{k: v for k, v in job.items() if k != "output_dir"})
+
+@router.get("/history")
+async def get_history(current_user: User = Depends(get_current_user)):
+    with Session(engine) as session:
+        records = session.exec(select(BillRecord).where(BillRecord.user_id == current_user.id).order_by(BillRecord.created_at.desc())).all()
+        return records
 
 
 @router.get("/jobs/{job_id}/download")
 async def download_result(job_id: str, format: str = "zip"):
-    job = JOBS.get(job_id)
-    if not job:
+    redis_client = aioredis.from_url(os.getenv("REDIS_URL", "redis://redis:6379/0"))
+    data = await redis_client.get(f"job:{job_id}")
+    await redis_client.aclose()
+    
+    if not data:
         raise HTTPException(404, "Job not found")
-    if job["status"] != "complete":
-        raise HTTPException(400, f"Job not complete (status: {job['status']})")
+        
+    job = json.loads(data)
+    if job.get("status") != "complete":
+        raise HTTPException(400, f"Job not complete (status: {job.get('status')})")
 
     out_dir = Path(job["output_dir"])
 

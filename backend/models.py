@@ -4,8 +4,27 @@ Derived from Git5 bill-api models, aligned to engine/model/document.py.
 """
 from pydantic import BaseModel, Field
 from typing import Optional
+from sqlmodel import SQLModel, Field as SQLField
+from datetime import datetime
 
+# --- DATABASE MODELS ---
+class User(SQLModel, table=True):
+    id: Optional[int] = SQLField(default=None, primary_key=True)
+    username: str = SQLField(unique=True, index=True)
+    hashed_password: str
+    role: str = SQLField(default="operator")
 
+class BillRecord(SQLModel, table=True):
+    id: Optional[int] = SQLField(default=None, primary_key=True)
+    job_id: str = SQLField(unique=True, index=True)
+    user_id: int = SQLField(foreign_key="user.id")
+    status: str
+    message: str
+    total_amount: float = 0.0
+    created_at: datetime = SQLField(default_factory=datetime.utcnow)
+    file_paths: str = "" # serialized JSON string for simplicity
+
+# --- API MODELS ---
 class BillItem(BaseModel):
     itemNo: str = ""
     description: str = ""
@@ -55,6 +74,9 @@ class GenerateRequest(BaseModel):
     extraItems: list[ExtraItem]
     options: GenerateOptions = Field(default_factory=GenerateOptions)
 
+class TemplateRequest(BaseModel):
+    prompt: str
+
 
 class DocumentInfo(BaseModel):
     name: str
@@ -73,5 +95,7 @@ class JobStatus(BaseModel):
 
 class HealthResponse(BaseModel):
     status: str
+    redis: str
+    worker: str
     engine: str
     version: str = "1.0.0"

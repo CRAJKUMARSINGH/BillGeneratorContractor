@@ -2,6 +2,11 @@ fastapi>=0.115.0
 uvicorn[standard]>=0.30.0
 python-multipart>=0.0.9
 pydantic>=2.0.0
+# DB and Auth
+sqlmodel>=0.0.14
+passlib[bcrypt]>=1.7.4
+PyJWT>=2.8.0
+redis>=5.0.0
 # engine deps (shared)
 pandas>=2.0.0
 numpy>=1.24.0

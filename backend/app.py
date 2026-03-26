@@ -16,8 +16,12 @@ Run:
 """
 import logging
 import sys
+import os
 from pathlib import Path
 
+import redis.asyncio as aioredis
+from arq import create_pool
+from arq.connections import RedisSettings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -26,7 +30,9 @@ ENGINE_DIR = Path(__file__).parent.parent / "engine"
 if str(ENGINE_DIR) not in sys.path:
     sys.path.insert(0, str(ENGINE_DIR))
 
+from database import create_db_and_tables
 from routes.bills import router as bills_router
+from routes.auth import router as auth_router
 from models import HealthResponse
 
 logging.basicConfig(
@@ -50,20 +56,49 @@ app.add_middleware(
 )
 
 app.include_router(bills_router)
+app.include_router(auth_router)
 
 
-@app.get("/healthz", response_model=HealthResponse, tags=["health"])
+@app.get("/health", response_model=HealthResponse, tags=["health"])
 async def health():
-    """Health check — verifies engine is importable."""
+    """Health check — verifies engine and infrastructure."""
     try:
         from calculation.bill_processor import process_bill  # noqa
         engine_status = "ok"
     except Exception as e:
         engine_status = f"error: {e}"
-    return HealthResponse(status="ok", engine=engine_status)
+        
+    redis_status = "unknown"
+    try:
+        redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+        r = aioredis.from_url(redis_url, socket_timeout=1)
+        if await r.ping():
+            redis_status = "connected"
+        else:
+            redis_status = "failed"
+        await r.aclose()
+    except Exception:
+        redis_status = "failed"
+        
+    return HealthResponse(
+        status="ok", 
+        redis=redis_status,
+        worker="unknown",  # MVP static value until ARQ worker is integrated
+        engine=engine_status
+    )
 
 
 @app.on_event("startup")
 async def startup():
+    create_db_and_tables()
     logger.info("Bill Generator API starting up")
     logger.info(f"Engine path: {ENGINE_DIR}")
+    
+    redis_url = os.getenv("REDIS_URL", "redis://redis:6379/0")
+    app.state.redis_pool = await create_pool(RedisSettings.from_dsn(redis_url))
+
+@app.on_event("shutdown")
+async def shutdown():
+    if hasattr(app.state, "redis_pool"):
+        app.state.redis_pool.close()
+        await app.state.redis_pool.wait_closed()

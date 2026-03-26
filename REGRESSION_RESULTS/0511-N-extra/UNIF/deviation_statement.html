@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deviation Statement</title>
+    <style>
+        @page { 
+            size: A4 landscape; 
+            margin: 10mm;
+            @top-left { content: none; }
+            @top-center { content: none; }
+            @top-right { content: none; }
+            @bottom-left { content: none; }
+            @bottom-center { content: none; }
+            @bottom-right { content: none; }
+        }
+        @media print {
+            html, body {
+                width: 277mm !important;
+                min-width: 277mm !important;
+                max-width: 277mm !important;
+            }
+            table {
+                width: 277mm !important;
+                min-width: 277mm !important;
+                max-width: 277mm !important;
+            }
+        }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        html {
+            zoom: 1.0 !important;
+            -webkit-text-size-adjust: none !important;
+        }
+        body { 
+            font-family: Calibri, sans-serif; 
+            font-size: 7pt; 
+            margin: 0; 
+            line-height: 1.1;
+            width: 277mm !important;
+            max-width: 277mm !important;
+            min-width: 277mm !important;
+            transform: scale(1.0) !important;
+            overflow-x: visible !important;
+        }
+        .container { 
+            width: 277mm !important;
+            max-width: 277mm !important;
+            min-width: 277mm !important;
+            min-height: 190mm; 
+            margin: 0; 
+            padding: 0;
+            transform: scale(1.0) !important;
+        }
+        table { 
+            width: 277mm !important;
+            min-width: 277mm !important;
+            max-width: 277mm !important;
+            border-collapse: collapse !important; 
+            table-layout: fixed !important; 
+            font-size: 7pt;
+            transform: scale(1.0) !important;
+            border: 2px solid black !important;
+        }
+        /* OPTIMIZED column widths for deviation statement - better fit */
+        table th:nth-child(1), table td:nth-child(1) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(2), table td:nth-child(2) { width: 65mm !important; min-width: 65mm !important; max-width: 65mm !important; border: 1px solid black !important; }
+        table th:nth-child(3), table td:nth-child(3) { width: 12mm !important; min-width: 12mm !important; max-width: 12mm !important; border: 1px solid black !important; }
+        table th:nth-child(4), table td:nth-child(4) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(5), table td:nth-child(5) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(6), table td:nth-child(6) { width: 22mm !important; min-width: 22mm !important; max-width: 22mm !important; border: 1px solid black !important; }
+        table th:nth-child(7), table td:nth-child(7) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(8), table td:nth-child(8) { width: 22mm !important; min-width: 22mm !important; max-width: 22mm !important; border: 1px solid black !important; }
+        table th:nth-child(9), table td:nth-child(9) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(10), table td:nth-child(10) { width: 22mm !important; min-width: 22mm !important; max-width: 22mm !important; border: 1px solid black !important; }
+        table th:nth-child(11), table td:nth-child(11) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(12), table td:nth-child(12) { width: 22mm !important; min-width: 22mm !important; max-width: 22mm !important; border: 1px solid black !important; }
+        table th:nth-child(13), table td:nth-child(13) { width: 44mm !important; min-width: 44mm !important; max-width: 44mm !important; border: 1px solid black !important; }
+        th, td { 
+            border: 1px solid black !important; 
+            padding: 2px 1px; 
+            text-align: left; 
+            vertical-align: top; 
+            overflow: visible; 
+            word-wrap: break-word;
+            white-space: normal;
+            font-size: 7pt;
+            box-sizing: border-box;
+        }
+        th {
+            font-size: 6.5pt;
+            line-height: 1.1;
+            border: 1px solid black !important;
+            text-align: center !important;
+        }
+        /* Force borders on all sides */
+        table {
+            border: 1px solid black !important;
+        }
+        tr {
+            border: 1px solid black !important;
+        }
+        .header { text-align: left; margin-bottom: 12px; }
+        .header h2 { 
+            font-size: 14pt; 
+            margin-bottom: 10px; 
+            text-align: center; 
+            font-weight: bold;
+            border: 2px solid #000000;
+            padding: 10px;
+        }
+        .header-item { margin: 6px 0; font-size: 9pt; }
+        .header-item strong { font-weight: bold; }
+        .header-value { font-weight: bold; font-size: 10pt; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>DEVIATION STATEMENT</h2>
+            <div class="header-item">
+                <strong>Name of Work :-</strong> <span class="header-value">Plumbing Installation and MTC work at Govt. Nehru hostel Mansarovar, Sanganer, Jaipur</span>
+            </div>
+            <div class="header-item">
+                <strong>Name of Contractor or supplier :</strong> <span class="header-value">M/s. Shree Krishna Builders Jaipur</span>
+            </div>
+            <div class="header-item">
+                <strong>Serial No. of this bill :</strong> <span class="header-value">First & Final Bill</span>
+            </div>
+            <div class="header-item">
+                <strong>Agreement No.</strong> <span class="header-value">48/2024-25</span>
+            </div>
+        </div>
+        <table>
+            <colgroup>
+                <col style="width: 8mm;">
+                <col style="width: 120mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 37mm;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th style="width: 8mm;">ITEM No.</th>
+                    <th style="width: 120mm;">Description</th>
+                    <th style="width: 12mm;">Unit</th>
+                    <th style="width: 12mm;">Qty as per Work Order</th>
+                    <th style="width: 12mm;">Rate</th>
+                    <th style="width: 12mm;">Amt as per Work Order Rs.</th>
+                    <th style="width: 12mm;">Qty Executed</th>
+                    <th style="width: 12mm;">Amt as per Executed Rs.</th>
+                    <th style="width: 12mm;">Excess Qty</th>
+                    <th style="width: 12mm;">Excess Amt Rs.</th>
+                    <th style="width: 12mm;">Saving Qty</th>
+                    <th style="width: 12mm;">Saving Amt Rs.</th>
+                    <th style="width: 37mm;">REMARKS/ REASON.</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                    
+                    <tr >
+                        
+                            <td>1.0</td>
+                            <td>
+                                
+                                    Rewiring of light point/ fan point/ exhaust fan point/ call bell point with 1.5 sq. mm nominal size FR PVC insulated unsheathed flexible copper conductor 1.1 kV grade  and 1.5 sq. mm nominal size FR PVC insulated unsheathed flexible copper earth conductor 1.1 kV grade (IS:694) in recessed  ISI marked MMS ( IS:9537 P - III ) virgin material PVC conduit & it's ISI marked (IS:3419-1988) accessories, round tiles, 1.2 mm thick MS box with earth terminal, 6 A switch, 3 pin ceiling rose/holder / 3 way connector , 3.0 mm thick ISI marked (IS:2036-1995) phenolic laminated sheet, Al.alloy / Cadmium plated iron/  brass  screws, cup washers, making connections, testing etc. as required. For specification of copper  Conductor,  Phenolic Laminated sheet's & Electrical/ Wiring accessories refer Chapter E - 04, E - 05 & E - 07 For additional technical parameters of product / work refer Annexure 'A' attached with this BSR
+                                
+                            </td>
+                            
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    Short point (up to 3 mtr.)
+                                
+                            </td>
+                            
+                                <td>P. point</td>
+                                <td>50</td>
+                                <td>256.00</td>
+                                <td>12800.00</td>
+                                <td>52</td>
+                                <td>13312.00</td>
+                                <td>2</td>
+                                <td>512.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    Medium point (up to 6 mtr.)
+                                
+                            </td>
+                            
+                                <td>P. point</td>
+                                <td>50</td>
+                                <td>472.00</td>
+                                <td>23600.00</td>
+                                <td>48</td>
+                                <td>22656.00</td>
+                                <td></td>
+                                <td></td>
+                                <td>2</td>
+                                <td>944.00</td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    Long point  (up to 10 mtr.)
+                                
+                            </td>
+                            
+                                <td>P. point</td>
+                                <td>50</td>
+                                <td>662.00</td>
+                                <td>33100.00</td>
+                                <td>52</td>
+                                <td>34424.00</td>
+                                <td>2</td>
+                                <td>1324.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>2.0</td>
+                            <td>
+                                
+                                    Rewiring of 3/5 pin 6 amp. Light plug point with 1.5 sq. mm nominal size  FR PVC insulated unsheathed flexible copper conductor 1.1 kV grade  and 1.5 sq. mm nominal size FR PVC insulated unsheathed flexible copper earth conductor 1.1 kV grade(IS:694)   in recessed ISI marked MMS ( IS:9537 P - III ) virgin material  PVC conduit & it's  ISI marked (IS:3419-1988) accessories, 1.2 mm thick  MS box with earth terminal of required size,  6 A  switch, 3/5 pin 6 A socket, 3.0 mm thick ISI marked (IS:2036-1995) phenolic laminated sheet, Al.alloy / Cadmium plated iron/ brass  screws, cup washers, making connections, testing etc. as required.  For specification of copper  Conductor,  Phenolic Laminated sheet's & Electrical/ Wiring accessories refer Chapter E - 04, E - 05 & E - 07 For additional technical parameters of product / work refer Annexure 'A' attached with this BSR
+                                
+                            </td>
+                            
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    On board
+                                
+                            </td>
+                            
+                                <td>P. point</td>
+                                <td>100</td>
+                                <td>136.00</td>
+                                <td>13600.00</td>
+                                <td>102</td>
+                                <td>13872.00</td>
+                                <td>2</td>
+                                <td>272.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>3.0</td>
+                            <td>
+                                
+                                    P & F ISI marked (IS:3854) 6 amp. flush type non modular switch  with CM/L no. printed and made out from industrial grade Polycarbonate or fire resistant ABS material including cutting hole in tile and making connection testing etc. as required. All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure "A" attached with this BSR .
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td>10</td>
+                                <td>23.00</td>
+                                <td>230.00</td>
+                                <td>8</td>
+                                <td>184.00</td>
+                                <td></td>
+                                <td></td>
+                                <td>2</td>
+                                <td>46.00</td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr style="font-weight: bold; background-color: #f0f0f0;">
+                        
+                            <td></td>
+                            <td style="text-align: left; font-weight: bold; text-decoration: underline;">
+                                <strong><u>EXTRA ITEM/S</u></strong>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>E-01</td>
+                            <td>
+                                
+                                    Minimum lumen output 2500 Im Post top Luminarie
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td></td>
+                                <td>5075.00</td>
+                                <td></td>
+                                <td>2</td>
+                                <td>10150.00</td>
+                                <td>2</td>
+                                <td>10150.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>E-02</td>
+                            <td>
+                                
+                                    6 A 3/5 pin shuttered socket
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td></td>
+                                <td>107.00</td>
+                                <td></td>
+                                <td>4</td>
+                                <td>428.00</td>
+                                <td>4</td>
+                                <td>428.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>E-03</td>
+                            <td>
+                                
+                                    6/16 A shuttered socket
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td></td>
+                                <td>176.00</td>
+                                <td></td>
+                                <td>5</td>
+                                <td>880.00</td>
+                                <td>5</td>
+                                <td>880.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>E-04</td>
+                            <td>
+                                
+                                    Providing & Fixing of modular type lockable feature socket duly made out of unbreakable and fire retardant vergin poly carbonate with brass terminals and captive screws & silver alloy contact tip with IP-20 rating, including all as per pre approved by Engineer in charge, making connections, testing etc. as required. For additional technical parameters of product / work refer Annexure 'A' attached with this BSR
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td></td>
+                                <td>345.00</td>
+                                <td></td>
+                                <td>5</td>
+                                <td>1725.00</td>
+                                <td>5</td>
+                                <td>1725.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>E-05</td>
+                            <td>
+                                
+                                    6 A 3/5 pin shuttered socket
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td></td>
+                                <td>107.00</td>
+                                <td></td>
+                                <td>4</td>
+                                <td>428.00</td>
+                                <td>4</td>
+                                <td>428.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>E-06</td>
+                            <td>
+                                
+                                    6/16 A shuttered socket
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td></td>
+                                <td>176.00</td>
+                                <td></td>
+                                <td>5</td>
+                                <td>880.00</td>
+                                <td>5</td>
+                                <td>880.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                <tr>
+                    <td></td>
+                    <td>Grand Total Rs.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>83330.00</td>
+                    <td></td>
+                    <td>98939.00</td>
+                    <td></td>
+                    <td>16599.00</td>
+                    <td></td>
+                    <td>990.00</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Add Tender Premium (5.11%)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>4258.16</td>
+                    <td></td>
+                    <td>5055.78</td>
+                    <td></td>
+                    <td>848.21</td>
+                    <td></td>
+                    <td>50.59</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Grand Total including Tender Premium Rs.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>87588.16</td>
+                    <td></td>
+                    <td>103994.78</td>
+                    <td></td>
+                    <td>17447.21</td>
+                    <td></td>
+                    <td>1040.59</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: left;">
+                        
+                            Overall Excess With Respect to the Work Order Amount Rs.
+                        
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    
+                        <td>16406.62</td>
+                        <td></td>
+                        <td></td>
+                    
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: left; font-weight: bold;">
+                        
+                            Percentage of Excess %
+                        
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    
+                        <td style="font-weight: bold;">18.73%</td>
+                        <td></td>
+                        <td></td>
+                    
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
