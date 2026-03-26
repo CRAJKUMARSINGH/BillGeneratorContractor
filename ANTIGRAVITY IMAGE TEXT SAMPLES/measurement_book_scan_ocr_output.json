@@ -1,0 +1,9 @@
+{
+  "source_image": "measurement_book_scan.png",
+  "items_extracted": 0,
+  "total_amount": 0.0,
+  "rows": [],
+  "anomaly_warnings": [
+    "Anomaly Detected: Item Count (0.00) is usually outside historical norms!"
+  ]
+}
