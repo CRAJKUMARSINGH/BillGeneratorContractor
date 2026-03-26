@@ -159,6 +159,38 @@ async def upload_image(file: UploadFile = File(...)):
         raise HTTPException(500, f"Failed to run OCR on image: {e}")
 
 
+@router.post("/export-excel")
+async def export_excel(data: ParsedBillData):
+    """
+    Accepts ParsedBillData (e.g., from OCR or UI) and returns a streaming Excel (.xlsx) file
+    using the Reverse Excel Exporter utility. 
+    This fulfills Option B of the Human-in-the-Loop OCR Refinement strategy.
+    """
+    import sys
+    root_dir = Path(__file__).parent.parent.parent
+    if str(root_dir) not in sys.path:
+        sys.path.insert(0, str(root_dir))
+        
+    from ingestion.excel_exporter import generate_excel_from_data
+    
+    try:
+        # Convert Pydantic model to dict for the exporter
+        parsed_dict = data.dict(by_alias=True) if hasattr(data, "dict") else data.model_dump(by_alias=True)
+        excel_io = generate_excel_from_data(parsed_dict)
+        
+        headers = {
+            'Content-Disposition': 'attachment; filename="exported_bill_data.xlsx"'
+        }
+        return StreamingResponse(
+            excel_io, 
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", 
+            headers=headers
+        )
+    except Exception as e:
+        logger.exception("Excel export failed")
+        raise HTTPException(500, f"Failed to generate Excel: {e}")
+
+
 def _parse_excel(path: Path, file_id: str, filename: str) -> ParsedBillData:
     """Parse using engine's EnterpriseExcelProcessor + bill_processor."""
     import sys

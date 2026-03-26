@@ -4,7 +4,7 @@
  * Part-rate detection preserved from BillGeneratorUnified.
  */
 import { useRef, useEffect, useState } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, AlertTriangle } from 'lucide-react';
 import type { BillItem } from '../types/bill';
 import { useBillStore } from '../store/useBillStore';
 
@@ -80,6 +80,23 @@ export default function EditableTable() {
 
   return (
     <div className="glass rounded-2xl overflow-hidden">
+      {parsedData?.anomaly_warnings && parsedData.anomaly_warnings.length > 0 && (
+        <div className="bg-red-500/10 border-b border-red-500/20 px-5 py-3">
+          <div className="flex items-center gap-2 text-red-400 mb-1">
+            <AlertTriangle size={16} />
+            <h3 className="text-sm font-semibold">AI Anomaly Warning: Dirty Scan Detected</h3>
+          </div>
+          <ul className="list-disc list-inside text-xs text-red-400/80 space-y-1 ml-6">
+            {parsedData.anomaly_warnings.map((warning, idx) => (
+              <li key={idx}>{warning}</li>
+            ))}
+          </ul>
+          <p className="text-xs text-red-400/60 mt-2 ml-6 font-medium">
+            Please carefully review and correct the highlighted quantities below before generating PDFs.
+            Or use the Export to Excel API to fix via desktop.
+          </p>
+        </div>
+      )}
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
         <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">
           Bill Items ({billItems.length})

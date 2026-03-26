@@ -36,6 +36,7 @@ export interface ParsedBillData {
   totalAmount: number;
   hasExtraItems: boolean;
   sheets: string[];
+  anomaly_warnings?: string[];
 }
 
 export interface GenerateOptions {

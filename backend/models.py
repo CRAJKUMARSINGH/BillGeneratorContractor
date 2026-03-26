@@ -56,6 +56,7 @@ class ParsedBillData(BaseModel):
     totalAmount: float
     hasExtraItems: bool
     sheets: list[str]
+    anomaly_warnings: list[str] = []
 
 
 class GenerateOptions(BaseModel):
