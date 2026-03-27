@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bill Scrutiny Sheet</title>
+    <style>
+        @page { 
+            size: A4 portrait; 
+            margin: 8mm 10mm 8mm 10mm;
+            @top-left { content: none; }
+            @top-center { content: none; }
+            @top-right { content: none; }
+            @bottom-left { content: none; }
+            @bottom-center { content: none; }
+            @bottom-right { content: none; }
+        }
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            font-size: 10pt;
+            font-weight: bold;
+            color: #000000;
+        }
+        .container {
+            width: 190mm;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            font-size: 11pt;
+            font-weight: bold;
+            margin: 0 0 4px 0;
+            text-decoration: underline;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 0 2px 0;
+        }
+        td {
+            border: 1px solid #000000;
+            padding: 3px 6px;
+            vertical-align: top;
+            font-size: 10pt;
+            font-weight: bold;
+            line-height: 1.1;
+        }
+        .label-cell {
+            width: 50%;
+        }
+        .value-cell {
+            width: 50%;
+        }
+        .deduction-label {
+            width: 33.33%;
+        }
+        .deduction-value {
+            width: 66.67%;
+            text-align: left;
+        }
+        .indent {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>
+        {% set bill_serial = data.title_data.get('Serial No. of this bill :', data.title_data.get('Serial No. of this bill', '')) %}
+        {{ bill_serial }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SCRUTINY SHEET
+    </h1>
+
+    <table>
+        <tr>
+            <td class="label-cell">1. Budget Head</td>
+            <td class="value-cell">{{ data.title_data.get('Budget Head', '') }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">2. Agreement No.</td>
+            <td class="value-cell">{{ data.title_data.get('Agreement No.', '') }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">3. A&F Sanction</td>
+            <td class="value-cell">{{ data.title_data.get('A&F Sanction', 'Refer Agreement') }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">4. Technical Section</td>
+            <td class="value-cell">{{ data.title_data.get('Technical Section', 'Refer Agreement') }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">5. MB No. & Page</td>
+            <td class="value-cell">{{ data.title_data.get('Measurement Book No', '') }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/Page No. {{ data.title_data.get('Measurement Book Page', '') }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">6. Name of Sub Division</td>
+            <td class="value-cell">{{ data.title_data.get('Sub Division', '') }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">7. Name of Work</td>
+            <td class="value-cell">{{ data.title_data.get('Name of Work ;-', data.title_data.get('Name of Work', '')) }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">8. Name of Contractor</td>
+            <td class="value-cell">{{ data.title_data.get('Name of Contractor or supplier :', data.title_data.get('Name of Contractor or supplier', '')) }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">9. Original/Deposit</td>
+            <td class="value-cell">{{ data.title_data.get('Original or Deposit', 'Original') }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">10. Budget Provision</td>
+            <td class="value-cell">Adequate</td>
+        </tr>
+        <tr>
+            <td class="label-cell">11. Scheduled Date of Commencement</td>
+            <td class="value-cell">{{ data.title_data.get('Date of written order to commence work :', data.title_data.get('St. date of Start :', '')) }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">12. Scheduled Date of Completion</td>
+            <td class="value-cell">{{ data.title_data.get('St. date of completion :', '') }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">13. Actual date of completion</td>
+            <td class="value-cell">{{ data.title_data.get('Date of actual completion of work :', '') }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">14. In case Delay whether provisional extension given</td>
+            <td class="value-cell">Yes/No.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No._____ Date _______</td>
+        </tr>
+        <tr>
+            <td class="label-cell">15. Whether any notice issued</td>
+            <td class="value-cell">Not applicable.</td>
+        </tr>
+        <tr>
+            <td class="label-cell">16. Total Amount of work order</td>
+            <td class="value-cell">Rs. {{ "{:,.0f}".format(data.totals.work_order_amount if data.totals.work_order_amount else 0) }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">17.A. Sum of payment upto last bill</td>
+            <td class="value-cell">Rs. {{ "{:,.0f}".format(data.totals.last_bill_amount if data.totals.last_bill_amount else 0) }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell indent">B. Amount of this bill</td>
+            <td class="value-cell">Rs. {{ "{:,.0f}".format((data.totals.payable + data.totals.extra_items_sum) if data.totals.payable else 0) }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell indent">C. Actual expenditure upto this bill = ( A + B)</td>
+            <td class="value-cell">Rs. {{ "{:,.0f}".format((data.totals.last_bill_amount + data.totals.payable + data.totals.extra_items_sum) if data.totals.payable else 0) }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">18. Balance to be done = (16 - 17 C)</td>
+            {% set balance = (data.totals.work_order_amount - (data.totals.last_bill_amount + data.totals.payable + data.totals.extra_items_sum)) if data.totals.work_order_amount else 0 %}
+            <td class="value-cell">{% if balance < 0 %}Nil{% else %}Rs. {{ "{:,.0f}".format(balance) }}{% endif %}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">19. Prorata Progress on the work maintained by the contractor</td>
+            <td class="value-cell">Evident from para 13 and 17 above.</td>
+        </tr>
+        <tr>
+            <td class="label-cell">20. Date on which record measurement taken by AEN</td>
+            <td class="value-cell">{{ data.title_data.get('Date of measurement :', '') }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell">21. Date of and % of work checked by AEN</td>
+            <td class="value-cell"></td>
+        </tr>
+        <tr>
+            <td class="label-cell">22. Number of selective Items checked by XEN</td>
+            <td class="value-cell"></td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td class="label-cell">23. Other Inputs</td>
+            <td class="value-cell">-------------------</td>
+        </tr>
+        <tr>
+            <td class="label-cell indent">(A) Is It a Repair / Maintenance Work</td>
+            <td class="value-cell">{{ data.title_data.get('Is Repair Maintenance Work', 'No') }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell indent">(B) Extra Item</td>
+            <td class="value-cell">{% if data.totals.extra_items_sum and data.totals.extra_items_sum > 0 %}Yes{% else %}No{% endif %}</td>
+        </tr>
+        <tr>
+            <td class="label-cell indent">Amount of Extra Items Rs.</td>
+            <td class="value-cell">{{ "{:,.0f}".format(data.totals.extra_items_sum if data.totals.extra_items_sum else 0) }}</td>
+        </tr>
+        <tr>
+            <td class="label-cell indent">(C) Any Excess Item</td>
+            <td class="value-cell">{% if data.summary and data.summary.grand_total_j and data.summary.grand_total_j > 0 %}Yes{% else %}No{% endif %}</td>
+        </tr>
+        <tr>
+            <td class="label-cell indent">(D) Any Inadvertent Delay in Bill Submission</td>
+            <td class="value-cell">{{ data.title_data.get('Delay in Bill Submission', 'No') }}</td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td class="deduction-label">23. Deductions</td>
+            <td class="deduction-value"></td>
+        </tr>
+        <tr>
+            <td class="deduction-label indent">SD @ 10%</td>
+            <td class="deduction-value">Rs. {{ "{:,.0f}".format(data.totals.sd_amount if data.totals.sd_amount else 0) }}</td>
+        </tr>
+        <tr>
+            <td class="deduction-label indent">IT @ 2%</td>
+            <td class="deduction-value">Rs. {{ "{:,.0f}".format(data.totals.it_amount if data.totals.it_amount else 0) }}</td>
+        </tr>
+        <tr>
+            <td class="deduction-label indent">GST @ 2%</td>
+            <td class="deduction-value">Rs. {{ "{:,.0f}".format(data.totals.gst_amount if data.totals.gst_amount else 0) }}</td>
+        </tr>
+        <tr>
+            <td class="deduction-label indent">LC @ 1%</td>
+            <td class="deduction-value">Rs. {{ "{:,.0f}".format(data.totals.lc_amount if data.totals.lc_amount else 0) }}</td>
+        </tr>
+        <tr>
+            <td class="deduction-label indent">Dep-V</td>
+            <td class="deduction-value">Rs. 0</td>
+        </tr>
+        <tr>
+            <td class="deduction-label">Cheque Amount</td>
+            <td class="deduction-value">Rs. {{ "{:,.0f}".format(((data.totals.payable + data.totals.extra_items_sum) - data.totals.total_deductions) if data.totals.payable else 0) }}</td>
+        </tr>
+        <tr>
+            <td class="deduction-label">Total</td>
+            <td class="deduction-value">{{ "{:,.0f}".format((data.totals.payable + data.totals.extra_items_sum) if data.totals.payable else 0) }}</td>
+        </tr>
+    </table>
+
+    <div style="margin-top: 2px; padding: 4px 6px; border: 1px solid #000000; font-size: 9pt; line-height: 1.0; margin-bottom: 0;">
+        {% set work_completion_pct = ((data.totals.last_bill_amount + data.totals.payable + data.totals.extra_items_sum) / data.totals.work_order_amount * 100) if data.totals.work_order_amount else 0 %}
+        {% set excess_pct = work_completion_pct - 100 %}
+        {% set delay_days = data.delay_days if data.delay_days else 0 %}
+        {% set bill_serial = data.title_data.get('Serial No. of this bill :', data.title_data.get('Serial No. of this bill', '')) %}
+        {% set is_final_bill = 'final' in bill_serial.lower() %}
+        <p style="margin: 0; padding: 0;">1. कार्य {{ "{:.2f}".format(work_completion_pct) }} प्रतिशत संपादित हुआ है।</p>
+        {% if excess_pct > 5 %}
+        <p style="margin: 0; padding: 0;">2. जिसका डेविएशन स्टेटमेंट भी स्वीकृति हेतु प्राप्त हुआ है, OVERALL EXCESS वर्क आर्डर राशि के 5% से अधिक है।</p>
+        {% else %}
+        <p style="margin: 0; padding: 0;">2. जिसका डेविएशन स्टेटमेंट भी स्वीकृति हेतु प्राप्त हुआ है, OVERALL EXCESS वर्क आर्डर राशि के 5% से कम है जिसकी स्वीकृति इसी कार्यालय के क्षेत्राधिकार में निहित है।</p>
+        {% endif %}
+        {% if delay_days and delay_days > 0 %}
+        <p style="margin: 0; padding: 0;">3. कार्य में {{ delay_days }} दिन की देरी हुई है।</p>
+        <p style="margin: 0; padding: 0;">4. टाइम एक्सटेंशन केस Superintending Engineer, PWD Electric Circle, Udaipur कार्यालय द्वारा अनुमोदित किया जाना है।</p>
+        <p style="margin: 0; padding: 0;">5. Agreement clause 2 के अनुसार liquidated damages की गणना रुपया {{ "{:,.0f}".format(data.liquidated_damages_amount if data.liquidated_damages_amount else 0) }} है। वसूली योग्य LD हेतु विनिर्णय का स्पष्ट अंकन अपेक्षित है।</p>
+        {% set point_num = 6 %}
+        {% else %}
+        <p style="margin: 0; padding: 0;">3. कार्य समय पर पूर्ण हुआ है।</p>
+        {% set point_num = 4 %}
+        {% endif %}
+        <p style="margin: 0; padding: 0;">{{ point_num }}. कार्य संपादन में वर्क आर्डर के जिन आइटम्स में EXCESS QUANTITY संपादित की गई है, उनका विवरण संलग्न है। कार्य में OVERALL EXCESS केवल {{ "{:.2f}".format(excess_pct) }}% होकर {% if excess_pct <= 5 %}5% से कम है, जिसकी स्वीकृति इस कार्यालय के क्षेत्राधिकार में है{% else %}5% से अधिक है{% endif %}।</p>
+        {% set point_num = point_num + 1 %}
+        <p style="margin: 0; padding: 0;">{{ point_num }}. गुणवत्ता नियंत्रण (Q.C.) परीक्षण रिपोर्ट संलग्न हैं।</p>
+        {% set point_num = point_num + 1 %}
+        {% if is_final_bill %}
+        <p style="margin: 0; padding: 0;">{{ point_num }}. हस्तांतरण विवरण Hand Over Statement संलग्न है।</p>
+        {% set point_num = point_num + 1 %}
+        {% endif %}
+        {% set delay_in_submission = data.title_data.get('Delay in Bill Submission', 'No') %}
+        {% if delay_in_submission and delay_in_submission.lower() in ['yes', 'y', 'true', '1'] %}
+        <p style="margin: 0; padding: 0;">{{ point_num }}. कार्य समाप्ति के करीब 6 महीने बाद फाइनल बिल इस कार्यालय में प्रस्तुत किया गया है। इस अप्रत्याशित देरी के लिए सहायक अभियंता से स्पष्टीकरण मांगा जाए ऐसी प्रस्तावना है।</p>
+        {% set point_num = point_num + 1 %}
+        {% endif %}
+        <p style="margin: 0; padding: 0;">{{ point_num }}. बिल समुचित निर्णय हेतु प्रस्तुत है।</p>
+        <p style="margin: 0; padding: 0; text-align: right; padding-right: 50px;">प्रेमलता जैन, AAO</p>
+    </div>
+</div>
+
+</body>
+</html>

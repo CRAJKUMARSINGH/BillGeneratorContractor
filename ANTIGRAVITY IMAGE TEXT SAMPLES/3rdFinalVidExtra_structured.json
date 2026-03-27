@@ -1,0 +1,112 @@
+{
+  "source": "3rdFinalVidExtra.xlsx",
+  "has_extra_items": true,
+  "items": [
+    {
+      "sno": 1,
+      "desc": "Rewiring of light point/ fan point/ exha",
+      "qty": "",
+      "rate": "",
+      "amt": ""
+    },
+    {
+      "sno": 2,
+      "desc": "Short point (up to 3 mtr.)",
+      "qty": "52",
+      "rate": "256",
+      "amt": "13312"
+    },
+    {
+      "sno": 3,
+      "desc": "Medium point (up to 6 mtr.)",
+      "qty": "48",
+      "rate": "472",
+      "amt": "22656"
+    },
+    {
+      "sno": 4,
+      "desc": "Long point  (up to 10 mtr.)",
+      "qty": "52",
+      "rate": "662",
+      "amt": "34424"
+    },
+    {
+      "sno": 5,
+      "desc": "Rewiring of 3/5 pin 6 amp. Light plug po",
+      "qty": "",
+      "rate": "",
+      "amt": ""
+    },
+    {
+      "sno": 6,
+      "desc": "On board",
+      "qty": "102",
+      "rate": "136",
+      "amt": "13872"
+    },
+    {
+      "sno": 7,
+      "desc": "P & F ISI marked (IS:3854) 6 amp. flush ",
+      "qty": "8",
+      "rate": "23",
+      "amt": "184"
+    },
+    {
+      "sno": 8,
+      "desc": "P & F ISI marked (IS :3854) 16 amp. flus",
+      "qty": "32",
+      "rate": "50",
+      "amt": "1600"
+    },
+    {
+      "sno": 9,
+      "desc": "Providing & Fixing of  of 3/5 pin 6 amp.",
+      "qty": "22",
+      "rate": "33",
+      "amt": "726"
+    },
+    {
+      "sno": 10,
+      "desc": "Providing & Fixing of  3/6 pin 16 amp fl",
+      "qty": "36",
+      "rate": "78",
+      "amt": "2808"
+    },
+    {
+      "sno": 11,
+      "desc": "Providing & Fixing of  ISI marked (IS:37",
+      "qty": "12",
+      "rate": "30",
+      "amt": "360"
+    },
+    {
+      "sno": 12,
+      "desc": "Providing & Fixing of ISI marked (IS:125",
+      "qty": "8",
+      "rate": "30",
+      "amt": "240"
+    },
+    {
+      "sno": 13,
+      "desc": "Providing & Fixing of IS 11037:1984  mar",
+      "qty": "0",
+      "rate": "219",
+      "amt": "0"
+    },
+    {
+      "sno": 14,
+      "desc": "Providing and fixing of   power plug poi",
+      "qty": "0",
+      "rate": "303",
+      "amt": "0"
+    },
+    {
+      "sno": 15,
+      "desc": "S&F following sizes (dia.) of ISI marked",
+      "qty": "",
+      "rate": "",
+      "amt": ""
+    }
+  ],
+  "grand_total": 90182.0
+}

@@ -1,0 +1,6 @@
+@echo off
+echo Installing Google Generative AI...
+python -m pip install google-generativeai
+echo.
+echo Done! Press any key to continue...
+pause

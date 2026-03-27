@@ -1,0 +1,12 @@
+FROM node:20-slim AS builder
+RUN npm i -g pnpm
+WORKDIR /app
+COPY pnpm-workspace.yaml package.json ./
+COPY artifacts/bill-ui/package.json artifacts/bill-ui/
+RUN pnpm install --frozen-lockfile
+COPY artifacts/bill-ui/ artifacts/bill-ui/
+RUN pnpm --filter @workspace/bill-ui run build
+
+FROM nginx:alpine
+COPY --from=builder /app/artifacts/bill-ui/dist /usr/share/nginx/html
+EXPOSE 80

@@ -1,0 +1,12 @@
+
+
+https://pwd-tools-priyanka.netlify.app/
+
+
+
+ONLINE ENTYRY PART OF THE APP IS ESSENTIAL SOMETIMES AFTER UPLOADING INPUT FILES >>>>>SOME ITEMS NEED PART RATE PAYMENT WHICH CAN BE LESS THAN RATE IN WORK ORDER 
+>>>>the online mode shud show as a excel sheet editable on browser >>>>i know u can do it to that eficient level
+>>>test online segment in browser>>>use input test files all one by one >>>>in each case add quanity to 3 of zero qty items in ezch bill >>>>modify by reducing 5 rs in 2-3 items where bill quantity exist >>>>find place to add (part Rate) in bracked where the rate is reduced as per my requiest >>>>repeat the test randomly by changing order of input files >>>clean cache and manage memory and whatever is required >>>>create a comprehensive test script that tests both Excel upload mode and the online/hybrid mode with all the requirements I specified ABOVE. >>>TEST TO SUCH NUMBER OF ITERATIONS THAT U CAN CERTIFY ROBUSTNESS, CACHE MANAGEMENT ABILITY, MEMORY MANAGEMENT SEGMENTS OF THE APP SATISFACTORY >>>>AND 101% SUCCESSFULE >>>1 EXTRA FOR INPUT ADDITIONAL FEATURE U AWARDED ME IN CASE
+
+
+

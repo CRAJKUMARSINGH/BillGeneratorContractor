@@ -1,0 +1,20 @@
+# Large binary files - IDE installers
+attached assets/CURSOR WINDSURF/*.exe
+attached assets/CURSOR WINDSURF/CURSOR MANJAN/*.exe
+
+# Python virtual environments
+**/.venv/
+**/venv/
+**/__pycache__/
+**/*.pyc
+
+# Node modules
+**/node_modules/
+
+# Environment files
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+BATCH_SYSTEM/GENERATED_PDFS/

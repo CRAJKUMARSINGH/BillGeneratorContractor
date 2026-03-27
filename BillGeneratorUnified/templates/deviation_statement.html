@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deviation Statement</title>
+    <style>
+        @page { 
+            size: A4 landscape; 
+            margin: 10mm;
+            @top-left { content: none; }
+            @top-center { content: none; }
+            @top-right { content: none; }
+            @bottom-left { content: none; }
+            @bottom-center { content: none; }
+            @bottom-right { content: none; }
+        }
+        @media print {
+            html, body {
+                width: 277mm !important;
+                min-width: 277mm !important;
+                max-width: 277mm !important;
+            }
+            table {
+                width: 277mm !important;
+                min-width: 277mm !important;
+                max-width: 277mm !important;
+            }
+        }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        html {
+            zoom: 1.0 !important;
+            -webkit-text-size-adjust: none !important;
+        }
+        body { 
+            font-family: Calibri, sans-serif; 
+            font-size: 7pt; 
+            margin: 0; 
+            line-height: 1.1;
+            width: 277mm !important;
+            max-width: 277mm !important;
+            min-width: 277mm !important;
+            transform: scale(1.0) !important;
+            overflow-x: visible !important;
+        }
+        .container { 
+            width: 277mm !important;
+            max-width: 277mm !important;
+            min-width: 277mm !important;
+            min-height: 190mm; 
+            margin: 0; 
+            padding: 0;
+            transform: scale(1.0) !important;
+        }
+        table { 
+            width: 277mm !important;
+            min-width: 277mm !important;
+            max-width: 277mm !important;
+            border-collapse: collapse !important; 
+            table-layout: fixed !important; 
+            font-size: 7pt;
+            transform: scale(1.0) !important;
+            border: 2px solid black !important;
+        }
+        /* OPTIMIZED column widths for deviation statement - better fit */
+        table th:nth-child(1), table td:nth-child(1) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(2), table td:nth-child(2) { width: 65mm !important; min-width: 65mm !important; max-width: 65mm !important; border: 1px solid black !important; }
+        table th:nth-child(3), table td:nth-child(3) { width: 12mm !important; min-width: 12mm !important; max-width: 12mm !important; border: 1px solid black !important; }
+        table th:nth-child(4), table td:nth-child(4) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(5), table td:nth-child(5) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(6), table td:nth-child(6) { width: 22mm !important; min-width: 22mm !important; max-width: 22mm !important; border: 1px solid black !important; }
+        table th:nth-child(7), table td:nth-child(7) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(8), table td:nth-child(8) { width: 22mm !important; min-width: 22mm !important; max-width: 22mm !important; border: 1px solid black !important; }
+        table th:nth-child(9), table td:nth-child(9) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(10), table td:nth-child(10) { width: 22mm !important; min-width: 22mm !important; max-width: 22mm !important; border: 1px solid black !important; }
+        table th:nth-child(11), table td:nth-child(11) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(12), table td:nth-child(12) { width: 22mm !important; min-width: 22mm !important; max-width: 22mm !important; border: 1px solid black !important; }
+        table th:nth-child(13), table td:nth-child(13) { width: 44mm !important; min-width: 44mm !important; max-width: 44mm !important; border: 1px solid black !important; }
+        th, td { 
+            border: 1px solid black !important; 
+            padding: 2px 1px; 
+            text-align: left; 
+            vertical-align: top; 
+            overflow: visible; 
+            word-wrap: break-word;
+            white-space: normal;
+            font-size: 7pt;
+            box-sizing: border-box;
+        }
+        th {
+            font-size: 6.5pt;
+            line-height: 1.1;
+            border: 1px solid black !important;
+            text-align: center !important;
+        }
+        /* Force borders on all sides */
+        table {
+            border: 1px solid black !important;
+        }
+        tr {
+            border: 1px solid black !important;
+        }
+        .header { text-align: left; margin-bottom: 12px; }
+        .header h2 { 
+            font-size: 14pt; 
+            margin-bottom: 10px; 
+            text-align: center; 
+            font-weight: bold;
+            border: 2px solid #000000;
+            padding: 10px;
+        }
+        .header-item { margin: 6px 0; font-size: 9pt; }
+        .header-item strong { font-weight: bold; }
+        .header-value { font-weight: bold; font-size: 10pt; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>DEVIATION STATEMENT</h2>
+            <div class="header-item">
+                <strong>Name of Work :-</strong> <span class="header-value">{{ data.title_data.get('Name of Work ;-', 'N/A') }}</span>
+            </div>
+            <div class="header-item">
+                <strong>Name of Contractor or supplier :</strong> <span class="header-value">{{ data.title_data.get('Name of Contractor or supplier :', 'N/A') }}</span>
+            </div>
+            <div class="header-item">
+                <strong>Serial No. of this bill :</strong> <span class="header-value">{{ data.title_data.get('Serial No. of this bill :', data.title_data.get('Serial No. of this bill', 'N/A')) }}</span>
+            </div>
+            <div class="header-item">
+                <strong>Agreement No.</strong> <span class="header-value">{{ data.title_data.get('Agreement No.', 'N/A') }}</span>
+            </div>
+        </div>
+        <table>
+            <colgroup>
+                <col style="width: 8mm;">
+                <col style="width: 120mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 37mm;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th style="width: 8mm;">ITEM No.</th>
+                    <th style="width: 120mm;">Description</th>
+                    <th style="width: 12mm;">Unit</th>
+                    <th style="width: 12mm;">Qty as per Work Order</th>
+                    <th style="width: 12mm;">Rate</th>
+                    <th style="width: 12mm;">Amt as per Work Order Rs.</th>
+                    <th style="width: 12mm;">Qty Executed</th>
+                    <th style="width: 12mm;">Amt as per Executed Rs.</th>
+                    <th style="width: 12mm;">Excess Qty</th>
+                    <th style="width: 12mm;">Excess Amt Rs.</th>
+                    <th style="width: 12mm;">Saving Qty</th>
+                    <th style="width: 12mm;">Saving Amt Rs.</th>
+                    <th style="width: 37mm;">REMARKS/ REASON.</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data["deviation_items"] %}
+                    {% set is_sep = item.get('is_separator') or item.get('is_divider') %}
+                    <tr {% if is_sep %}style="font-weight: bold; background-color: #f0f0f0;"{% endif %}>
+                        {% if is_sep %}
+                            <td></td>
+                            <td style="text-align: left; font-weight: bold; text-decoration: underline;">
+                                <strong><u>{{ item.description | default("") }}</u></strong>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        {% else %}
+                            <td>{{ item.serial_no | default("") }}</td>
+                            <td>
+                                {% if item.get('bold') and item.get('underline') %}
+                                    <strong><u>{{ item.description | default("") }}</u></strong>
+                                {% elif item.get('bold') %}
+                                    <strong>{{ item.description | default("") }}</strong>
+                                {% elif item.get('underline') %}
+                                    <u>{{ item.description | default("") }}</u>
+                                {% else %}
+                                    {{ item.description | default("") }}
+                                {% endif %}
+                            </td>
+                            {% if item.rate == 0 or item.rate == '' or item.rate is none %}
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            {% else %}
+                                <td>{{ item.unit | default("") }}</td>
+                                <td>{{ "{:.0f}".format(item.qty_wo) if item.qty_wo and item.qty_wo != 0 else "" }}</td>
+                                <td>{{ "{:.2f}".format(item.rate) if item.rate and item.rate != 0 else "" }}</td>
+                                <td>{{ "{:.2f}".format(item.amt_wo) if item.amt_wo and item.amt_wo != 0 else "" }}</td>
+                                <td>{{ "{:.0f}".format(item.qty_bill) if item.qty_bill and item.qty_bill != 0 else "" }}</td>
+                                <td>{{ "{:.2f}".format(item.amt_bill) if item.amt_bill and item.amt_bill != 0 else "" }}</td>
+                                <td>{{ "{:.0f}".format(item.excess_qty) if item.excess_qty and item.excess_qty != 0 else "" }}</td>
+                                <td>{{ "{:.2f}".format(item.excess_amt) if item.excess_amt and item.excess_amt != 0 else "" }}</td>
+                                <td>{{ "{:.0f}".format(item.saving_qty) if item.saving_qty and item.saving_qty != 0 else "" }}</td>
+                                <td>{{ "{:.2f}".format(item.saving_amt) if item.saving_amt and item.saving_amt != 0 else "" }}</td>
+                                <td>{{ item.remark | default("") }}</td>
+                            {% endif %}
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td></td>
+                    <td>Grand Total Rs.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ "{:.2f}".format(data.summary.work_order_total) if data.summary.work_order_total else "" }}</td>
+                    <td></td>
+                    <td>{{ "{:.2f}".format(data.summary.executed_total) if data.summary.executed_total else "" }}</td>
+                    <td></td>
+                    <td>{{ "{:.2f}".format(data.summary.overall_excess) if data.summary.overall_excess else "" }}</td>
+                    <td></td>
+                    <td>{{ "{:.2f}".format(data.summary.overall_saving) if data.summary.overall_saving else "" }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Add Tender Premium ({{ "%.2f%%" % (data.summary.premium.percent * 100) if data.summary.premium.percent is not none else "" }})</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ "{:.2f}".format(data.summary.tender_premium_f) if data.summary.tender_premium_f else "" }}</td>
+                    <td></td>
+                    <td>{{ "{:.2f}".format(data.summary.tender_premium_h) if data.summary.tender_premium_h else "" }}</td>
+                    <td></td>
+                    <td>{{ "{:.2f}".format(data.summary.tender_premium_j) if data.summary.tender_premium_j else "" }}</td>
+                    <td></td>
+                    <td>{{ "{:.2f}".format(data.summary.tender_premium_l) if data.summary.tender_premium_l else "" }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Grand Total including Tender Premium Rs.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ "{:.2f}".format(data.summary.grand_total_f) if data.summary.grand_total_f else "" }}</td>
+                    <td></td>
+                    <td>{{ "{:.2f}".format(data.summary.grand_total_h) if data.summary.grand_total_h else "" }}</td>
+                    <td></td>
+                    <td>{{ "{:.2f}".format(data.summary.grand_total_j) if data.summary.grand_total_j else "" }}</td>
+                    <td></td>
+                    <td>{{ "{:.2f}".format(data.summary.grand_total_l) if data.summary.grand_total_l else "" }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: left;">
+                        {% if data.summary.is_saving %}
+                            Overall Saving With Respect to the Work Order Amount Rs.
+                        {% else %}
+                            Overall Excess With Respect to the Work Order Amount Rs.
+                        {% endif %}
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    {% if data.summary.is_saving %}
+                        <td></td>
+                        <td></td>
+                        <td>{{ "{:.2f}".format(data.summary.net_difference) if data.summary.net_difference else "" }}</td>
+                    {% else %}
+                        <td>{{ "{:.2f}".format(data.summary.net_difference) if data.summary.net_difference else "" }}</td>
+                        <td></td>
+                        <td></td>
+                    {% endif %}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: left; font-weight: bold;">
+                        {% if data.summary.is_saving %}
+                            Percentage of Saving %
+                        {% else %}
+                            Percentage of Excess %
+                        {% endif %}
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    {% if data.summary.is_saving %}
+                        <td></td>
+                        <td></td>
+                        <td style="font-weight: bold;">{{ '%0.2f%%' | format(data.summary.percentage_deviation) }}</td>
+                    {% else %}
+                        <td style="font-weight: bold;">{{ '%0.2f%%' | format(data.summary.percentage_deviation) }}</td>
+                        <td></td>
+                        <td></td>
+                    {% endif %}
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

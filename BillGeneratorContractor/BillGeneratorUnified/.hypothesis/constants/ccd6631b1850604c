@@ -1,0 +1,4 @@
+# file: C:\Users\Rajkumar\BillGeneratorUnified\core\ui\online_mode_grid_new.py
+# hypothesis_version: 6.151.9
+
+[0.0, 'Amount', 'Description', 'Item No', 'NOS', 'Quantity', 'Rate', 'Unit']

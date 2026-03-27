@@ -1,0 +1,4 @@
+# file: C:\Users\Rajkumar\BillGeneratorUnified\core\utils\output_manager.py
+# hypothesis_version: 6.151.9
+
+[1024.0, '%Y%m%d_%H%M%S', '*', '.', 'B', 'GB', 'KB', 'MB', 'OUTPUT', 'utf-8', 'w', 'wb']

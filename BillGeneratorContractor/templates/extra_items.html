@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EXTRA ITEMS SLIP</title>
+    <style>
+        @page { 
+            size: A4 portrait; 
+            margin: 10mm;
+            @top-left { content: none; }
+            @top-center { content: none; }
+            @top-right { content: none; }
+            @bottom-left { content: none; }
+            @bottom-center { content: none; }
+            @bottom-right { content: none; }
+        }
+        @media print {
+            html, body {
+                width: 190mm !important;
+                min-width: 190mm !important;
+                max-width: 190mm !important;
+            }
+            table {
+                width: 190mm !important;
+                min-width: 190mm !important;
+                max-width: 190mm !important;
+            }
+        }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        html {
+            zoom: 1.0 !important;
+            -webkit-text-size-adjust: none !important;
+            -moz-text-size-adjust: none !important;
+            -ms-text-size-adjust: none !important;
+            text-size-adjust: none !important;
+        }
+        body { 
+            font-family: Calibri, sans-serif; 
+            font-size: 8pt; 
+            margin: 0; 
+            line-height: 1.2;
+            width: 190mm !important;
+            max-width: 190mm !important;
+            min-width: 190mm !important;
+            transform: scale(1.0) !important;
+            transform-origin: top left !important;
+            overflow-x: visible !important;
+        }
+        .container { 
+            width: 190mm !important; 
+            max-width: 190mm !important;
+            min-width: 190mm !important;
+            min-height: 277mm; 
+            margin: 0; 
+            padding: 0;
+            transform: scale(1.0) !important;
+        }
+        .container { 
+            width: 190mm; 
+            max-width: 190mm;
+            min-height: 277mm; 
+            margin: 0; 
+            padding: 0; 
+        }
+        table { 
+            width: 190mm !important;
+            min-width: 190mm !important;
+            max-width: 190mm !important;
+            border-collapse: collapse; 
+            table-layout: fixed !important; 
+            font-size: 8pt;
+            transform: scale(1.0) !important;
+        }
+        /* FORCE exact column widths - NO SHRINKING POSSIBLE */
+        table th:nth-child(1), table td:nth-child(1) { width: 25mm !important; min-width: 25mm !important; max-width: 25mm !important; }
+        table th:nth-child(2), table td:nth-child(2) { width: 70mm !important; min-width: 70mm !important; max-width: 70mm !important; }
+        table th:nth-child(3), table td:nth-child(3) { width: 15mm !important; min-width: 15mm !important; max-width: 15mm !important; }
+        table th:nth-child(4), table td:nth-child(4) { width: 20mm !important; min-width: 20mm !important; max-width: 20mm !important; }
+        table th:nth-child(5), table td:nth-child(5) { width: 20mm !important; min-width: 20mm !important; max-width: 20mm !important; }
+        table th:nth-child(6), table td:nth-child(6) { width: 25mm !important; min-width: 25mm !important; max-width: 25mm !important; }
+        table th:nth-child(7), table td:nth-child(7) { width: 15mm !important; min-width: 15mm !important; max-width: 15mm !important; }
+        th, td { 
+            border: 1px solid black; 
+            padding: 3px 2px; 
+            text-align: left; 
+            vertical-align: top; 
+            overflow: visible; 
+            word-wrap: break-word;
+            white-space: normal;
+        }
+        th {
+            text-align: center !important;
+            font-weight: bold;
+        }
+        .header { 
+            text-align: left; 
+            margin-bottom: 8px; 
+        }
+        .header h2 { 
+            font-size: 14pt; 
+            margin-bottom: 6px; 
+            text-align: center;
+            font-weight: bold;
+            border: 2px solid #000000;
+            padding: 10px;
+        }
+        .header-item {
+            margin: 2px 0;
+            font-size: 9pt;
+        }
+        .header-item strong {
+            font-weight: bold;
+        }
+        .header-value {
+            font-weight: normal;
+        }
+        .bold { font-weight: bold; }
+        .underline { text-decoration: underline; }
+        .center-align { text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>EXTRA ITEMS SLIP</h2>
+            <div class="header-item">
+                <strong>Name of Work :-</strong> <span class="header-value">{{ data.title_data.get('Name of Work ;-', 'N/A') }}</span>
+            </div>
+            <div class="header-item">
+                <strong>Name of Contractor or supplier :</strong> <span class="header-value">{{ data.title_data.get('Name of Contractor or supplier :', 'N/A') }}</span>
+            </div>
+            <div class="header-item">
+                <strong>Serial No. of this bill :</strong> <span class="header-value">{{ data.title_data.get('Serial No. of this bill :', data.title_data.get('Serial No. of this bill', 'N/A')) }}</span>
+            </div>
+            <div class="header-item">
+                <strong>Agreement No.</strong> <span class="header-value">{{ data.title_data.get('Agreement No.', 'N/A') }}</span>
+            </div>
+        </div>
+        <table>
+            <colgroup>
+                <col style="width: 11mm;">
+                <col style="width: 16mm;">
+                <col style="width: 16mm;">
+                <col style="width: 11mm;">
+                <col style="width: 70mm;">
+                <col style="width: 15mm;">
+                <col style="width: 22mm;">
+                <col style="width: 17mm;">
+                <col style="width: 12mm;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th style="width: 11mm;">Unit</th>
+                    <th style="width: 16mm;">Quantity executed (or supplied) since last certificate</th>
+                    <th style="width: 16mm;">Quantity executed (or supplied) upto date as per MB</th>
+                    <th style="width: 11mm;">S. No.</th>
+                    <th style="width: 70mm;">Item of Work supplies (Grouped under "sub-head" and "sub work" of estimate)</th>
+                    <th style="width: 15mm;">Rate</th>
+                    <th style="width: 22mm;">Upto date Amount</th>
+                    <th style="width: 17mm;">Amount Since previous bill (Total for each sub-head)</th>
+                    <th style="width: 12mm;">Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data.extra_items_only %}
+                    <tr>
+                        <td>{{ item.unit | default("") }}</td>
+                        <td>{{ item.quantity_since_last if item.quantity_since_last|trim else "" }}</td>
+                        <td>{{ item.quantity_upto_date if item.quantity_upto_date|trim else item.quantity if item.quantity|trim else "" }}</td>
+                        <td>{{ item.serial_no | default("") }}</td>
+                        <td class="{% if item.bold %}bold{% endif %} {% if item.underline %}underline{% endif %}">{{ item.description | default("") }}</td>
+                        <td>{{ item.rate if item.rate|trim else "" }}</td>
+                        <td>{{ item.amount | default("") }}</td>
+                        <td>{{ item.amount_previous | default("") }}</td>
+                        <td>{{ item.remark | default("") }}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="4"></td>
+                    <td>Total Rs.</td>
+                    <td></td>
+                    <td>{{ "%.2f" | format(data.extra_total if data.extra_total else 0) }}</td>
+                    <td>{{ "%.2f" | format(data.extra_total if data.extra_total else 0) }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                    <td>Add Tender Premium @ {{ "%.2f%%" % (data.totals.premium.percent * 100) if data.totals.premium.percent is not none else "0.00%" }}</td>
+                    <td>{{ "%.2f%%" % (data.totals.premium.percent * 100) if data.totals.premium.percent is not none else "0.00%" }}</td>
+                    <td>{{ "%.2f" | format(data.extra_premium if data.extra_premium else 0) }}</td>
+                    <td>{{ "%.2f" | format(data.extra_premium if data.extra_premium else 0) }}</td>
+                    <td></td>
+                </tr>
+                <tr style="background-color: #f0f0f0;">
+                    <td colspan="4"></td>
+                    <td style="font-weight: bold;">Grand Total Rs.</td>
+                    <td></td>
+                    <td style="font-weight: bold;">{{ "%.2f" | format(data.extra_grand_total if data.extra_grand_total else 0) }}</td>
+                    <td style="font-weight: bold;">{{ "%.2f" | format(data.extra_grand_total if data.extra_grand_total else 0) }}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="margin-top: 20px; text-align: left;">
+            <p><strong>Certified that:</strong></p>
+            <ol>
+                <li>The extra items listed above have been actually executed and measured.</li>
+                <li>The rates quoted are as per the schedule of rates of the work order or as agreed.</li>
+                <li>The work has been carried out in accordance with the terms and conditions of the agreement.</li>
+                <li>All deductions as per rules have been made.</li>
+            </ol>
+        </div>
+        <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+            <div>
+                <p><strong>Prepared by:</strong> _____________________</p>
+                <p>Name: _____________________</p>
+                <p>Designation: _____________________</p>
+                <p>Date: _____________________</p>
+            </div>
+            <div>
+                <p><strong>Checked by:</strong> _____________________</p>
+                <p>Name: _____________________</p>
+                <p>Designation: _____________________</p>
+                <p>Date: _____________________</p>
+            </div>
+        </div>
+        <div style="margin-top: 30px; text-align: right;">
+            <p><strong>Authorized Signatory:</strong> _____________________</p>
+            <p>Name: _____________________</p>
+            <p>Designation: _____________________</p>
+            <p>Date: _____________________</p>
+        </div>
+    </div>
+</body>
+</html>
