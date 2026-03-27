@@ -1,20 +1,36 @@
-# Large binary files - IDE installers
-attached assets/CURSOR WINDSURF/*.exe
-attached assets/CURSOR WINDSURF/CURSOR MANJAN/*.exe
-
-# Python virtual environments
-**/.venv/
-**/venv/
-**/__pycache__/
-**/*.pyc
-
-# Node modules
-**/node_modules/
-
-# Environment files
+# Python
+__pycache__/
+*.py[cod]
+*.pdb
+*.egg-info/
+.venv/
+venv/
 .env
 
-# OS files
+# Node
+node_modules/
+dist/
+.next/
+
+# Build outputs
+backend/outputs/
+backend/uploads/
+engine_output/
+REGRESSION_RESULTS/
+
+# Redis binaries & data
+redis/
+redis.zip
+dump.rdb
+
+# DB
+backend/database.db
+ingestion/historical_features.json
+
+# OS
 .DS_Store
 Thumbs.db
-BATCH_SYSTEM/GENERATED_PDFS/
+
+# Temp
+*.tmp
+~$*
