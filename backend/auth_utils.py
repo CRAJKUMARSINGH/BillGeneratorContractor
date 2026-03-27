@@ -4,7 +4,21 @@ from typing import Optional
 from passlib.context import CryptContext
 import jwt
 
-SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey_change_in_production")
+import secrets
+
+_raw_secret = os.getenv("SECRET_KEY", "")
+if not _raw_secret:
+    # Warn loudly — a missing secret key is a security misconfiguration.
+    import warnings
+    warnings.warn(
+        "SECRET_KEY env var is not set. Using a random key — "
+        "all existing tokens will be invalidated on restart. "
+        "Set SECRET_KEY in production.",
+        stacklevel=1,
+    )
+    _raw_secret = secrets.token_hex(32)
+
+SECRET_KEY = _raw_secret
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
 

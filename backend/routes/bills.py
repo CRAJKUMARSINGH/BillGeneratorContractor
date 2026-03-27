@@ -27,8 +27,23 @@ from dependencies import get_current_user
 from database import engine
 from sqlmodel import Session, select
 
-logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/bills", tags=["bills"])
+import re
+
+# Only allow safe filename characters — prevents path traversal
+_SAFE_NAME_RE = re.compile(r"^[\w\-. ]+$")
+
+def _sanitize_filename(filename: str, allowed_exts: set) -> str:
+    """
+    Return a safe filename. Falls back to a UUID name if the original
+    contains suspicious characters or a disallowed extension.
+    """
+    ext = Path(filename).suffix.lower()
+    if ext not in allowed_exts:
+        ext = ".bin"
+    stem = Path(filename).stem
+    if not stem or not _SAFE_NAME_RE.match(stem) or ".." in filename:
+        return f"{uuid.uuid4()}{ext}"
+    return f"{stem[:50]}{ext}"   # cap length
 
 UPLOAD_DIR = Path(__file__).parent.parent / "uploads"
 OUTPUT_DIR = Path(__file__).parent.parent / "outputs"
@@ -83,7 +98,8 @@ async def upload_excel(file: UploadFile = File(...)):
         raise HTTPException(413, "File too large. Max 20 MB.")
 
     file_id = str(uuid.uuid4())
-    save_path = UPLOAD_DIR / f"{file_id}{ext}"
+    safe_name = _sanitize_filename(file.filename, {".xlsx", ".xls", ".xlsm"})
+    save_path = UPLOAD_DIR / f"{file_id}_{safe_name}"
     save_path.write_bytes(content)
     logger.info(f"Saved upload {file.filename} → {save_path}")
 
@@ -112,7 +128,8 @@ async def upload_image(file: UploadFile = File(...)):
         raise HTTPException(413, "File too large. Max 20 MB.")
 
     file_id = str(uuid.uuid4())
-    save_path = UPLOAD_DIR / f"{file_id}{ext}"
+    safe_name = _sanitize_filename(file.filename, {".png", ".jpg", ".jpeg", ".pdf"})
+    save_path = UPLOAD_DIR / f"{file_id}_{safe_name}"
     save_path.write_bytes(content)
     logger.info(f"Saved image upload {file.filename} → {save_path}")
 

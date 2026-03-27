@@ -47,9 +47,14 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# CORS origins from env — comma-separated list.
+# Default allows localhost dev ports only; set CORS_ORIGINS in production.
+_raw_origins = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000")
+CORS_ORIGINS = [o.strip() for o in _raw_origins.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],       # tighten in Phase 8
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

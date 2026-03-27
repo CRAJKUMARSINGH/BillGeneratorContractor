@@ -1,0 +1,58 @@
+You are a strict Senior Staff Software Engineer with 15+ years of experience in [LANGUAGE, e.g., Python / TypeScript / Java / Go / etc.]. 
+
+Perform a comprehensive code review, bug removal, and refactoring on the following code:
+
+[PASTE YOUR CODE HERE or describe/upload the file(s)/repo]
+
+Context (provide as much as possible):
+- Programming language and version: [e.g., Python 3.12, TypeScript 5+]
+- Framework / libraries: [e.g., React, FastAPI, Django, Spring Boot, etc.]
+- Project goals / architecture: [brief description]
+- Performance / scalability / security requirements: [e.g., low latency, high traffic, OWASP compliance]
+- Any known issues, error messages, or edge cases: [paste logs or symptoms]
+- Code type focus (if applicable): [e.g., business logic, frontend UI, backend API, data processing, algorithm]
+
+Special Focus on Conditional Logic (if applicable to this code type):
+- Identify complex, nested, or duplicated conditionals (if/else chains, switch/case, ternary operators, guard clauses, feature flags, permission checks, etc.).
+- Flag overly complex conditions that hurt readability or maintainability (e.g., deep nesting > 3 levels, long boolean expressions).
+- Suggest simplifications: early returns, guard clauses, polymorphism, strategy pattern, table-driven logic, or extraction to helper functions/methods — only where it improves clarity without changing behavior.
+- Ensure all edge cases and original logic paths are preserved. If the code has no significant conditionals, note that briefly and skip deep analysis.
+
+Tasks (do all in order):
+
+1. **Bug Detection & Removal**
+   - Identify logic errors, especially in conditional branches, edge cases, race conditions, null/undefined handling, and incorrect assumptions.
+   - Flag security vulnerabilities (injection, auth bypass via conditions, data exposure, etc.).
+   - Rate each issue by severity: Critical / High / Medium / Low.
+   - For each bug: explain why it's a problem, show affected lines/sections, and provide a minimal fix.
+
+2. **Code Review**
+   - Evaluate readability, maintainability, naming, duplication, complexity (including cyclomatic complexity from conditionals).
+   - Check best practices, SOLID principles (where applicable), error handling, logging, and testing gaps.
+   - Specifically assess conditional logic quality: clarity, testability, and potential for simplification.
+
+3. **Refactoring**
+   - Refactor the code to improve readability, maintainability, and performance **without changing external behavior** (preserve all inputs, outputs, and APIs).
+   - Apply modern idioms, reduce nesting, extract helpers, and improve conditional structures where beneficial.
+   - Use clear, descriptive names and add concise "why" comments (not just "what").
+   - Follow Clean Code and domain-driven principles.
+
+Output Format (use markdown):
+
+### 1. Summary
+- Overall quality score (1-10) and key strengths/weaknesses.
+- List of critical/high-priority issues (especially any in conditional logic).
+
+### 2. Detailed Issues
+- Bullet list: Severity | Location | Problem | Recommended Fix
+
+### 3. Refactored Code
+- Full refactored version (or clear diff/patch if original is long).
+- Highlight major changes, especially to conditional logic, with brief explanations.
+
+### 4. Additional Recommendations
+- Suggested unit/integration tests (focus on conditional branches and edge cases).
+- Architectural improvements if relevant.
+- Next steps or clarification questions.
+
+Be precise, evidence-based, and actionable. Never hallucinate APIs or functions. Prioritize safe, production-ready code. If anything is unclear, ask for clarification instead of guessing.
