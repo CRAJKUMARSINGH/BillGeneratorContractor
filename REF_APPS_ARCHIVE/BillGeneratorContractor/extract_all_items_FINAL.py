@@ -50,11 +50,26 @@ USE_CACHE = False        # Disable caching for now
 CACHE_TTL_HOURS = 24     # Cache validity (24 hours)
 CACHE_MAX_ENTRIES = 1000 # Maximum cache entries
 
-# API Keys (with rotation)
-API_KEYS = [
-    APIKey(key="AIzaSyBMZYPgjcqXY-tpe6UhtBtrWhzfbU0-WVU", name="Primary", daily_quota=20),
-    APIKey(key="AIzaSyDCU_qa6mH4Dz0Rcvof7RQrr8P6HevZJpc", name="Backup1", daily_quota=20),
-]
+# API Keys — loaded from environment variables, never hardcoded.
+# Set GEMINI_API_KEY (and optionally GEMINI_API_KEY_BACKUP) in your .env file.
+import os as _os
+
+def _build_api_keys() -> list:
+    """Load API keys from environment variables."""
+    keys = []
+    primary = _os.getenv("GEMINI_API_KEY", "")
+    if primary:
+        keys.append(APIKey(key=primary, name="Primary", daily_quota=20))
+    backup = _os.getenv("GEMINI_API_KEY_BACKUP", "")
+    if backup:
+        keys.append(APIKey(key=backup, name="Backup1", daily_quota=20))
+    if not keys:
+        raise RuntimeError(
+            "No API keys configured. Set GEMINI_API_KEY in your .env file."
+        )
+    return keys
+
+API_KEYS = _build_api_keys()
 
 def log_message(message: str, level: str = "INFO"):
     """Log message to file and console with timestamp"""

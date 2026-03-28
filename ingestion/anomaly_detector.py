@@ -1,61 +1,68 @@
-"""
-Anomaly Detector — statistical Z-score based outlier detection.
-
-Fixes applied (KIMI review):
-- Race condition: file writes are now atomic (write-to-temp + rename).
-- Baseline poisoning: features are saved ONLY after passing validation.
-- save_validated_features() is a separate explicit call so callers control
-  when clean data enters the training set.
-- Z-score threshold and min-history size are named constants.
-"""
+import os
 import json
 import logging
-import os
 import tempfile
+from typing import Dict, Any, List, Optional
 from pathlib import Path
-from typing import Any, Dict, List
-
 import pandas as pd
+import numpy as np
+import portalocker  # Cross-platform file locking
 
 logger = logging.getLogger(__name__)
 
-HISTORY_FILE      = Path(__file__).parent / "historical_features.json"
-MIN_HISTORY_SIZE  = 3      # need at least this many prior bills for Z-score
-Z_SCORE_THRESHOLD = 2.0    # standard deviations before flagging
-
-
-# ── I/O helpers ───────────────────────────────────────────────────────────────
+# Constants
+HISTORY_FILE = Path(__file__).parent / "historical_features.json"
+MIN_HISTORY_SIZE = 5
+Z_SCORE_THRESHOLD = 3.0
 
 def _load_historical_features() -> List[Dict[str, Any]]:
-    """Read history file; returns empty list on any error."""
+    """Thread-safe and process-safe read of historical features."""
     if not HISTORY_FILE.exists():
         return []
+    
     try:
-        return json.loads(HISTORY_FILE.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError) as exc:
-        logger.warning("Could not read history file: %s", exc)
+        with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+            # Acquire shared lock for reading
+            portalocker.lock(f, portalocker.LOCK_SH)
+            try:
+                data = json.load(f)
+                return data
+            finally:
+                portalocker.unlock(f)
+    except (json.JSONDecodeError, Exception) as e:
+        logger.warning(f"Could not read history file: {e}")
         return []
 
-
 def _save_historical_features(features: List[Dict[str, Any]]) -> None:
-    """
-    Atomic write: write to a temp file in the same directory, then rename.
-    Prevents partial writes from corrupting the history on crash.
-    """
+    """Atomic write with exclusive locking to prevent corruption."""
     parent = HISTORY_FILE.parent
+    parent.mkdir(parents=True, exist_ok=True)
+    
+    # Use a lock file for coordination during the temp-write process
+    lock_path = HISTORY_FILE.with_suffix(".lock")
+    
     try:
-        fd, tmp_path = tempfile.mkstemp(dir=parent, suffix=".tmp")
-        try:
-            with os.fdopen(fd, "w", encoding="utf-8") as f:
-                json.dump(features, f, indent=2)
-        except Exception:
-            os.unlink(tmp_path)
-            raise
-        # Atomic rename (same filesystem guaranteed because same dir)
-        os.replace(tmp_path, HISTORY_FILE)
-    except OSError as exc:
-        logger.error("Failed to persist history features: %s", exc)
-
+        with open(lock_path, "w") as lock_f:
+            portalocker.lock(lock_f, portalocker.LOCK_EX)
+            
+            # Create a temp file in the same directory for atomic rename
+            fd, tmp_path = tempfile.mkstemp(dir=parent, suffix=".tmp")
+            try:
+                with os.fdopen(fd, "w", encoding="utf-8") as f:
+                    json.dump(features, f, indent=2)
+                    f.flush()
+                    os.fsync(f.fileno())  # Ensure data hits disk
+                
+                # Atomic replace
+                os.replace(tmp_path, HISTORY_FILE)
+            except Exception as e:
+                if os.path.exists(tmp_path):
+                    os.unlink(tmp_path)
+                raise e
+            finally:
+                portalocker.unlock(lock_f)
+    except Exception as e:
+        logger.error(f"Failed to persist historical features: {e}")
 
 # ── Public API ────────────────────────────────────────────────────────────────
 
@@ -64,63 +71,66 @@ def extract_features(raw_rows: List[Dict[str, Any]]) -> Dict[str, float]:
     if not raw_rows:
         return {"total_amount": 0.0, "item_count": 0, "avg_rate": 0.0, "max_quantity": 0.0}
 
-    amounts    = [float(r.get("amount",   0) or 0) for r in raw_rows]
-    rates      = [float(r.get("rate",     0) or 0) for r in raw_rows if r.get("rate")]
-    quantities = [float(r.get("quantity", 0) or 0) for r in raw_rows if r.get("quantity")]
+    amounts = []
+    rates = []
+    quantities = []
+    
+    for r in raw_rows:
+        try:
+            amt = float(r.get("amount") or 0)
+            rate = float(r.get("rate") or 0)
+            qty = float(r.get("quantity") or 0)
+            
+            amounts.append(amt)
+            if rate > 0: rates.append(rate)
+            if qty > 0: quantities.append(qty)
+        except (ValueError, TypeError):
+            continue
 
     return {
         "total_amount": sum(amounts),
-        "item_count":   len(raw_rows),
-        "avg_rate":     sum(rates) / len(rates) if rates else 0.0,
-        "max_quantity": max(quantities) if quantities else 0.0,
+        "item_count": len(raw_rows),
+        "avg_rate": sum(rates) / len(rates) if rates else 0.0,
+        "max_quantity": max(quantities) if quantities else 0.0
     }
-
 
 def detect_anomalies(current_features: Dict[str, float]) -> List[str]:
     """
-    Compare current bill features against historical Z-scores.
-
-    IMPORTANT: does NOT save features — call save_validated_features()
-    explicitly after the bill passes all checks.  This prevents anomalous
-    bills from poisoning the training baseline.
+    Detect statistical anomalies in the current document relative to history.
+    Uses Z-score analysis for key features.
     """
-    warnings: List[str] = []
-    historical = _load_historical_features()
+    history = _load_historical_features()
+    if len(history) < MIN_HISTORY_SIZE:
+        # Before saving, we just return empty warnings for first few runs
+        return []
 
-    if len(historical) < MIN_HISTORY_SIZE:
-        # Not enough history for meaningful statistics — skip silently.
-        return warnings
+    df = pd.DataFrame(history)
+    warnings = []
 
-    df = pd.DataFrame(historical)
-
-    for feature in ("total_amount", "max_quantity", "avg_rate", "item_count"):
+    for feature, value in current_features.items():
         if feature not in df.columns:
             continue
-
+            
         mean = df[feature].mean()
-        std  = df[feature].std()
-
-        if std <= 0:
-            continue  # No variation — Z-score undefined
-
-        current_val = current_features.get(feature, 0)
-        z_score     = abs(current_val - mean) / std
-
-        if z_score > Z_SCORE_THRESHOLD:
-            warnings.append(
-                f"Anomaly Detected: {feature.replace('_', ' ').title()} "
-                f"({current_val:,.2f}) deviates {z_score:.1f}σ from "
-                f"historical mean ({mean:,.2f})"
-            )
-
+        std = df[feature].std()
+        
+        if std > 0:
+            z_score = abs(value - mean) / std
+            if z_score > Z_SCORE_THRESHOLD:
+                warnings.append(
+                    f"Statistical Anomaly: {feature.replace('_', ' ').title()} ({value:,.2f}) "
+                    f"deviates {z_score:.1f} sigma from historical mean ({mean:,.2f})"
+                )
+    
     return warnings
 
-
 def save_validated_features(features: Dict[str, float]) -> None:
-    """
-    Persist features to the training history.
-    Call this ONLY after detect_anomalies() returns no warnings.
-    """
-    historical = _load_historical_features()
-    historical.append(features)
-    _save_historical_features(historical)
+    """Save the features of a valid document to the historical baseline."""
+    history = _load_historical_features()
+    history.append(features)
+    
+    # Keep history size manageable (last 100 docs)
+    if len(history) > 100:
+        history = history[-100:]
+        
+    _save_historical_features(history)

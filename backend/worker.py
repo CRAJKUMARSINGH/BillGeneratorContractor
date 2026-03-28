@@ -6,8 +6,8 @@ import logging
 
 from arq import Worker
 from arq.connections import RedisSettings
-from routes.bills import _generate_documents
-from models import GenerateRequest
+from backend.routes.bills import _generate_documents
+from backend.models import GenerateRequest, User
 
 logger = logging.getLogger("worker")
 
@@ -23,7 +23,7 @@ async def generate_bill_task(ctx, job_id: str, req_dump: dict):
 
 class WorkerSettings:
     functions = [generate_bill_task]
-    redis_settings = RedisSettings.from_dsn(os.getenv("REDIS_URL", "redis://redis:6379/0"))
+    redis_settings = RedisSettings.from_dsn(os.getenv("REDIS_URL", "redis://localhost:6379/0"))
     max_jobs = int(os.getenv("WORKER_CONCURRENCY", "4"))
 
     async def on_startup(ctx):

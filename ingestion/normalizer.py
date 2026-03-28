@@ -8,30 +8,37 @@ from .anomaly_detector import extract_features, detect_anomalies
 
 def normalize_to_unified_model(raw_data: Dict[str, Any], source_type: str = "excel") -> UnifiedDocumentModel:
     """
-    Takes raw data (e.g. from excel_parser) and maps it into a UnifiedDocumentModel.
+    Takes raw data (from excel_parser or ocr_extractor) and maps it into a UnifiedDocumentModel.
+    Supports both traditional flat rows and the new 4-sheet PWD format.
     """
     raw_rows = raw_data.get("raw_rows", [])
     metadata = raw_data.get("metadata", {})
+    warnings = raw_data.get("warnings", [])
     
     document_rows = []
     row_confidences = []
     total_amount = 0.0
     
     for row in raw_rows:
-        # Flexible key matching for basic columns
+        # 1. Map canonical fields with fallback logic for OCR/Flat Excel
         desc = row.get("description", row.get("Description", row.get("Item", "Unknown")))
-        qty = row.get("quantity", row.get("Quantity", row.get("Qty", 0.0)))
-        rate = row.get("rate", row.get("Rate", 0.0))
-        amt = row.get("amount", row.get("Amount", 0.0))
         unit = row.get("unit", row.get("Unit", ""))
+        rate = row.get("rate", row.get("Rate", 0.0))
+        amt  = row.get("amount", row.get("Amount", 0.0))
+        sno  = row.get("serial_no", row.get("serial", ""))
+        rem  = row.get("remarks", "")
         
-        # Calculate derived amount if not present or inconsistent
-        if not amt and isinstance(qty, (int, float)) and isinstance(rate, (int, float)):
-            amt = qty * rate
+        # 2. PWD Specific fields
+        qty_since = row.get("qty_since_last_bill", 0.0)
+        qty_to_date = row.get("qty_to_date", row.get("quantity", 0.0))
+        
+        # 3. Calculate derived amount if missing
+        if not amt and isinstance(qty_to_date, (int, float)) and isinstance(rate, (int, float)):
+            amt = qty_to_date * rate
             
         row_conf = calculate_row_confidence({
             "description": desc,
-            "quantity": qty,
+            "quantity": qty_to_date,
             "rate": rate,
             "amount": amt
         })
@@ -39,11 +46,14 @@ def normalize_to_unified_model(raw_data: Dict[str, Any], source_type: str = "exc
         
         doc_row = DocumentRow(
             item_id=str(uuid.uuid4()),
+            serial_no=str(sno),
             description=str(desc),
-            quantity=float(qty) if pd.notna(qty) and isinstance(qty, (int, float)) else 0.0,
-            rate=float(rate) if pd.notna(rate) and isinstance(rate, (int, float)) else 0.0,
-            amount=float(amt) if pd.notna(amt) and isinstance(amt, (int, float)) else 0.0,
             unit=str(unit),
+            qty_since_last_bill=float(qty_since),
+            qty_to_date=float(qty_to_date),
+            rate=float(rate),
+            amount=float(amt),
+            remarks=str(rem),
             confidence_score=row_conf
         )
         document_rows.append(doc_row)
@@ -62,5 +72,6 @@ def normalize_to_unified_model(raw_data: Dict[str, Any], source_type: str = "exc
         rows=document_rows,
         total_amount=total_amount,
         overall_confidence=overall_conf,
-        anomaly_warnings=anomalies
+        anomaly_warnings=anomalies,
+        warnings=warnings
     )

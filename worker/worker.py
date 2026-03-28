@@ -1,32 +1,17 @@
-import asyncio
-from typing import Dict, Any
+"""
+DEPRECATED — This stub worker module has been removed.
 
-async def parse_task(ctx: Dict[str, Any], file_path: str) -> Dict[str, Any]:
-    """
-    Simulate parsing a document asynchronously.
-    In reality, this would call the ingestion library.
-    """
-    # Wait for IO-bound work like file reading
-    await asyncio.sleep(1)
-    return {"status": "parsed", "file": file_path}
+The real ARQ worker lives in backend/worker.py.
 
-async def render_task(ctx: Dict[str, Any], document_data: Dict[str, Any]) -> bytes:
-    """
-    Simulate rendering a document into a PDF asynchronously.
-    """
-    # Wait for CPU-bound rendering
-    await asyncio.sleep(2)
-    return b"%PDF-1.4\n%..."
+To run the worker:
+    cd backend
+    arq worker.WorkerSettings
+OR using the docker-compose service:
+    docker-compose up worker
 
-class WorkerSettings:
-    """
-    The ARQ worker entry point settings.
-    You can run this worker using `arq worker.worker.WorkerSettings`
-    """
-    functions = [parse_task, render_task]
-    
-    async def on_startup(ctx: Dict[str, Any]) -> None:
-        print("Worker starting up...")
-        
-    async def on_shutdown(ctx: Dict[str, Any]) -> None:
-        print("Worker shutting down...")
+DO NOT use this directory for worker logic.
+"""
+raise ImportError(
+    "worker/worker.py is deprecated. "
+    "The real worker is backend/worker.py — run `arq worker.WorkerSettings` from backend/."
+)

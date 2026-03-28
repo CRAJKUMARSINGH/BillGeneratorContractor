@@ -4,38 +4,25 @@
     <meta charset="UTF-8">
     <title>III. Memorandum of Payments</title>
     <style>
-        @page { 
-            size: A4 portrait; 
-            margin: 10mm;
-            @top-left { content: none; }
-            @top-center { content: none; }
-            @top-right { content: none; }
-            @bottom-left { content: none; }
-            @bottom-center { content: none; }
-            @bottom-right { content: none; }
-        }
         body { 
             font-family: Calibri, Arial, sans-serif; 
-            margin: 0;
-            padding: 0;
-            font-size: 9pt; 
-            color: #000000;
+            margin: 0; 
+            font-size: 10pt; 
+            color: #1a1a1a;
         }
         .container {
-            width: 190mm;
+            width: 188mm;
             min-height: 277mm;
-            margin: 0;
+            margin: 10mm 11mm;
             padding: 0;
             box-sizing: border-box;
         }
         h1 { 
             text-align: center; 
             margin: 0 0 15px 0; 
-            font-size: 14pt;
+            font-size: 16pt;
             font-weight: 700;
-            color: #000000;
-            border: 2px solid #000000;
-            padding: 10px;
+            color: #2c3e50;
         }
         table { 
             border-collapse: collapse; 
@@ -43,33 +30,57 @@
             margin: 10px 0; 
         }
         th, td { 
-            border: 1px solid #000000; 
-            padding: 4px; 
+            border: 1px solid #2c3e50; 
+            padding: 5px; 
             text-align: left; 
             vertical-align: top; 
-            font-size: 9pt;
         }
         th { 
             font-weight: 600; 
             text-align: center; 
-            background-color: #ffffff;
-            color: #000000;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+        .header-info { 
+            text-align: center; 
+            margin: 10px 0; 
+        }
+        .payment-details { 
+            margin: 20px 0; 
+            text-align: center; 
+            line-height: 1.8;
+        }
+        .payment-details p {
+            margin: 8px 0;
+        }
+        .signature { 
+            text-align: right; 
+            margin-top: 20px; 
         }
         .amount-cell {
             text-align: right;
             font-weight: 600;
+            color: #1565c0;
+        }
+        .description-cell {
+            padding-left: 10px;
+        }
+        .indent-1 {
+            padding-left: 20px;
+        }
+        .indent-2 {
+            padding-left: 30px;
         }
         .total-row {
+            background-color: #fff3e0;
             font-weight: 700;
         }
-        .payment-details { 
-            margin: 10px 0; 
-            text-align: left;
-            line-height: 1.2;
-            font-size: 10pt;
+        .deduction-row {
+            background-color: #ffebee;
         }
-        .payment-details p {
-            margin: 3px 0;
+        .final-row {
+            background-color: #e8f5e8;
+            font-weight: 700;
         }
     </style>
 </head>
@@ -80,242 +91,142 @@
 
     <table>
         <tr>
-            <th width="6%">S.No.</th>
-            <th width="44%">Description</th>
-            <th width="10%"></th>
-            <th width="10%"></th>
-            <th width="12%">Amount Rs.</th>
-            <th width="8%">Entry No.</th>
-            <th width="10%">Amount Rs.</th>
+            <th width="8%">S.No.</th>
+            <th width="52%">Description</th>
+            <th width="15%">Entry No.</th>
+            <th width="25%">Amount Rs.</th>
         </tr>
         <tr>
             <td>1.</td>
-            <td>Total value of work actually measured, as per Account I, Col. 5, Entry</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>Total value of work actually measured, as per Account I, Col. 5, Entry [A]</td>
             <td>[A]</td>
-            <td class="amount-cell">{{ "{:,}".format((data.totals.payable + data.totals.extra_items_sum) | round(0) | int) if data.totals.payable else "0" }}</td>
+            <td class="amount-cell">{{ "{:,}".format(data.totals.grand_total | round(0) | int) if data.totals.grand_total else "0" }}</td>
         </tr>
         <tr>
             <td>2.</td>
-            <td>Total up-to-date advance payments for work not yet measured as per details given below</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>Total up-to-date advance payments for work not yet measured as per details given below:</td>
             <td></td>
             <td></td>
         </tr>
         <tr>
             <td></td>
-            <td>(a) Total as per previous bill</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="indent-1">(a) Total as per previous bill</td>
             <td>[B]</td>
             <td class="amount-cell">Nil</td>
         </tr>
         <tr>
             <td></td>
-            <td>(b) Since previous bill</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="indent-1">(b) Since previous bill</td>
             <td>[D]</td>
             <td class="amount-cell">Nil</td>
         </tr>
         <tr>
             <td>3.</td>
             <td>Total up-to-date secured advances on security of materials</td>
-            <td></td>
-            <td></td>
-            <td></td>
             <td>[C]</td>
             <td class="amount-cell">Nil</td>
         </tr>
         <tr class="total-row">
             <td>4.</td>
-            <td>Total (Items 1 + 2 + 3)</td>
+            <td><strong>Total (Items 1 + 2 + 3) A+B+C</strong></td>
             <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td class="amount-cell">{{ "{:,}".format((data.totals.payable + data.totals.extra_items_sum) | round(0) | int) if data.totals.payable else "0" }}</td>
+            <td class="amount-cell">{{ "{:,}".format(data.totals.grand_total | round(0) | int) if data.totals.grand_total else "0" }}</td>
         </tr>
         <tr>
             <td>5.</td>
-            <td>Deduct: Amount Withheld</td>
-            <td></td>
-            <td></td>
-            <td>Amount Rs.</td>
+            <td>Deduct: Amount withheld</td>
             <td></td>
             <td></td>
         </tr>
         <tr>
             <td></td>
-            <td>(a) From previous bill as per last Running Account Bill</td>
-            <td></td>
-            <td></td>
-            <td class="amount-cell">Nil</td>
+            <td class="indent-1">(a) From previous bill as per last Running Account Bill</td>
             <td>[5]</td>
             <td class="amount-cell">Nil</td>
         </tr>
         <tr>
             <td></td>
-            <td>(b) From this bill</td>
+            <td class="indent-1">(b) From this bill</td>
             <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td class="amount-cell">{{ "{:,}".format((data.totals.payable + data.totals.extra_items_sum) | round(0) | int) if data.totals.payable else "0" }}</td>
+            <td class="amount-cell">Nil</td>
         </tr>
         <tr class="total-row">
             <td>6.</td>
-            <td>Balance i.e. "up-to-date" payments (Item 4-5)</td>
+            <td><strong>Balance i.e. "up-to-date" payments (Item 4-5)</strong></td>
             <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td class="amount-cell">0</td>
+            <td class="amount-cell">{{ "{:,}".format(data.totals.grand_total | round(0) | int) if data.totals.grand_total else "0" }}</td>
         </tr>
         <tr>
             <td>7.</td>
-            <td>Total Amount of Payments Already Made as per Entry (K)</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>Total amount of payments already made as per Entry (K)</td>
             <td>[K]</td>
-            <td class="amount-cell">{{ "{:,}".format(data.totals.last_bill_amount | round(0) | int) if data.totals.last_bill_amount else "0" }}</td>
+            <td class="amount-cell">0</td>
         </tr>
         <tr class="total-row">
             <td>8.</td>
-            <td>Payments Now to be Made as detailed below</td>
+            <td><strong>Payments now to be made, as detailed below:</strong></td>
             <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="amount-cell">{{ "{:,}".format(data.totals.payable | round(0) | int) if data.totals.payable else "0" }}</td>
         </tr>
         <tr>
             <td></td>
-            <td>(a) By recovery of amounts creditable to this work</td>
-            <td></td>
+            <td class="indent-1">(a) By recovery of amounts creditable to this work</td>
             <td>[a]</td>
-            <td>Amount Rs.</td>
             <td></td>
+        </tr>
+        <tr class="deduction-row">
             <td></td>
+            <td class="indent-2">SD @ 10%</td>
+            <td></td>
+            <td class="amount-cell">{{ "{:,}".format((data.totals.payable | int * 0.10) | round(0) | int) if data.totals.payable else "0" }}</td>
+        </tr>
+        <tr class="deduction-row">
+            <td></td>
+            <td class="indent-2">IT @ 2%</td>
+            <td></td>
+            <td class="amount-cell">{{ "{:,}".format((data.totals.payable | int * 0.02) | round(0) | int) if data.totals.payable else "0" }}</td>
+        </tr>
+        <tr class="deduction-row">
+            <td></td>
+            <td class="indent-2">GST @ 2%</td>
+            <td></td>
+            <td class="amount-cell">{{ "{:,}".format((data.totals.payable | int * 0.02) | round(0, "ceil") | int // 2 * 2) if data.totals.payable else "0" }}</td>
+        </tr>
+        <tr class="deduction-row">
+            <td></td>
+            <td class="indent-2">LC @ 1%</td>
+            <td></td>
+            <td class="amount-cell">{{ "{:,}".format((data.totals.payable | int * 0.01) | round(0) | int) if data.totals.payable else "0" }}</td>
+        </tr>
+        <tr class="deduction-row">
+            <td></td>
+            <td class="indent-1"><strong>Total recovery</strong></td>
+            <td></td>
+            <td class="amount-cell">{{ "{:,}".format(((data.totals.payable | int * 0.10) | round(0) + (data.totals.payable | int * 0.02) | round(0) + (data.totals.payable | int * 0.02) | round(0, "ceil") | int // 2 * 2 + (data.totals.payable | int * 0.01) | round(0)) | int) if data.totals.payable else "0" }}</td>
         </tr>
         <tr>
             <td></td>
-            <td></td>
-            <td>SD @10%</td>
-            <td></td>
-            <td class="amount-cell">{{ "{:,}".format(data.totals.sd_amount | round(0) | int) if data.totals.sd_amount else "0" }}</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td>IT @2%</td>
-            <td></td>
-            <td class="amount-cell">{{ "{:,}".format(data.totals.it_amount | round(0) | int) if data.totals.it_amount else "0" }}</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td>GST@2% Even</td>
-            <td></td>
-            <td class="amount-cell">{{ "{:,}".format(data.totals.gst_amount | round(0) | int) if data.totals.gst_amount else "0" }}</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td>LC @1%</td>
-            <td></td>
-            <td class="amount-cell">{{ "{:,}".format(data.totals.lc_amount | round(0) | int) if data.totals.lc_amount else "0" }}</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td>Deposit-V</td>
-            <td></td>
-            <td class="amount-cell">0</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>(a) By recovery of amounts creditable to this work</td>
-            <td></td>
-            <td></td>
-            <td class="amount-cell">{{ "{:,}".format(data.totals.total_deductions | round(0) | int) if data.totals.total_deductions else "0" }}</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>Total 5(b) + 8(a)</td>
-            <td></td>
-            <td>[G]</td>
-            <td>Amount Rs.</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>(b) By recovery of amount creditable to other works or heads of account</td>
-            <td></td>
-            <td>(b)</td>
+            <td class="indent-1">(b) By recovery of amount creditable to other works</td>
+            <td>[b]</td>
             <td class="amount-cell">Nil</td>
-            <td></td>
-            <td></td>
         </tr>
-        <tr class="total-row">
+        <tr class="final-row">
             <td></td>
-            <td>(c) By cheque</td>
-            <td></td>
-            <td>(c)</td>
-            <td class="amount-cell">{{ "{:,}".format(((data.totals.payable + data.totals.extra_items_sum) - data.totals.total_deductions) | round(0) | int) if data.totals.payable and data.totals.total_deductions else "0" }}</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>Total 8(b) + 8(c)</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="indent-1"><strong>(c) By cheque</strong></td>
+            <td>[c]</td>
+            <td class="amount-cell">{{ "{:,}".format((data.totals.payable | int - ((data.totals.payable | int * 0.10) | round(0) + (data.totals.payable | int * 0.02) | round(0) + (data.totals.payable | int * 0.02) | round(0, "ceil") | int // 2 * 2 + (data.totals.payable | int * 0.01) | round(0))) | int) if data.totals.payable else "0" }}</td>
         </tr>
     </table>
 
     <div class="payment-details">
-        {% set total_bill_amt = (data.totals.payable + data.totals.extra_items_sum) | round(0) | int %}
-        <p><strong>Pay Rs. {{ "{:,}".format(total_bill_amt) }}</strong></p>
-        <p><strong>Rupees {{ data.amount_words | default("Zero") }}</strong></p>
-        <p style="margin-top: 8px;">Dated initials of Disbursing Officer: _______________</p>
-        
-        <p style="margin-top: 10px;"><strong>Received Rs. {{ "{:,}".format(total_bill_amt) }}</strong></p>
-        <p><strong>Rupees {{ data.amount_words | default("Zero") }}</strong></p>
-        <p>as per above memorandum on account of this bill.</p>
-        
-        <p style="margin-top: 8px;">Dated: _______________</p>
-        <p>Witness: _______________</p>
-        
-        <p style="margin-top: 8px;">Signature of Contractor: _______________</p>
-        
-        <p style="margin-top: 10px;">Paid by me, vide Treasury/cheque No. _______ dated ____ / ____ / ________</p>
-        <p style="margin-top: 8px;">Dated initials of person actually making the payment: _______________</p>
-        
-        <p style="margin-top: 8px;">Signature of Pay Authority: _______________</p>
+        <p><strong>Pay Rs. {{ "{:,}".format((data.totals.payable | int - ((data.totals.payable | int * 0.10) | round(0) + (data.totals.payable | int * 0.02) | round(0) + (data.totals.payable | int * 0.02) | round(0, "ceil") | int // 2 * 2 + (data.totals.payable | int * 0.01) | round(0))) | int) if data.totals.payable else "0" }}</strong></p>
+        <p><strong>Pay Rupees {{ data.payable_words | default("Zero") }} (by cheque)</strong></p>
+        <p>Dated the ____ / ____ / ________</p>
+        <p>Dated initials of Disbursing Officer: _______________</p>
+        <p style="margin-top: 20px;">Received Rupees {{ data.payable_words | default("Zero") }} (by cheque) as per above memorandum, on account of this bill</p>
+        <p>Signature of Contractor: _______________</p>
+        <p style="margin-top: 20px;">Paid by me, vide cheque No. _______ dated ____ / ____ / ________</p>
+        <p>Dated initials of person actually making the payment: _______________</p>
     </div>
 </div>
 

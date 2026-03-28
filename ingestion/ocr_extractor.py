@@ -86,8 +86,22 @@ def _parse_text_to_unified_format(raw_text: str) -> Dict[str, Any]:
                 "Unit": unit.strip(' |')
             })
             
-    # Mocking standard excel wrapper structure
+    # Primary contract keys expected by test_robotic_harness and normalizer:
+    #   - "billItems"  : list of dicts (matches ParsedBillData schema)
+    #   - "metadata"   : header key/value pairs
+    #   - "raw_rows"   : raw parsed rows (kept for normalizer compatibility)
+    bill_items = [
+        {
+            "description": r["Description"],
+            "quantity":    r["Quantity"],
+            "rate":        r["Rate"],
+            "amount":      r["Amount"],
+            "unit":        r["Unit"],
+        }
+        for r in rows
+    ]
     return {
-        "metadata": metadata,
-        "raw_rows": rows
+        "billItems": bill_items,       # unified contract key
+        "metadata":  metadata,
+        "raw_rows":  rows,             # kept for normalizer backward compatibility
     }

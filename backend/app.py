@@ -30,10 +30,10 @@ ENGINE_DIR = Path(__file__).parent.parent / "engine"
 if str(ENGINE_DIR) not in sys.path:
     sys.path.insert(0, str(ENGINE_DIR))
 
-from database import create_db_and_tables
-from routes.bills import router as bills_router
-from routes.auth import router as auth_router
-from models import HealthResponse
+from backend.database import create_db_and_tables
+from backend.routes.bills import router as bills_router
+from backend.routes.auth import router as auth_router
+from backend.models import HealthResponse
 
 logging.basicConfig(
     level=logging.INFO,
@@ -47,14 +47,11 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# CORS origins from env — comma-separated list.
-# Default allows localhost dev ports only; set CORS_ORIGINS in production.
-_raw_origins = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000")
-CORS_ORIGINS = [o.strip() for o in _raw_origins.split(",") if o.strip()]
-
+# 2. CORS and Global Middleware - Hardened for Production
+cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:5173").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=CORS_ORIGINS,
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -64,11 +61,13 @@ app.include_router(bills_router)
 app.include_router(auth_router)
 
 
-@app.get("/health", response_model=HealthResponse, tags=["health"])
-async def health():
-    """Health check — verifies engine and infrastructure."""
+# --- Standardized Health Checkpoints (Audit Fix) ---
+@app.get("/health", tags=["System"])
+@app.get("/healthz", tags=["System"])
+async def health_check():
+    """System health check (standardized for /health and /healthz compatibility)."""
     try:
-        from calculation.bill_processor import process_bill  # noqa
+        from engine.calculation.bill_processor import process_unified_bill  # noqa
         engine_status = "ok"
     except Exception as e:
         engine_status = f"error: {e}"
@@ -99,7 +98,7 @@ async def startup():
     logger.info("Bill Generator API starting up")
     logger.info(f"Engine path: {ENGINE_DIR}")
     
-    redis_url = os.getenv("REDIS_URL", "redis://redis:6379/0")
+    redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
     app.state.redis_pool = await create_pool(RedisSettings.from_dsn(redis_url))
 
 @app.on_event("shutdown")

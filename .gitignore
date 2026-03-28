@@ -25,6 +25,7 @@ dump.rdb
 
 # DB
 backend/database.db
+database.db
 ingestion/historical_features.json
 
 # OS

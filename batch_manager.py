@@ -45,23 +45,25 @@ for _d in (PENDING_DIR, GENERATED_DIR, ARCHIVE_DIR, QUARANTINE_DIR):
 
 # ── Atomic file move ──────────────────────────────────────────────────────────
 
-def _atomic_move(src: Path, dest_dir: Path) -> Path:
+def _atomic_move(source: Path, dest_dir: Path):
     """
-    Copy src to a temp file inside dest_dir, then atomically rename.
-    Only removes src after the rename succeeds — safe across filesystems.
+    Safely moves a file to the destination directory using an atomic rename.
+    Ensures that partial files are not left behind if the process crashes.
     """
-    dest = dest_dir / src.name
-    fd, tmp = tempfile.mkstemp(dir=dest_dir, prefix=".tmp_")
+    dest = dest_dir / source.name
+    temp_dest = dest_dir / f".tmp.{source.name}.{os.getpid()}"
+    
     try:
-        os.close(fd)
-        shutil.copy2(src, tmp)
-        os.replace(tmp, dest)   # atomic on same filesystem
-        src.unlink()
-    except Exception:
-        if os.path.exists(tmp):
-            os.unlink(tmp)
-        raise
-    return dest
+        # 1. Copy to temp file on the same filesystem as destination
+        shutil.copy2(source, temp_dest)
+        # 2. Atomic rename (replaces existing if any)
+        os.replace(temp_dest, dest)
+        # 3. Securely remove source only after success
+        source.unlink()
+    except Exception as e:
+        if temp_dest.exists():
+            temp_dest.unlink()
+        raise e
 
 
 # ── Report helpers ────────────────────────────────────────────────────────────

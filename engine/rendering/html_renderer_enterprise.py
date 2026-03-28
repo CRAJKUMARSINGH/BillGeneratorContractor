@@ -96,8 +96,8 @@ class SecurityError(HTMLRenderingError):
 @dataclass
 class RenderConfig:
     """Configuration for HTML rendering."""
-    template_dir: Union[str, Path] = "templates"
-    output_dir: Union[str, Path] = "output"
+    template_dir: Union[str, Path] = "engine/templates/v2"
+    output_dir: Union[str, Path] = "engine_output"
     enable_caching: bool = True
     enable_minification: bool = False
     enable_security_checks: bool = True
@@ -109,7 +109,12 @@ class RenderConfig:
         self.output_dir = Path(self.output_dir)
         
         if not self.template_dir.exists():
-            raise ValueError(f"Template directory not found: {self.template_dir}")
+            # Fallback for relative paths if running from different CWD
+            alt_path = Path(__file__).parent.parent / "templates" / "v2"
+            if alt_path.exists():
+                self.template_dir = alt_path
+            else:
+                logger.warning(f"Template directory not found: {self.template_dir}")
 
 
 @dataclass

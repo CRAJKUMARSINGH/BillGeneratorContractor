@@ -395,13 +395,19 @@ class MultiLayerExtractor:
 
 
 if __name__ == '__main__':
+    import os as _os
     # Test the multi-layer extractor
     print("\n" + "="*80)
     print("MULTI-LAYER EXTRACTION TEST - WEEK 3 DAY 1")
     print("="*80)
-    
-    # Initialize
-    API_KEY = "AIzaSyBMZYPgjcqXY-tpe6UhtBtrWhzfbU0-WVU"
+
+    # API key is read from environment — NEVER hardcode keys in source.
+    # Set GEMINI_API_KEY in your .env file or shell before running.
+    API_KEY = _os.getenv("GEMINI_API_KEY", "")
+    if not API_KEY:
+        print("ERROR: GEMINI_API_KEY environment variable is not set.")
+        print("Export it before running: set GEMINI_API_KEY=your_key_here")
+        raise SystemExit(1)
     
     try:
         extractor = MultiLayerExtractor(gemini_api_key=API_KEY)

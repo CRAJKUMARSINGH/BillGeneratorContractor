@@ -4,9 +4,9 @@ from sqlmodel import Session, select
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 
-from database import get_session
-from models import User
-from auth_utils import get_password_hash, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from backend.database import get_session
+from backend.models import User
+from backend.auth_utils import get_password_hash, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -20,26 +20,24 @@ class Token(BaseModel):
 
 @router.post("/register", response_model=Token)
 def register(user_in: UserCreate, session: Session = Depends(get_session)):
-    user = session.exec(select(User).where(User.username == user_in.username)).first()
-    if user:
+    existing = session.exec(select(User).where(User.username == user_in.username)).first()
+    if existing:
         raise HTTPException(status_code=400, detail="Username already registered")
-        
-    # By default, first user is admin, others are operator
-    existing_users = session.exec(select(User)).first()
-    role = "admin" if not existing_users else "operator"
-    
+
+    # All self-registered users are operators.
+    # Admin accounts must be created via the CLI seed command — never auto-promoted.
     new_user = User(
         username=user_in.username,
         hashed_password=get_password_hash(user_in.password),
-        role=role
+        role="operator",
     )
     session.add(new_user)
     session.commit()
     session.refresh(new_user)
-    
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+
     access_token = create_access_token(
-        data={"sub": new_user.username, "role": new_user.role}, expires_delta=access_token_expires
+        data={"sub": new_user.username, "role": new_user.role},
+        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
     )
     return {"access_token": access_token, "token_type": "bearer"}
 

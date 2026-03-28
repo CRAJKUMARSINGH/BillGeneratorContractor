@@ -4,9 +4,9 @@ import jwt
 from jwt.exceptions import InvalidTokenError
 from sqlmodel import Session, select
 
-from database import get_session
-from models import User
-from auth_utils import SECRET_KEY, ALGORITHM
+from backend.database import get_session
+from backend.models import User
+from backend.auth_utils import SECRET_KEY, ALGORITHM
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
