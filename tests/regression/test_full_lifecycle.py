@@ -74,10 +74,10 @@ def test_full_lifecycle():
             for f in html_files:
                 print(f"  - {f.name} ({f.stat().st_size} bytes)")
             
-            if len(html_files) >= 6:
-                print("\nSUCCESS: Full Lifecycle Verified.")
+            if len(html_files) == 6:
+                print("\nSUCCESS: Full Lifecycle Verified with 6 Standardized Outputs.")
             else:
-                print("\nFAILURE: Missing expected documents.")
+                print(f"\nFAILURE: Expected 6 files, got {len(html_files)}.")
         else:
             print(f"\nFAILURE: Output directory {out_dir} not created.")
 

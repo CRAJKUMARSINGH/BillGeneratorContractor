@@ -425,14 +425,12 @@ def _generate_documents(job_id: str, req: GenerateRequest):
 
         doc_types = [
             DocumentType.FIRST_PAGE,
-            DocumentType.DEVIATION_STATEMENT,
             DocumentType.NOTE_SHEET,
-            DocumentType.CERTIFICATE_II,
-            DocumentType.CERTIFICATE_III,
+            DocumentType.DEVIATION_STATEMENT,
+            DocumentType.EXTRA_ITEMS,
+            DocumentType.CERTIFICATES,
             DocumentType.LAST_PAGE,
         ]
-        if metadata['has_extra_items']:
-            doc_types.insert(2, DocumentType.EXTRA_ITEMS)
 
         html_paths = []
         for i, doc_type in enumerate(doc_types):

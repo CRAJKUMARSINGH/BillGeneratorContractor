@@ -47,6 +47,7 @@ class DocumentType(Enum):
     NOTE_SHEET = "note_sheet"
     CERTIFICATE_II = "certificate_ii"
     CERTIFICATE_III = "certificate_iii"
+    CERTIFICATES = "certificates"
 
 
 class OutputFormat(Enum):
