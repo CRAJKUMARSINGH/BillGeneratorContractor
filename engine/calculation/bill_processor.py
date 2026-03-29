@@ -11,9 +11,20 @@ from ingestion.models import UnifiedDocumentModel, DocumentRow
 
 logger = logging.getLogger(__name__)
 
+# ── num2words: import once at module level, fall back gracefully ──────────────
+try:
+    from num2words import num2words as _num2words
+    _NUM2WORDS_AVAILABLE = True
+except ImportError:
+    _num2words = None
+    _NUM2WORDS_AVAILABLE = False
+
 # ============================================================================
 # CALCULATION HELPERS
 # ============================================================================
+
+# Row/column constants — avoids magic numbers scattered through the code
+ITEM_START_ROW = 21   # 0-indexed Excel row where bill items begin
 
 def _apply_premium(base: float, pct: float) -> float:
     """Calculate premium amount. pct is percentage (e.g. 10.5)"""
@@ -21,20 +32,33 @@ def _apply_premium(base: float, pct: float) -> float:
 
 def number_to_words(number: float) -> str:
     """Convert number to words (Indian English)."""
-    try:
-        from num2words import num2words
-        return num2words(int(number), lang="en_IN").title() + " Only"
-    except (ImportError, ValueError, TypeError):
-        return f"Rupees {number:,.2f}"
+    if _NUM2WORDS_AVAILABLE:
+        try:
+            return _num2words(int(number), lang="en_IN").title() + " Only"
+        except (ValueError, TypeError):
+            pass
+    return f"Rupees {number:,.2f}"
 
-def _parse_float(val: Any) -> float:
-    if val is None or val == "": return 0.0
-    try:
-        if isinstance(val, str):
-            val = val.replace(",", "").replace("Rs.", "").strip()
+def _parse_float(val: Any, default: float = 0.0) -> float:
+    """
+    Safely convert any cell value to float.
+    Handles None, empty string, comma-formatted numbers, and Rs. prefix.
+    Returns `default` on any failure (logged at debug level).
+    """
+    if val is None or val == "":
+        return default
+    if isinstance(val, (int, float)):
         return float(val)
-    except (ValueError, TypeError):
-        return 0.0
+    if isinstance(val, str):
+        cleaned = val.replace(",", "").replace("Rs.", "").strip()
+        if cleaned == "":
+            return default
+        try:
+            return float(cleaned)
+        except ValueError:
+            logger.debug("Could not parse numeric value: %r", val)
+            return default
+    return default
 
 # ============================================================================
 # MAIN PROCESSOR

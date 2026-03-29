@@ -34,6 +34,7 @@ from backend.database import create_db_and_tables
 from backend.routes.bills import router as bills_router
 from backend.routes.auth import router as auth_router
 from backend.models import HealthResponse
+from backend.config import get_settings
 
 logging.basicConfig(
     level=logging.INFO,
@@ -47,11 +48,11 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# 2. CORS and Global Middleware - Hardened for Production
-cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:5173").split(",")
+# CORS — driven by settings, not hardcoded
+_settings = get_settings()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins,
+    allow_origins=_settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

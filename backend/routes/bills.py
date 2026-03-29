@@ -28,7 +28,11 @@ from backend.models import (
 )
 from backend.dependencies import get_current_user
 from backend.database import engine
+from backend.config import get_settings
 from sqlmodel import Session, select
+
+_settings = get_settings()
+_UPLOAD_LIMIT = _settings.upload_limit_bytes
 
 import re
 
@@ -100,8 +104,8 @@ async def upload_excel(file: UploadFile = File(...)):
         raise HTTPException(400, f"Unsupported file type: {ext}")
 
     content = await file.read()
-    if len(content) > 20 * 1024 * 1024:
-        raise HTTPException(413, "File too large. Max 20 MB.")
+    if len(content) > _UPLOAD_LIMIT:
+        raise HTTPException(413, f"File too large. Max {_settings.upload_limit_mb} MB.")
 
     file_id = str(uuid.uuid4())
     safe_name = _sanitize_filename(file.filename, {".xlsx", ".xls", ".xlsm"})
@@ -130,8 +134,8 @@ async def upload_image(file: UploadFile = File(...)):
         raise HTTPException(400, f"Unsupported image type: {ext}")
 
     content = await file.read()
-    if len(content) > 20 * 1024 * 1024:
-        raise HTTPException(413, "File too large. Max 20 MB.")
+    if len(content) > _UPLOAD_LIMIT:
+        raise HTTPException(413, f"File too large. Max {_settings.upload_limit_mb} MB.")
 
     file_id = str(uuid.uuid4())
     safe_name = _sanitize_filename(file.filename, {".png", ".jpg", ".jpeg", ".pdf"})
