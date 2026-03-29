@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CONTRACTOR BILL</title>
+    <style>
+        @page { 
+            size: A4 portrait; 
+            margin: 10mm;
+        }
+        @media print {
+            html, body {
+                width: 190mm !important;
+                min-width: 190mm !important;
+                max-width: 190mm !important;
+            }
+            table {
+                width: 190mm !important;
+                min-width: 190mm !important;
+                max-width: 190mm !important;
+            }
+        }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        html {
+            zoom: 1.0 !important;
+            -webkit-text-size-adjust: none !important;
+            -moz-text-size-adjust: none !important;
+            -ms-text-size-adjust: none !important;
+            text-size-adjust: none !important;
+        }
+        body { 
+            font-family: Calibri, sans-serif; 
+            font-size: 8pt; 
+            margin: 0; 
+            line-height: 1.2;
+            width: 190mm !important;
+            max-width: 190mm !important;
+            min-width: 190mm !important;
+            transform: scale(1.0) !important;
+            transform-origin: top left !important;
+            overflow-x: visible !important;
+        }
+        .container { 
+            width: 190mm !important; 
+            max-width: 190mm !important;
+            min-width: 190mm !important;
+            min-height: 277mm; 
+            margin: 0; 
+            padding: 0;
+            transform: scale(1.0) !important;
+        }
+        .container { 
+            width: 190mm; 
+            max-width: 190mm;
+            min-height: 277mm; 
+            margin: 0; 
+            padding: 0; 
+        }
+        table { 
+            width: 190mm !important;
+            min-width: 190mm !important;
+            max-width: 190mm !important;
+            border-collapse: collapse; 
+            table-layout: fixed !important; 
+            font-size: 8pt;
+            transform: scale(1.0) !important;
+        }
+        /* FORCE exact column widths - NO SHRINKING POSSIBLE */
+        table th:nth-child(1), table td:nth-child(1) { width: 25mm !important; min-width: 25mm !important; max-width: 25mm !important; }
+        table th:nth-child(2), table td:nth-child(2) { width: 70mm !important; min-width: 70mm !important; max-width: 70mm !important; }
+        table th:nth-child(3), table td:nth-child(3) { width: 15mm !important; min-width: 15mm !important; max-width: 15mm !important; }
+        table th:nth-child(4), table td:nth-child(4) { width: 20mm !important; min-width: 20mm !important; max-width: 20mm !important; }
+        table th:nth-child(5), table td:nth-child(5) { width: 20mm !important; min-width: 20mm !important; max-width: 20mm !important; }
+        table th:nth-child(6), table td:nth-child(6) { width: 25mm !important; min-width: 25mm !important; max-width: 25mm !important; }
+        table th:nth-child(7), table td:nth-child(7) { width: 15mm !important; min-width: 15mm !important; max-width: 15mm !important; }
+        th, td { 
+            border: 1px solid black; 
+            padding: 3px 2px; 
+            text-align: left; 
+            vertical-align: top; 
+            overflow: hidden; 
+            word-wrap: break-word;
+            white-space: normal;
+        }
+        .header { text-align: left; margin-bottom: 8px; }
+        .header h2 { font-size: 11pt; margin-bottom: 4px; }
+        .header p { margin: 1px 0; font-size: 8pt; }
+        .bold { font-weight: bold; }
+        .underline { text-decoration: underline; }
+        .center-align { text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>CONTRACTOR BILL</h2>
+            {% for row in data.header %}
+                {% if row|length > 0 %}
+                    <p>
+                        {% for item in row %}
+                            {% if item|trim %}
+                                {% set trimmed = item|trim %}
+                                {% if trimmed|length >= 10 and trimmed[4:5] == '-' and trimmed[7:8] == '-' and trimmed[:4]|int > 0 and trimmed[5:7]|int > 0 and trimmed[8:10]|int > 0 %}
+                                    {{ trimmed[8:10] }}/{{ trimmed[5:7] }}/{{ trimmed[:4] }}
+                                {% else %}
+                                    {{ trimmed }}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <table>
+            <colgroup>
+                <col style="width: 11mm;">
+                <col style="width: 16mm;">
+                <col style="width: 16mm;">
+                <col style="width: 11mm;">
+                <col style="width: 70mm;">
+                <col style="width: 15mm;">
+                <col style="width: 22mm;">
+                <col style="width: 17mm;">
+                <col style="width: 12mm;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th style="width: 11mm;">Unit</th>
+                    <th style="width: 16mm;">Quantity executed (or supplied) since last certificate</th>
+                    <th style="width: 16mm;">Quantity executed (or supplied) upto date as per MB</th>
+                    <th style="width: 11mm;">S. No.</th>
+                    <th style="width: 70mm;">Item of Work supplies (Grouped under "sub-head" and "sub work" of estimate)</th>
+                    <th style="width: 15mm;">Rate</th>
+                    <th style="width: 22mm;">Upto date Amount</th>
+                    <th style="width: 17mm;">Amount Since previous bill (Total for each sub-head)</th>
+                    <th style="width: 12mm;">Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data["items"] %}
+                    <tr>
+                        <td>{{ item.unit | default("") }}</td>
+                        <td>{{ item.quantity_since_last if item.quantity_since_last|trim else "" }}</td>
+                        <td>{{ item.quantity_upto_date if item.quantity_upto_date|trim else item.quantity if item.quantity|trim else "" }}</td>
+                        <td>{{ item.serial_no | default("") }}</td>
+                        <td class="{% if item.bold %}bold{% endif %} {% if item.underline %}underline{% endif %}">{{ item.description | default("") }}</td>
+                        <td>{{ item.rate if item.rate|trim else "" }}</td>
+                        <td>{{ item.amount | default("") }}</td>
+                        <td>{{ item.amount_previous | default("") }}</td>
+                        <td>{{ item.remark | default("") }}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="4"></td>
+                    <td>Grand Total Rs.</td>
+                    <td></td>
+                    <td>{{ data.totals.grand_total | default("") }}</td>
+                    <td>{{ data.totals.grand_total | default("") }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                    <td>Tender Premium @ {{ "%.2f%%" % (data.totals.premium.percent * 100) if data.totals.premium.percent is not none else "" }}</td>
+                    <td>{{ "%.2f%%" % (data.totals.premium.percent * 100) if data.totals.premium.percent is not none else "" }}</td>
+                    <td>{{ data.totals.premium.amount | default("") }}</td>
+                    <td>{{ data.totals.premium.amount | default("") }}</td>
+                    <td></td>
+                </tr>               
+                <tr>
+                    <td colspan="9" style="text-align: left; padding-left: 10px;">
+                        Sum of Extra Items (including Tender Premium): 
+                        {% if data.totals.get('extra_items_sum') and data.totals.get('extra_items_sum') > 0 %}
+                            Rs. {{ data.totals.extra_items_sum }}
+                        {% else %}
+                            NIL
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                    <td>Payable Amount Rs.</td>
+                    <td></td>
+                    <td>{{ data.totals.payable | default("") }}</td>
+                    <td>{{ data.totals.payable | default("") }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                    <td>Less Amount Paid vide Last Bill Rs.</td>
+                    <td></td>
+                    <td>{{ data.totals.last_bill_amount | round(2) if data.totals.last_bill_amount else "0.00" }}</td>
+                    <td>{{ data.totals.last_bill_amount | round(2) if data.totals.last_bill_amount else "0.00" }}</td>
+                    <td></td>
+                </tr>
+                <tr style="background-color: #f0f0f0;">
+                    <td colspan="4"></td>
+                    <td style="font-weight: bold;">Net Payable Amount Rs.</td>
+                    <td></td>
+                    <td style="font-weight: bold;">{{ data.totals.net_payable | default(data.totals.payable) | round(2) }}</td>
+                    <td style="font-weight: bold;">{{ data.totals.net_payable | default(data.totals.payable) | round(2) }}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

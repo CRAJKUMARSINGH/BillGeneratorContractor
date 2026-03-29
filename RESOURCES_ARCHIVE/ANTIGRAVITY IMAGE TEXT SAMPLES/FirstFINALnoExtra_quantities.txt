@@ -1,0 +1,31 @@
+MEASUREMENT BOOK EXTRACT - FirstFINALnoExtra
+================================================================================
+S.No   Description                         Qty        Unit     Rate       Amount      
+---------------------------------------------------------------------------------
+1      Rewiring of light point/ fan poin                                              
+2      Short point (up to 3 mtr.)          52         P. poi   256        13312       
+3      Medium point (up to 6 mtr.)         48         P. poi   472        22656       
+4      Long point  (up to 10 mtr.)         52         P. poi   662        34424       
+5      Rewiring of 3/5 pin 6 amp. Light                                               
+6      On board                            102        P. poi   136        13872       
+7      P & F ISI marked (IS:3854) 6 amp.   8          Each     23         184         
+8      P & F ISI marked (IS :3854) 16 am   32         Each     50         1600        
+9      Providing & Fixing of  of 3/5 pin   22         Each     33         726         
+10     Providing & Fixing of  3/6 pin 16   36         Each     78         2808        
+11     Providing & Fixing of  ISI marked   12         Each     30         360         
+12     Providing & Fixing of ISI marked    8          Each     30         240         
+13     Providing & Fixing of IS 11037:19   0          Each     219        0           
+14     Providing and fixing of   power p   0          Each     303        0           
+15     S&F following sizes (dia.) of ISI                                              
+---------------------------------------------------------------------------------
+GRAND TOTAL                                             90182.00
+
+EXTRA ITEMS:
+---------------------------------------------------------------------------------
+  Name of Work :-                                                                       
+  Name of Contractor or supplier :                                                                       
+  Reference to work order or Agreement :                                                                       
+  S.No. Ref. BSR No.                        Qty.       unit       Rate        
+                                                                             
+                                           %          11.22      Above       
+                                                                             

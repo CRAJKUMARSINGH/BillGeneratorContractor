@@ -1,0 +1,323 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: Bill Generator Contractor API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: bills
+    description: Bill generation operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /bills/upload:
+    post:
+      operationId: uploadExcel
+      tags: [bills]
+      summary: Upload Excel file and extract bill data
+      description: Upload an Excel (.xlsx/.xlsm) file, extract title sheet, bill quantity, and extra items data
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+                - file
+      responses:
+        "200":
+          description: Parsed bill data ready for preview/edit
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BillData"
+        "400":
+          description: Invalid file
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Processing error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /bills/generate:
+    post:
+      operationId: generateBill
+      tags: [bills]
+      summary: Generate bill documents from bill data
+      description: Takes processed bill data (possibly edited), generates HTML, PDF, and Word documents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateRequest"
+      responses:
+        "200":
+          description: Job enqueued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobStatus"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /bills/jobs/{jobId}:
+    get:
+      operationId: getJobStatus
+      tags: [bills]
+      summary: Get generation job status
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Job status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobStatus"
+        "404":
+          description: Job not found
+
+  /bills/jobs/{jobId}/download:
+    get:
+      operationId: downloadBillResult
+      tags: [bills]
+      summary: Download generated ZIP of bill documents
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [zip, pdf, html, word]
+            default: zip
+      responses:
+        "200":
+          description: File download
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Job or file not found
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    TitleData:
+      type: object
+      description: Key-value metadata extracted from the Excel title sheet
+      additionalProperties:
+        type: string
+
+    BillItem:
+      type: object
+      properties:
+        itemNo:
+          type: string
+        description:
+          type: string
+        unit:
+          type: string
+        quantitySince:
+          type: number
+        quantityUpto:
+          type: number
+        quantity:
+          type: number
+        rate:
+          type: number
+        amount:
+          type: number
+      required:
+        - itemNo
+        - description
+
+    ExtraItem:
+      type: object
+      properties:
+        itemNo:
+          type: string
+        bsr:
+          type: string
+        description:
+          type: string
+        quantity:
+          type: number
+        unit:
+          type: string
+        rate:
+          type: number
+        amount:
+          type: number
+        remark:
+          type: string
+
+    BillData:
+      type: object
+      properties:
+        fileId:
+          type: string
+          description: Temporary file ID for subsequent operations
+        fileName:
+          type: string
+        titleData:
+          $ref: "#/components/schemas/TitleData"
+        billItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/BillItem"
+        extraItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExtraItem"
+        totalAmount:
+          type: number
+        hasExtraItems:
+          type: boolean
+        sheets:
+          type: array
+          items:
+            type: string
+      required:
+        - fileId
+        - fileName
+        - titleData
+        - billItems
+        - extraItems
+        - totalAmount
+        - hasExtraItems
+        - sheets
+
+    GenerateRequest:
+      type: object
+      properties:
+        fileId:
+          type: string
+        titleData:
+          $ref: "#/components/schemas/TitleData"
+        billItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/BillItem"
+        extraItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExtraItem"
+        options:
+          $ref: "#/components/schemas/GenerateOptions"
+      required:
+        - fileId
+        - titleData
+        - billItems
+        - extraItems
+
+    GenerateOptions:
+      type: object
+      properties:
+        generatePdf:
+          type: boolean
+          default: true
+        generateHtml:
+          type: boolean
+          default: true
+        generateWord:
+          type: boolean
+          default: false
+
+    JobStatus:
+      type: object
+      properties:
+        jobId:
+          type: string
+        status:
+          type: string
+          enum: [pending, processing, complete, error]
+        progress:
+          type: number
+          description: 0-100
+        message:
+          type: string
+        documents:
+          type: array
+          items:
+            $ref: "#/components/schemas/DocumentInfo"
+        error:
+          type: string
+      required:
+        - jobId
+        - status
+
+    DocumentInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        format:
+          type: string
+          enum: [html, pdf, word]
+        size:
+          type: integer
+      required:
+        - name
+        - format
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        detail:
+          type: string
+      required:
+        - error

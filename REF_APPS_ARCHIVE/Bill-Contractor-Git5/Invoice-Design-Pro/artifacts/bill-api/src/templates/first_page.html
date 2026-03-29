@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CONTRACTOR BILL</title>
+    <style>
+        @page { 
+            size: A4 portrait; 
+            margin: 10mm;
+            @top-left { content: none; }
+            @top-center { content: none; }
+            @top-right { content: none; }
+            @bottom-left { content: none; }
+            @bottom-center { content: none; }
+            @bottom-right { content: none; }
+        }
+        @media print {
+            html, body {
+                width: 190mm !important;
+                min-width: 190mm !important;
+                max-width: 190mm !important;
+            }
+            table {
+                width: 190mm !important;
+                min-width: 190mm !important;
+                max-width: 190mm !important;
+            }
+        }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        html {
+            zoom: 1.0 !important;
+            -webkit-text-size-adjust: none !important;
+            -moz-text-size-adjust: none !important;
+            -ms-text-size-adjust: none !important;
+            text-size-adjust: none !important;
+        }
+        body { 
+            font-family: Calibri, sans-serif; 
+            font-size: 8pt; 
+            margin: 0; 
+            line-height: 1.2;
+            width: 190mm !important;
+            max-width: 190mm !important;
+            min-width: 190mm !important;
+            transform: scale(1.0) !important;
+            transform-origin: top left !important;
+            overflow-x: visible !important;
+        }
+        .container { 
+            width: 190mm !important; 
+            max-width: 190mm !important;
+            min-width: 190mm !important;
+            min-height: 277mm; 
+            margin: 0; 
+            padding: 0;
+            transform: scale(1.0) !important;
+        }
+        .container { 
+            width: 190mm; 
+            max-width: 190mm;
+            min-height: 277mm; 
+            margin: 0; 
+            padding: 0; 
+        }
+        table { 
+            width: 190mm !important;
+            min-width: 190mm !important;
+            max-width: 190mm !important;
+            border-collapse: collapse; 
+            table-layout: fixed !important; 
+            font-size: 8pt;
+            transform: scale(1.0) !important;
+        }
+        /* FORCE exact column widths - NO SHRINKING POSSIBLE */
+        table th:nth-child(1), table td:nth-child(1) { width: 25mm !important; min-width: 25mm !important; max-width: 25mm !important; }
+        table th:nth-child(2), table td:nth-child(2) { width: 70mm !important; min-width: 70mm !important; max-width: 70mm !important; }
+        table th:nth-child(3), table td:nth-child(3) { width: 15mm !important; min-width: 15mm !important; max-width: 15mm !important; }
+        table th:nth-child(4), table td:nth-child(4) { width: 20mm !important; min-width: 20mm !important; max-width: 20mm !important; }
+        table th:nth-child(5), table td:nth-child(5) { width: 20mm !important; min-width: 20mm !important; max-width: 20mm !important; }
+        table th:nth-child(6), table td:nth-child(6) { width: 25mm !important; min-width: 25mm !important; max-width: 25mm !important; }
+        table th:nth-child(7), table td:nth-child(7) { width: 15mm !important; min-width: 15mm !important; max-width: 15mm !important; }
+        th, td { 
+            border: 1px solid black; 
+            padding: 3px 2px; 
+            text-align: left; 
+            vertical-align: top; 
+            overflow: visible; 
+            word-wrap: break-word;
+            white-space: normal;
+        }
+        th {
+            text-align: center !important;
+        }
+        .bold { font-weight: bold; }
+        .underline { text-decoration: underline; }
+        .center-align { text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Source File Reference (for review) -->
+        <div style="text-align: right; font-size: 7pt; color: #666; margin-bottom: 5px; padding: 2px;">
+            Source: {{ data.source_filename }}
+        </div>
+        
+        <!-- Title Information Header Table -->
+        <table style="margin-bottom: 10px; border: 1px solid black;">
+            <tr>
+                <td colspan="6" style="text-align: center; font-weight: bold; font-size: 9pt; padding: 5px;">
+                    FOR CONTRACTORS & SUPPLIERS ONLY FOR PAYMENT FOR WORK OR SUPPLIES ACTUALLY MEASURED
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="text-align: center; font-weight: bold; font-size: 9pt; padding: 5px;">
+                    {% set bill_num = data.title_data.get('Bill Number', '') %}
+                    {% set running_final = data.title_data.get('Running or Final', '') %}
+                    {% if bill_num and running_final %}
+                        {{ bill_num }} & {{ running_final }} Bill
+                    {% elif data.title_data.get('Serial No. of this bill :', '') %}
+                        {{ data.title_data.get('Serial No. of this bill :') }}
+                    {% elif data.title_data.get('Serial No. of this bill', '') %}
+                        {{ data.title_data.get('Serial No. of this bill') }}
+                    {% else %}
+                        WORK ORDER
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 33%; padding: 3px;">Cash Book Voucher No.</td>
+                <td style="width: 34%; padding: 3px;"></td>
+                <td style="width: 33%; padding: 3px;">Date-</td>
+            </tr>
+            <tr>
+                <td style="padding: 3px;">Name of Contractor or supplier :</td>
+                <td colspan="5" style="padding: 3px;">{{ data.title_data.get('Name of Contractor or supplier :', data.title_data.get('Name of Contractor or supplier', 'N/A')) }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 3px;">Name of Work :-</td>
+                <td colspan="5" style="padding: 3px;">{{ data.title_data.get('Name of Work ;-', data.title_data.get('Name of Work', 'N/A')) }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 3px;">Serial No. of this bill :</td>
+                <td colspan="2" style="padding: 3px;">{{ data.title_data.get('Serial No. of this bill :', data.title_data.get('Serial No. of this bill', 'N/A')) }}</td>
+                <td style="padding: 3px;">No. and date of the last bill-</td>
+                <td colspan="2" style="padding: 3px;">{{ data.title_data.get('No. and date of the last bill-', data.title_data.get('No. and date of the last bill', 'N/A')) }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 3px;">Reference to work order or Agreement :</td>
+                <td colspan="5" style="padding: 3px;">{{ data.title_data.get('Reference to work order or Agreement :', data.title_data.get('Reference to work order or Agreement', 'N/A')) }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 3px;">Agreement No.</td>
+                <td colspan="5" style="padding: 3px;">{{ data.title_data.get('Agreement No.', 'N/A') }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 3px;">Date of written order to commence work :</td>
+                <td colspan="5" style="padding: 3px;">{{ data.title_data.get('Date of written order to commence work :', data.title_data.get('Date of written order to commence work', 'N/A')) }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 3px;">St. date of Start :</td>
+                <td colspan="5" style="padding: 3px;">{{ data.title_data.get('St. date of Start :', data.title_data.get('St. date of Start', 'N/A')) }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 3px;">St. date of completion :</td>
+                <td colspan="5" style="padding: 3px;">{{ data.title_data.get('St. date of completion :', data.title_data.get('St. date of completion', 'N/A')) }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 3px;">Date of actual completion of work :</td>
+                <td colspan="5" style="padding: 3px;">{{ data.title_data.get('Date of actual completion of work :', data.title_data.get('Date of actual completion of work', 'N/A')) }}</td>
+            </tr>
+            <tr>
+                <td style="padding: 3px;">Date of measurement :</td>
+                <td colspan="5" style="padding: 3px;">{{ data.title_data.get('Date of measurement :', data.title_data.get('Date of measurement', 'N/A')) }}</td>
+            </tr>
+        </table>
+        <table>
+            <colgroup>
+                <col style="width: 11mm;">
+                <col style="width: 16mm;">
+                <col style="width: 16mm;">
+                <col style="width: 11mm;">
+                <col style="width: 70mm;">
+                <col style="width: 15mm;">
+                <col style="width: 22mm;">
+                <col style="width: 17mm;">
+                <col style="width: 12mm;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th style="width: 11mm;">Unit</th>
+                    <th style="width: 16mm;">Quantity executed (or supplied) since last certificate</th>
+                    <th style="width: 16mm;">Quantity executed (or supplied) upto date as per MB</th>
+                    <th style="width: 11mm;">S. No.</th>
+                    <th style="width: 70mm;">Item of Work supplies (Grouped under "sub-head" and "sub work" of estimate)</th>
+                    <th style="width: 15mm;">Rate</th>
+                    <th style="width: 22mm;">Upto date Amount</th>
+                    <th style="width: 17mm;">Amount Since previous bill (Total for each sub-head)</th>
+                    <th style="width: 12mm;">Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data["items"] %}
+                    {% set qty_since = item.quantity_since_last if item.quantity_since_last is not none else 0 %}
+                    {% set qty_upto = item.quantity_upto_date if item.quantity_upto_date is not none else (item.quantity if item.quantity is not none else 0) %}
+                    {% set rate = item.rate if item.rate is not none else 0 %}
+                    {% set amount = item.amount if item.amount is not none else 0 %}
+                    {% set amount_prev = item.amount_previous if item.amount_previous is not none else 0 %}
+                    {% set desc = item.description|trim if item.description else "" %}
+                    {# Skip rows that are just labels (TOTAL, PREM, etc.) - these are summary labels from Excel, not actual items #}
+                    {% set is_summary_label = desc and (desc.upper() == 'TOTAL' or desc.upper() == 'PREM' or desc.upper() == 'PREMIUM' or desc.upper().startswith('TOTAL/') or desc.upper() == 'GRAND TOTAL' or desc.upper() == 'ADD TENDER PREMIUM' or 'TENDER PREMIUM' in desc.upper()) %}
+                    {% set is_empty_data = qty_since == 0 and qty_upto == 0 and rate == 0 and amount == 0 and amount_prev == 0 %}
+                    {% set is_label_only = is_summary_label and is_empty_data %}
+                    {# Also filter "Add Tender Premium" even if it has a quantity value (it's the premium %, not a real quantity) #}
+                    {% set is_add_tender_row = desc and desc.upper() == 'ADD TENDER PREMIUM' %}
+                    {% if not (is_label_only or is_add_tender_row) and (qty_since != 0 or qty_upto != 0 or rate != 0 or amount != 0 or amount_prev != 0 or desc) %}
+                    <tr>
+                        {% if rate == 0 or rate == '' or rate is none %}
+                            <!-- Leave columns 1 to 3 and 6 to 8 blank when rate is zero or blank -->
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ item.serial_no | default("") }}</td>
+                            <td class="{% if item.bold %}bold{% endif %} {% if item.underline %}underline{% endif %}">{{ item.description | default("") }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        {% else %}
+                            <td>{{ item.unit | default("") }}</td>
+                            <td>{{ "{:.2f}".format(qty_since) if qty_since != 0 else "" }}</td>
+                            <td>{{ "{:.2f}".format(qty_upto) if qty_upto != 0 else "" }}</td>
+                            <td>{{ item.serial_no | default("") }}</td>
+                            <td class="{% if item.bold %}bold{% endif %} {% if item.underline %}underline{% endif %}">{{ item.description | default("") }}</td>
+                            <td>{{ "{:.2f}".format(rate) if rate != 0 else "" }}</td>
+                            <td>{{ "{:.2f}".format(amount) if amount != 0 else "" }}</td>
+                            <td>{{ "{:.2f}".format(amount_prev) if amount_prev != 0 else "" }}</td>
+                        {% endif %}
+                        <td>{{ item.remark | default("") }}</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                <tr>
+                    <td colspan="4"></td>
+                    <td>Grand Total Rs.</td>
+                    <td></td>
+                    <td>{{ "{:.2f}".format(data.totals.grand_total) if data.totals.grand_total and data.totals.grand_total != 0 else "" }}</td>
+                    <td>{{ "{:.2f}".format(data.totals.grand_total) if data.totals.grand_total and data.totals.grand_total != 0 else "" }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                    <td>Tender Premium @ {{ "{:.2f}%".format(data.totals.premium.percent * 100) if data.totals.premium.percent is not none and data.totals.premium.percent != 0 else "" }}</td>
+                    <td>{{ "{:.2f}%".format(data.totals.premium.percent * 100) if data.totals.premium.percent is not none and data.totals.premium.percent != 0 else "" }}</td>
+                    <td>{{ "{:.2f}".format(data.totals.premium.amount) if data.totals.premium.amount and data.totals.premium.amount != 0 else "" }}</td>
+                    <td>{{ "{:.2f}".format(data.totals.premium.amount) if data.totals.premium.amount and data.totals.premium.amount != 0 else "" }}</td>
+                    <td></td>
+                </tr>               
+                <tr>
+                    <td colspan="4" style="text-align: center;">{% if data.totals.get('extra_items_sum') and data.totals.get('extra_items_sum') > 0 %}Rs. {{ "{:.2f}".format(data.totals.extra_items_sum) }}{% elif data.totals.get('extra_items_sum') == 0 %}NIL{% endif %}</td>
+                    <td><<<<<< Sum of Extra Items (including Tender Premium)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                    <td>Payable Amount Rs.</td>
+                    <td></td>
+                    <td>{{ "{:.2f}".format((data.totals.payable + data.totals.extra_items_sum) if data.totals.payable else "") }}</td>
+                    <td>{{ "{:.2f}".format((data.totals.payable + data.totals.extra_items_sum) if data.totals.payable else "") }}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                    <td>Less Amount Paid vide Last Bill Rs.</td>
+                    <td></td>
+                    <td>{% if data.title_data.get('Bill Number', '').lower() == 'first' or 'first' in data.title_data.get('Serial No. of this bill :', '').lower() %}0.00{% else %}{{ "{:.2f}".format(data.totals.last_bill_amount) if data.totals.last_bill_amount and data.totals.last_bill_amount != 0 else "0.00" }}{% endif %}</td>
+                    <td>{% if data.title_data.get('Bill Number', '').lower() == 'first' or 'first' in data.title_data.get('Serial No. of this bill :', '').lower() %}0.00{% else %}{{ "{:.2f}".format(data.totals.last_bill_amount) if data.totals.last_bill_amount and data.totals.last_bill_amount != 0 else "0.00" }}{% endif %}</td>
+                    <td></td>
+                </tr>
+                <tr style="background-color: #f0f0f0;">
+                    <td colspan="4"></td>
+                    <td style="font-weight: bold;">Net Payable Amount Rs.</td>
+                    <td></td>
+                    <td style="font-weight: bold;">{{ "{:.2f}".format(data.totals.net_payable if data.totals.net_payable and data.totals.net_payable != 0 else (data.totals.payable if data.totals.payable and data.totals.payable != 0 else "")) }}</td>
+                    <td style="font-weight: bold;">{{ "{:.2f}".format(data.totals.net_payable if data.totals.net_payable and data.totals.net_payable != 0 else (data.totals.payable if data.totals.payable and data.totals.payable != 0 else "")) }}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Removed Prepared by and Checked & Approved by sections as per user request -->
+        
+    </div>
+</body>
+</html>

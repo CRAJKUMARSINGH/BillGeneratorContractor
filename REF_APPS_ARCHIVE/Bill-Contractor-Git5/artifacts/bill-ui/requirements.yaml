@@ -1,0 +1,24 @@
+packages:
+  "framer-motion": "For page transitions and glassmorphism micro-interactions"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility for merging tailwind classes without style conflicts"
+  "@radix-ui/react-slot": "Used by generic UI components"
+  "@radix-ui/react-dialog": "For modals and overlays"
+  "@radix-ui/react-toast": "For elegant toast notifications"
+  "@radix-ui/react-progress": "For smooth progress bars"
+  "@radix-ui/react-tooltip": "For informative tooltips"
+  "lucide-react": "Sophisticated iconography"
+  "react-dropzone": "For drag-and-drop file uploads"
+  "zustand": "For elegant, minimal global state management"
+
+images:
+  - path: "artifacts/bill-ui/public/images/auth-bg.png"
+    description: "Abstract geometric 3D shapes in dark teal, emerald and deep charcoal colors, highly polished, soft studio lighting, glassmorphism elements floating, professional enterprise feel"
+    aspect_ratio: "16:9"
+  - path: "artifacts/bill-ui/public/images/empty-state.png"
+    description: "A minimalist 3D illustration of a glowing document or spreadsheet folder on a dark glossy surface, teal and emerald lighting, highly professional, dark mode"
+    aspect_ratio: "1:1"
+
+notes:
+  - The API is served under `/api`
+  - Uses TanStack Query for remote state and Zustand for local wizard state

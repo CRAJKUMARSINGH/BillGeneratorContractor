@@ -1,0 +1,4 @@
+# file: C:\Users\Rajkumar\BillGeneratorUnified\core\ui\online_mode_grid_new.py
+# hypothesis_version: 6.151.9
+
+[0.0, 1e-09, '%H:%M:%S', 'Amount', 'Description', 'Field', 'Item No', 'NOS', 'New', 'No items in grid', 'Old', 'Qty Change', 'Qty Set to Zero', 'Quantity', 'Rate', 'Rate Change', 'Rate Increase', 'Rate Reduction', 'Reason', 'Status', 'Timestamp', 'Unit', 'Zero-Qty Activation', '⚪', '🔴 Inv', '🔴 No Desc', '🔴|🟠', '🟠 Miss Q/R', '🟢']

@@ -1,0 +1,401 @@
+﻿{
+    "fileId":  "246efac6-1c04-49a0-86d3-e50a0e7a3b52",
+    "titleData":  {
+                      "Cash Book Voucher No.":  "Date-",
+                      "Serial No. of this bill :":  "First \u0026 Final Bill",
+                      "No. and date of the last bill-":  "Not Applicable",
+                      "Reference to work order or Agreement :":  "1179 Dt. 09-01-2025",
+                      "Agreement No.":  "48/2024-25",
+                      "Date of written order to commence work :":  "2025-01-09 00:00:00",
+                      "St. date of Start :":  "2025-01-18 00:00:00",
+                      "St. date of completion :":  "2025-04-17 00:00:00",
+                      "Date of actual completion of work :":  "2025-03-01 00:00:00",
+                      "Date of measurement :":  "2025-03-03 00:00:00",
+                      "WORK ORDER AMOUNT RS.":  "413804",
+                      "TENDER PREMIUM %":  "22.22",
+                      "22.22":  "\u0027%",
+                      "\u0027%":  "ABOVE",
+                      "Item":  "Description",
+                      "Description":  "Unit",
+                      "Unit":  "Quantity",
+                      "Quantity":  "Rate",
+                      "Rate":  "Amount",
+                      "Amount":  "BSR"
+                  },
+    "billItems":  {
+                      "value":  [
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "Medium point (up to 6 mtr.)",
+                                        "unit":  "P. point",
+                                        "quantitySince":  48.0,
+                                        "quantityUpto":  48.0,
+                                        "quantity":  48.0,
+                                        "rate":  472.0,
+                                        "amount":  22656.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "Long point  (up to 10 mtr.)",
+                                        "unit":  "P. point",
+                                        "quantitySince":  52.0,
+                                        "quantityUpto":  52.0,
+                                        "quantity":  52.0,
+                                        "rate":  662.0,
+                                        "amount":  34424.0
+                                    },
+                                    {
+                                        "itemNo":  "2",
+                                        "description":  "Rewiring of 3/5 pin 6 amp. Light plug point with 1.5 sq. mm nominal size  FR PVC insulated unsheathed flexible copper conductor 1.1 kV grade  and 1.5 sq. mm nominal size FR PVC insulated unsheathed flexible copper earth conductor 1.1 kV grade(IS:694)   in recessed ISI marked MMS ( IS:9537 P - III ) virgin material  PVC conduit \u0026 it\u0027s  ISI marked (IS:3419-1988) accessories, 1.2 mm thick  MS box with earth terminal of required size,  6 A  switch, 3/5 pin 6 A socket, 3.0 mm thick ISI marked (IS:2036-1995) phenolic laminated sheet, Al.alloy / Cadmium plated iron/ brass  screws, cup washers, making connections, testing etc. as required.  For specification of copper  Conductor,  Phenolic Laminated sheet\u0027s \u0026 Electrical/ Wiring accessories refer Chapter E - 04, E - 05 \u0026 E - 07 For additional technical parameters of product / work refer Annexure \u0027A\u0027 attached with this BSR",
+                                        "unit":  "",
+                                        "quantitySince":  0.0,
+                                        "quantityUpto":  0.0,
+                                        "quantity":  0.0,
+                                        "rate":  0.0,
+                                        "amount":  0.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "On board",
+                                        "unit":  "P. point",
+                                        "quantitySince":  102.0,
+                                        "quantityUpto":  102.0,
+                                        "quantity":  102.0,
+                                        "rate":  136.0,
+                                        "amount":  13872.0
+                                    },
+                                    {
+                                        "itemNo":  "3",
+                                        "description":  "P \u0026 F ISI marked (IS:3854) 6 amp. flush type non modular switch  with CM/L no. printed and made out from industrial grade Polycarbonate or fire resistant ABS material including cutting hole in tile and making connection testing etc. as required. All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure \"A\" attached with this BSR .",
+                                        "unit":  "Each",
+                                        "quantitySince":  8.0,
+                                        "quantityUpto":  8.0,
+                                        "quantity":  8.0,
+                                        "rate":  23.0,
+                                        "amount":  184.0
+                                    },
+                                    {
+                                        "itemNo":  "4",
+                                        "description":  "P \u0026 F ISI marked (IS :3854) 16 amp. flush type non modular switch CM/L no. printed and made out from industrial grade Polycarbonate or fire resistant ABS material including cutting hole in tile and making connection testing etc. as required. All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure \"A\" attached with this BSR .",
+                                        "unit":  "Each",
+                                        "quantitySince":  32.0,
+                                        "quantityUpto":  32.0,
+                                        "quantity":  32.0,
+                                        "rate":  50.0,
+                                        "amount":  1600.0
+                                    },
+                                    {
+                                        "itemNo":  "5",
+                                        "description":  "Providing \u0026 Fixing of  of 3/5 pin 6 amp. flush type  non modular socket  made out from industrial grade Polycarbonate or fire resistant ABS material, brass terminal with Porcelain based back cover \u0026 captive screws including cutting hole in tile and making connection testing etc. as required.All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure \"A\" attached with this BSR .",
+                                        "unit":  "Each",
+                                        "quantitySince":  22.0,
+                                        "quantityUpto":  22.0,
+                                        "quantity":  22.0,
+                                        "rate":  33.0,
+                                        "amount":  726.0
+                                    },
+                                    {
+                                        "itemNo":  "6",
+                                        "description":  "Providing \u0026 Fixing of  3/6 pin 16 amp flush type non modular socket  made out from Industrial grade Polycarbonate or fire resistant ABS material, brass terminal with Porcelain based back cover \u0026 captive screws including cutting hole in tile and making connection testing etc. as required.All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure \"A\" attached with this BSR .",
+                                        "unit":  "Each",
+                                        "quantitySince":  36.0,
+                                        "quantityUpto":  36.0,
+                                        "quantity":  36.0,
+                                        "rate":  78.0,
+                                        "amount":  2808.0
+                                    },
+                                    {
+                                        "itemNo":  "7",
+                                        "description":  "Providing \u0026 Fixing of  ISI marked (IS:371) 6 amp surface type 3 pin ceiling rose with CM/L no. printed and made out from industrial grade Polycarbonate or fire resistant ABS material, brass terminal \u0026 captive screws including making connection testing etc. as required.All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure \"A\" attached with this BSR .",
+                                        "unit":  "Each",
+                                        "quantitySince":  12.0,
+                                        "quantityUpto":  12.0,
+                                        "quantity":  12.0,
+                                        "rate":  30.0,
+                                        "amount":  360.0
+                                    },
+                                    {
+                                        "itemNo":  "8",
+                                        "description":  "Providing \u0026 Fixing of ISI marked (IS:1258) batten/angle lamp  holder with CM/L no. printed and made out from industrial grade Polycarbonate or fire resistant ABS material, brass terminal \u0026 captive screwsincluding making connection testing etc. as required.  All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure \"A\" attached with this BSR .",
+                                        "unit":  "Each",
+                                        "quantitySince":  25.0,
+                                        "quantityUpto":  25.0,
+                                        "quantity":  25.0,
+                                        "rate":  30.0,
+                                        "amount":  750.0
+                                    },
+                                    {
+                                        "itemNo":  "9",
+                                        "description":  "Providing \u0026 Fixing of IS 11037:1984  marked  non modular socket size flush type 180 watt rotary minimum 5 step fan regulator with CM/L no. printed and made out from industrial grade Polycarbonate or fire resistant ABS material including making connection testing etc. as required.All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure \"A\" attached with this BSR .",
+                                        "unit":  "Each",
+                                        "quantitySince":  25.0,
+                                        "quantityUpto":  25.0,
+                                        "quantity":  25.0,
+                                        "rate":  219.0,
+                                        "amount":  5475.0
+                                    },
+                                    {
+                                        "itemNo":  "10",
+                                        "description":  "Providing and fixing of   power plug point with non modular accessories as per PWD specification for electrical Works with  Galvanized   box of 1.2 mm thick  with earth terminal with suitable size phenolic laminated sheet (IS : 2036 -  1995) cover including cost of 16 amp. Switch (IS :3854) and 3/6 pin 16 amp. socket outlet  making connection , testing , etc. as required. . For specification of  Wiring accessories refer Chapter  E - 07 related item \u0026  For additional technical parameters of product / work refer Annexure \u0027A\u0027 attached with this BSR",
+                                        "unit":  "Each",
+                                        "quantitySince":  25.0,
+                                        "quantityUpto":  25.0,
+                                        "quantity":  25.0,
+                                        "rate":  303.0,
+                                        "amount":  7575.0
+                                    },
+                                    {
+                                        "itemNo":  "11",
+                                        "description":  "S\u0026F following sizes (dia.) of ISI marked virgin material MMS ( IS:9537 P - III ) PVC conduit along with  ISI marked (IS:3419-1988) accessories as required  in  recess  including  cutting the wall, covering conduit and making good the same as required. For additional technical parameters of product / work refer Annexure \u0027A\u0027 attached with this BSR",
+                                        "unit":  "",
+                                        "quantitySince":  0.0,
+                                        "quantityUpto":  0.0,
+                                        "quantity":  0.0,
+                                        "rate":  0.0,
+                                        "amount":  0.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "20 mm",
+                                        "unit":  "R. mtr.",
+                                        "quantitySince":  2985.0,
+                                        "quantityUpto":  2985.0,
+                                        "quantity":  2985.0,
+                                        "rate":  40.0,
+                                        "amount":  119400.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "25 mm",
+                                        "unit":  "R. mtr.",
+                                        "quantitySince":  25.0,
+                                        "quantityUpto":  25.0,
+                                        "quantity":  25.0,
+                                        "rate":  56.0,
+                                        "amount":  1400.0
+                                    },
+                                    {
+                                        "itemNo":  "12",
+                                        "description":  "Supplying and drawing FR PVC insulated \u0026 unsheathed flexible copper conductor as per PWD specification for electrical Works with ISI marked (IS:694) and as per IS 8130 : 2013 of 1.1 kV grade . Wire should be made from  99.90 % purity copper, class 2 stranding in acc. to IS:8130/IEC 60228 for  lower watt loss , oxygen free for less chances of oxidization, insulation PVC type A/C/D , flame retardant as per IS 10810-53, better amperage rating as per IS:3961 part 5,  in existing  surface or recessed PVC/ MS conduit/casing capping making connections with Copper Lugs of suitable size, Ferrules,testing etc. as required. OEM Must have its own in house NABL lab setup for all testing facilities for wires.   For additional technical parameters of product / work refer Annexure \u0027A\u0027 attached with this BSR",
+                                        "unit":  "",
+                                        "quantitySince":  0.0,
+                                        "quantityUpto":  0.0,
+                                        "quantity":  0.0,
+                                        "rate":  0.0,
+                                        "amount":  0.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "2 x 2.5 sq. mm. + 1x1.5sqmm",
+                                        "unit":  "Mtr.",
+                                        "quantitySince":  90.0,
+                                        "quantityUpto":  90.0,
+                                        "quantity":  90.0,
+                                        "rate":  81.0,
+                                        "amount":  7290.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "2 x 4.0 sq. mm. + 1 x 2.5 sq. mm.",
+                                        "unit":  "Mtr.",
+                                        "quantitySince":  25.0,
+                                        "quantityUpto":  25.0,
+                                        "quantity":  25.0,
+                                        "rate":  122.0,
+                                        "amount":  3050.0
+                                    },
+                                    {
+                                        "itemNo":  "13",
+                                        "description":  "Plate Earthing  as per IS:3043 with Hot dipped G.I. Earth plate of size 600mm x 600mm x 6.0mm by embodying  3 to 4 mtr. below the ground level with 20  mm dia. G.I. \u0027B\u0027 class watering Pipe ,including all accessories like nut, bolts, reducer, nipple, wire meshed funnel, and Heavy duty weather proof poly-propylene earth pit chamber with lockable Jam free lid suitable for safe working load 5000 Kg or more of size Top Dia. 225 to 260 mm, Bottom Dia 300 to 350 mm. and Height  250 to 300 mm. and embodying the pipe  complete with alternate layers salt and coke/ charcoal, testing of earth resistance for value of 5 ohms or less  as required \u0026 must record by engineer in charge during site visit and ensure to enter in measurment book.All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure \"A\" attached with this BSR .",
+                                        "unit":  "Set",
+                                        "quantitySince":  15.0,
+                                        "quantityUpto":  15.0,
+                                        "quantity":  15.0,
+                                        "rate":  5733.0,
+                                        "amount":  85995.0
+                                    },
+                                    {
+                                        "itemNo":  "14",
+                                        "description":  "Supply \u0026 Laying following size earth wire in horizontal or vertical run in ground/surface/recess including riveting, soldering, saddles,  making connection with GI/Cu purity purity \u003e95%  thimble etc. as required.  All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure \"A\" attached with this BSR .",
+                                        "unit":  "",
+                                        "quantitySince":  0.0,
+                                        "quantityUpto":  0.0,
+                                        "quantity":  0.0,
+                                        "rate":  0.0,
+                                        "amount":  0.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "8 SWG G.I. ( Hot Dipped  ) Wire",
+                                        "unit":  "Mtr.",
+                                        "quantitySince":  45.0,
+                                        "quantityUpto":  45.0,
+                                        "quantity":  45.0,
+                                        "rate":  20.0,
+                                        "amount":  900.0
+                                    },
+                                    {
+                                        "itemNo":  "15",
+                                        "description":  "Providing \u0026 Fixing of  BEE  Star rated copper wounded double ball bearing capacitor start, aluminium body \u0026 Metallic  blade ceiling  fan  Conforming to all the performance requirements laid down in IS 374:2019 including all amendments, as applicable ; \u0026 Carry BIS licensing (i.e. ISI marking) with down rod up to 80 cm with secondary support safety cable ( steel rope) , cotter pin with 3 x 1.5 sq.mm pvc insulated flexible copper conductor making connection testing etc. as required. All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure \"A\" attached with this BSR .",
+                                        "unit":  "",
+                                        "quantitySince":  0.0,
+                                        "quantityUpto":  0.0,
+                                        "quantity":  0.0,
+                                        "rate":  0.0,
+                                        "amount":  0.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "1200 mm Sweep BEE 1 Star rated (service value \u003e=4.0 to \u003c 4.5 )",
+                                        "unit":  "Each",
+                                        "quantitySince":  24.0,
+                                        "quantityUpto":  24.0,
+                                        "quantity":  24.0,
+                                        "rate":  1890.0,
+                                        "amount":  45360.0
+                                    },
+                                    {
+                                        "itemNo":  "16",
+                                        "description":  "Providing \u0026 Fixing of IP20 SMD Mid Power LED batten type integrated light fixture made from Powder coated Extruded aluminium  housing with in built driver  , System lumen efficacy ΓëÑ 110 lm/Watt output, internal surge protection of 2.5 KV with Short \u0026 Open circuit protection ,THD \u003c 10% , P. F.ΓëÑ0.95, CRI \u003e80 , life time of minimum  50000 Burning Hours with , 70% of intial Lumen maintaned till life ends  , CCT 3000┬░K / 4000┬░K  / 5700┬░K /6000┬░K/6500┬░K (As per ANSI Bin) , Maximum power consumption should not more than the specified rating and Fixture shall be of  BIS standard and  trade mark certificate ( T.C.). Manufactures Word Mark/ Name Engraved/ Embossing/ Screen printing on housing. OEM must have its own in house NABL lab setup for all testing facilities for LED fixtures. (LM79 \u0026 LM80) certificate / Report from OEM shall be submitted.  All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure \"A\" attached with this BSR .",
+                                        "unit":  "",
+                                        "quantitySince":  0.0,
+                                        "quantityUpto":  0.0,
+                                        "quantity":  0.0,
+                                        "rate":  0.0,
+                                        "amount":  0.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "1170mm(+/-10%) LED batten with min. lumen output 2200 lm",
+                                        "unit":  "Each",
+                                        "quantitySince":  78.0,
+                                        "quantityUpto":  78.0,
+                                        "quantity":  78.0,
+                                        "rate":  492.0,
+                                        "amount":  38376.0
+                                    },
+                                    {
+                                        "itemNo":  "17",
+                                        "description":  "Providing \u0026 Fixing of 240/415 V AC MCB with positive isolation of 10 kA breaking capacity (B/ C/D tripping characteristic as per type of load and  site requirement) 4 KV impulse withstand voltage, ISI marked IS 8828(1996) / conforming to IEC 60898-1 2002, IEC 60947-2, low watt losses, trip free mechanisum , energy limiting of  class 3 as per IEC,  minimum phase termination capacity of 35sq.mm. , conductor line load reversibility , IP 20 contact protection and fitted in  existing distribution board/sheets, minimum electrical operation 20,000 upto 20 A rating and 10,000 upto 63 A, 5000 for 80 A \u0026 above rating  including making connections, testing etc. as required. OEM shall have submit  NABL / CPRI / ERDA accrediated   lab type test reports  \u0026 All as per pre approved by Engineer in charge. For additional technical parameters of product / work refer Annexure \u0027A\u0027 attached with this BSR",
+                                        "unit":  "",
+                                        "quantitySince":  0.0,
+                                        "quantityUpto":  0.0,
+                                        "quantity":  0.0,
+                                        "rate":  0.0,
+                                        "amount":  0.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "Single pole MCB   (With B/C curve tripping Characteristics)",
+                                        "unit":  "",
+                                        "quantitySince":  0.0,
+                                        "quantityUpto":  0.0,
+                                        "quantity":  0.0,
+                                        "rate":  0.0,
+                                        "amount":  0.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "6 A to 32 A rating",
+                                        "unit":  "Each",
+                                        "quantitySince":  51.0,
+                                        "quantityUpto":  51.0,
+                                        "quantity":  51.0,
+                                        "rate":  187.0,
+                                        "amount":  9537.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "Double pole MCB(With B/C curve tripping Characteristics)",
+                                        "unit":  "",
+                                        "quantitySince":  0.0,
+                                        "quantityUpto":  0.0,
+                                        "quantity":  0.0,
+                                        "rate":  0.0,
+                                        "amount":  0.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "50/63 A rating",
+                                        "unit":  "Each",
+                                        "quantitySince":  12.0,
+                                        "quantityUpto":  12.0,
+                                        "quantity":  12.0,
+                                        "rate":  900.0,
+                                        "amount":  10800.0
+                                    },
+                                    {
+                                        "itemNo":  "18",
+                                        "description":  "Providing \u0026 Fixing of Recessed/surface mounting heavy duty horizontal type Double Door ( Metal / Glazed )Distribution board with Metal end box made out from Galvanized steel / CRCA sheet not less then 1.2 mm thick┬á conforming to IS-8623-1 \u0026 3 /┬á IEC 61439- 1 \u0026 3, powder painted complete with reversible door (for double door DB only )100 amp.┬á insulated copper bus bar/shorting link , copper neutral link, copper earth link , color coded interconnecting wire set┬á of suitable rating and din bar,masking sheet,┬á making internal DB┬á terminations with copper lugs, Ferrules,┬á detachable gland plate, including making connections, testing etc. as required. OEM shall have submit  NABL / CPRI / ERDA accrediated   lab type test reports  \u0026 All as per pre approved by Engineer in charge. For additional technical parameters of product / work refer Annexure \u0027A\u0027 attached with this BSR",
+                                        "unit":  "",
+                                        "quantitySince":  0.0,
+                                        "quantityUpto":  0.0,
+                                        "quantity":  0.0,
+                                        "rate":  0.0,
+                                        "amount":  0.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "Metal door (single phase) IK-09 and IP-43 with Metal end box",
+                                        "unit":  "",
+                                        "quantitySince":  0.0,
+                                        "quantityUpto":  0.0,
+                                        "quantity":  0.0,
+                                        "rate":  0.0,
+                                        "amount":  0.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "8 Way (8+2)",
+                                        "unit":  "Each",
+                                        "quantitySince":  7.0,
+                                        "quantityUpto":  7.0,
+                                        "quantity":  7.0,
+                                        "rate":  2184.0,
+                                        "amount":  15288.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "",
+                                        "unit":  "",
+                                        "quantitySince":  0.0,
+                                        "quantityUpto":  0.0,
+                                        "quantity":  0.0,
+                                        "rate":  0.0,
+                                        "amount":  0.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "",
+                                        "unit":  "",
+                                        "quantitySince":  0.0,
+                                        "quantityUpto":  0.0,
+                                        "quantity":  0.0,
+                                        "rate":  0.0,
+                                        "amount":  0.0
+                                    },
+                                    {
+                                        "itemNo":  "",
+                                        "description":  "",
+                                        "unit":  "",
+                                        "quantitySince":  0.0,
+                                        "quantityUpto":  0.0,
+                                        "quantity":  0.0,
+                                        "rate":  0.0,
+                                        "amount":  0.0
+                                    }
+                                ],
+                      "Count":  36
+                  },
+    "extraItems":  {
+
+                   },
+    "options":  {
+                    "generatePdf":  false,
+                    "generateHtml":  true,
+                    "premiumPercent":  22.22,
+                    "previousBillAmount":  0,
+                    "premiumType":  "above",
+                    "templateVersion":  "v1"
+                }
+}

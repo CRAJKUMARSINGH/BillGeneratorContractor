@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>II. Certificate and Signatures</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Calibri, serif;
+            margin: 0;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #1a1a1a;
+        }
+        .container {
+            width: 188mm;
+            min-height: 277mm;
+            margin: 10mm 11mm;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            font-size: 16pt;
+            font-weight: 700;
+            margin: 0 0 20px 0;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 10px;
+            color: #2c3e50;
+        }
+        .certificate-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .certificate-text {
+            text-align: justify;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .signature-block {
+            margin-top: 30px;
+            text-align: right;
+            padding-right: 20px;
+        }
+        .signature-block p {
+            margin: 8px 0;
+            font-style: italic;
+        }
+        .officer-details {
+            margin-top: 15px;
+            text-align: right;
+        }
+        .officer-details p {
+            margin: 5px 0;
+            font-weight: 600;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #1565c0;
+        }
+        .note {
+            font-size: 9pt;
+            font-style: italic;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>II. CERTIFICATE AND SIGNATURES</h1>
+
+    <div class="certificate-section">
+        <div class="certificate-text">
+            The measurements on which are based the entries in columns 1 to 6 of Account I, were made by <span class="highlight">{{ data.measurement_officer | default("Junior Engineer") }}</span> on <span class="highlight">{{ data.measurement_date | default("01/03/2025") }}</span>, and are recorded at page <span class="highlight">{{ data.measurement_book_page | default("04-20") }}</span> of Measurement Book No. <span class="highlight">{{ data.measurement_book_no | default("887") }}</span>.
+        </div>
+        <div class="certificate-text">
+            <span class="highlight">*Certified</span> that in addition to and quite apart from the quantities of work actually executed, as shown in column 4 of Account I, some work has actually been done in connection with several items and the value of such work (after deduction therefrom the proportionate amount of secured advances, if any, ultimately recoverable on account of the quantities of materials used therein) is in no case, less than the advance payments as per item 2 of the Memorandum, if payment is made.
+        </div>
+        <div class="certificate-text">
+            <span class="highlight">+Certified</span> that the contractor has made satisfactory progress with the work, and that the quantities and amounts claimed are correct and the work has been executed in accordance with the specifications and the terms of the contract.
+        </div>
+        <div class="certificate-text">
+            I also certify that the amount claimed is not more than the amount admissible under the contract.
+        </div>
+        <div class="note">
+            * Strike out if not applicable<br>
+            + Strike out if not applicable
+        </div>
+    </div>
+
+    <div class="signature-block">
+        <p>Dated signature of officer preparing the bill</p>
+        <div class="officer-details">
+            <p>{{ data.officer_name | default("Name of Officer") }}</p>
+            <p>{{ data.officer_designation | default("Assistant Engineer") }}</p>
+            <p>Date: {{ data.bill_date | default("__/__/____") }}</p>
+        </div>
+    </div>
+
+    <div class="signature-block">
+        <p>+Dated signature of officer authorising payment</p>
+        <div class="officer-details">
+            <p>{{ data.authorising_officer_name | default("Name of Authorising Officer") }}</p>
+            <p>{{ data.authorising_officer_designation | default("Executive Engineer") }}</p>
+            <p>Date: {{ data.authorisation_date | default("__/__/____") }}</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

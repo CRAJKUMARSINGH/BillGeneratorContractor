@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root { color-scheme: dark; }
+
+  html { @apply bg-surface-950 text-slate-100 antialiased; }
+
+  * { @apply border-glass-border; }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { @apply bg-transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-white/10 rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-white/20; }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] shadow-glass;
+  }
+  .glass-lg {
+    @apply bg-white/[0.05] backdrop-blur-2xl border border-white/[0.10] shadow-glass-lg;
+  }
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent-500 hover:bg-accent-600
+           text-white text-sm font-medium transition-all duration-150
+           hover:shadow-glow hover:-translate-y-px active:translate-y-0 active:shadow-none;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg
+           text-slate-300 hover:text-white hover:bg-white/[0.06]
+           text-sm font-medium transition-all duration-150;
+  }
+  .btn-danger {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg
+           text-red-400 hover:text-white hover:bg-red-500/20
+           text-sm font-medium transition-all duration-150;
+  }
+  .input-field {
+    @apply w-full px-3 py-2 rounded-lg bg-white/[0.05] border border-white/[0.08]
+           text-slate-100 placeholder-slate-500 text-sm
+           focus:outline-none focus:ring-2 focus:ring-accent-500/50 focus:border-accent-500/50
+           transition-all duration-150;
+  }
+  .label {
+    @apply block text-xs font-medium text-slate-400 mb-1 uppercase tracking-wide;
+  }
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+  .table-cell {
+    @apply px-3 py-2 text-sm text-slate-200 border-r border-white/[0.05] last:border-r-0;
+  }
+  .table-header {
+    @apply px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider
+           border-r border-white/[0.05] last:border-r-0;
+  }
+}
+
+/* Print styles — clean white output */
+@media print {
+  body { background: white !important; color: black !important; }
+  .no-print { display: none !important; }
+  .print-area { box-shadow: none !important; border: none !important; }
+}
