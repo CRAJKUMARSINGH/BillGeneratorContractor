@@ -57,7 +57,7 @@ def test_full_lifecycle():
             premiumPercent=10.5,
             premiumType="above",
             previousBillAmount=5000.0,
-            generatePdf=False # Skip PDF to avoid dependency issues in basic test
+            generatePdf=True # FULL LIFECYCLE DEMO: Enable PDF
         )
     )
 
@@ -75,7 +75,15 @@ def test_full_lifecycle():
                 print(f"  - {f.name} ({f.stat().st_size} bytes)")
             
             if len(html_files) == 6:
-                print("\nSUCCESS: Full Lifecycle Verified with 6 Standardized Outputs.")
+                pdf_files = list(out_dir.glob("*.pdf"))
+                print(f"Generated {len(pdf_files)} PDF files in {out_dir.name}")
+                for f in pdf_files:
+                    print(f"  - {f.name} ({f.stat().st_size} bytes)")
+                
+                if len(pdf_files) == 6:
+                    print("\nSUCCESS: Full Lifecycle Verified with 6 Standardized PDFs.")
+                else:
+                    print("\nFAILURE: PDF generation incomplete.")
             else:
                 print(f"\nFAILURE: Expected 6 files, got {len(html_files)}.")
         else:

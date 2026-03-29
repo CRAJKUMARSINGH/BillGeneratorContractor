@@ -249,20 +249,24 @@ def _parse_excel(path: Path, file_id: str, filename: str) -> ParsedBillData:
             unit=row.unit,
             quantitySince=row.qty_since_last_bill,
             quantityUpto=row.qty_to_date,
-            quantity=row.qty_to_date,
+            quantity=row.qty_to_date, # Fallback for simple bills
             rate=row.rate,
             amount=row.amount
         ))
-
+    
+    extra_items = []
+    # Similar mapping for extra items if needed, currently using primary rows
+    
     return ParsedBillData(
         fileId=file_id,
         fileName=filename,
-        titleData=unified_doc.raw_metadata,
+        titleData=raw_data.get("metadata", {}),
         billItems=bill_items,
-        extraItems=[], # Handled within billItems or separately depending on frontend logic
+        extraItems=extra_items,
         totalAmount=unified_doc.total_amount,
-        hasExtraItems=bool(unified_doc.raw_metadata.get('has_extra_items', False)),
-        sheets=unified_doc.raw_metadata.get('raw_sheet_names', ["Sheet1"])
+        hasExtraItems=len(extra_items) > 0,
+        sheets=list(raw_data.get("sheets", [])),
+        anomaly_warnings=unified_doc.anomaly_warnings
     )
 
 

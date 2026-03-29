@@ -11,7 +11,7 @@ def normalize_to_unified_model(raw_data: Dict[str, Any], source_type: str = "exc
     Takes raw data (from excel_parser or ocr_extractor) and maps it into a UnifiedDocumentModel.
     Supports both traditional flat rows and the new 4-sheet PWD format.
     """
-    raw_rows = raw_data.get("raw_rows", [])
+    raw_rows = raw_data.get("items", raw_data.get("raw_rows", []))
     metadata = raw_data.get("metadata", {})
     warnings = raw_data.get("warnings", [])
     
