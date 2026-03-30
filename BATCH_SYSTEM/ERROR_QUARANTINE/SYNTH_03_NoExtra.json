@@ -1,0 +1,113 @@
+{
+  "fileId": "SYNTH_03_NoExtra",
+  "fileName": "SYNTH_03_NoExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Providing and fixing MS door frame",
+      "unit": "each",
+      "quantitySince": 91.07,
+      "quantityUpto": 149.05,
+      "quantity": 149.05,
+      "rate": 2800.0,
+      "amount": 417340.0
+    },
+    {
+      "itemNo": "2",
+      "description": "Providing and fixing aluminium partition",
+      "unit": "sqm",
+      "quantitySince": 62.42,
+      "quantityUpto": 127.45,
+      "quantity": 127.45,
+      "rate": 2400.0,
+      "amount": 305880.0
+    },
+    {
+      "itemNo": "3",
+      "description": "Earthwork excavation in ordinary soil",
+      "unit": "cum",
+      "quantitySince": 43.76,
+      "quantityUpto": 47.32,
+      "quantity": 47.32,
+      "rate": 45.0,
+      "amount": 2129.4
+    },
+    {
+      "itemNo": "4",
+      "description": "Painting with OBD two coats",
+      "unit": "sqm",
+      "quantitySince": 120.41,
+      "quantityUpto": 131.85,
+      "quantity": 131.85,
+      "rate": 95.0,
+      "amount": 12525.75
+    },
+    {
+      "itemNo": "5",
+      "description": "Providing and laying IPS flooring",
+      "unit": "sqm",
+      "quantitySince": 32.39,
+      "quantityUpto": 55.24,
+      "quantity": 55.24,
+      "rate": 280.0,
+      "amount": 15467.2
+    },
+    {
+      "itemNo": "6",
+      "description": "Providing and laying DPC 40mm thick",
+      "unit": "sqm",
+      "quantitySince": 66.13,
+      "quantityUpto": 165.97,
+      "quantity": 165.97,
+      "rate": 320.0,
+      "amount": 53110.4
+    },
+    {
+      "itemNo": "7",
+      "description": "Providing and fixing flush door shutter",
+      "unit": "sqm",
+      "quantitySince": 67.36,
+      "quantityUpto": 109.0,
+      "quantity": 109.0,
+      "rate": 1450.0,
+      "amount": 158050.0
+    },
+    {
+      "itemNo": "8",
+      "description": "Providing and laying RCC M20",
+      "unit": "cum",
+      "quantitySince": 45.92,
+      "quantityUpto": 55.52,
+      "quantity": 55.52,
+      "rate": 6800.0,
+      "amount": 377536.0
+    },
+    {
+      "itemNo": "9",
+      "description": "Providing and laying PCC 1:4:8",
+      "unit": "cum",
+      "quantitySince": 78.53,
+      "quantityUpto": 135.1,
+      "quantity": 135.1,
+      "rate": 4200.0,
+      "amount": 567420.0
+    }
+  ],
+  "extraItems": [],
+  "totalAmount": 1909459.0,
+  "hasExtraItems": false,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}

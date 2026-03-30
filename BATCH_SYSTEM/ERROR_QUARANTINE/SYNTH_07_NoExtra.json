@@ -1,0 +1,83 @@
+{
+  "fileId": "SYNTH_07_NoExtra",
+  "fileName": "SYNTH_07_NoExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Providing and fixing aluminium partition",
+      "unit": "sqm",
+      "quantitySince": 70.83,
+      "quantityUpto": 117.65,
+      "quantity": 117.65,
+      "rate": 2400.0,
+      "amount": 282360.0
+    },
+    {
+      "itemNo": "2",
+      "description": "Brick masonry in CM 1:6",
+      "unit": "cum",
+      "quantitySince": 71.52,
+      "quantityUpto": 99.41,
+      "quantity": 99.41,
+      "rate": 3200.0,
+      "amount": 318112.0
+    },
+    {
+      "itemNo": "3",
+      "description": "Painting with OBD two coats",
+      "unit": "sqm",
+      "quantitySince": 69.41,
+      "quantityUpto": 166.63,
+      "quantity": 166.63,
+      "rate": 95.0,
+      "amount": 15829.85
+    },
+    {
+      "itemNo": "4",
+      "description": "Providing and laying vitrified tiles 600x600",
+      "unit": "sqm",
+      "quantitySince": 160.47,
+      "quantityUpto": 175.8,
+      "quantity": 175.8,
+      "rate": 920.0,
+      "amount": 161736.0
+    },
+    {
+      "itemNo": "5",
+      "description": "Providing and laying IPS flooring",
+      "unit": "sqm",
+      "quantitySince": 63.64,
+      "quantityUpto": 82.1,
+      "quantity": 82.1,
+      "rate": 280.0,
+      "amount": 22988.0
+    },
+    {
+      "itemNo": "6",
+      "description": "Providing and laying DPC 40mm thick",
+      "unit": "sqm",
+      "quantitySince": 71.13,
+      "quantityUpto": 90.02,
+      "quantity": 90.02,
+      "rate": 320.0,
+      "amount": 28806.4
+    }
+  ],
+  "extraItems": [],
+  "totalAmount": 829832.0,
+  "hasExtraItems": false,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}

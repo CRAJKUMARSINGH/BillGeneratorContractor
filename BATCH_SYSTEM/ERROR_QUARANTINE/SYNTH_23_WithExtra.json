@@ -1,0 +1,144 @@
+{
+  "fileId": "SYNTH_23_WithExtra",
+  "fileName": "SYNTH_23_WithExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Providing and fixing flush door shutter",
+      "unit": "sqm",
+      "quantitySince": 72.43,
+      "quantityUpto": 140.99,
+      "quantity": 140.99,
+      "rate": 1450.0,
+      "amount": 204435.5
+    },
+    {
+      "itemNo": "2",
+      "description": "Plastering 12mm thick CM 1:6",
+      "unit": "sqm",
+      "quantitySince": 21.48,
+      "quantityUpto": 26.48,
+      "quantity": 26.48,
+      "rate": 185.0,
+      "amount": 4898.8
+    },
+    {
+      "itemNo": "3",
+      "description": "Providing and fixing MS door frame",
+      "unit": "each",
+      "quantitySince": 134.09,
+      "quantityUpto": 169.73,
+      "quantity": 169.73,
+      "rate": 2800.0,
+      "amount": 475244.0
+    },
+    {
+      "itemNo": "4",
+      "description": "Providing and laying PCC 1:4:8",
+      "unit": "cum",
+      "quantitySince": 98.12,
+      "quantityUpto": 120.48,
+      "quantity": 120.48,
+      "rate": 4200.0,
+      "amount": 506016.0
+    },
+    {
+      "itemNo": "5",
+      "description": "Providing and fixing UPVC window",
+      "unit": "sqm",
+      "quantitySince": 100.23,
+      "quantityUpto": 114.52,
+      "quantity": 114.52,
+      "rate": 1850.0,
+      "amount": 211862.0
+    },
+    {
+      "itemNo": "6",
+      "description": "Brick masonry in CM 1:6",
+      "unit": "cum",
+      "quantitySince": 33.2,
+      "quantityUpto": 38.41,
+      "quantity": 38.41,
+      "rate": 3200.0,
+      "amount": 122912.0
+    },
+    {
+      "itemNo": "7",
+      "description": "Providing and laying RCC M20",
+      "unit": "cum",
+      "quantitySince": 41.84,
+      "quantityUpto": 90.34,
+      "quantity": 90.34,
+      "rate": 6800.0,
+      "amount": 614312.0
+    },
+    {
+      "itemNo": "8",
+      "description": "Providing and laying vitrified tiles 600x600",
+      "unit": "sqm",
+      "quantitySince": 176.3,
+      "quantityUpto": 185.97,
+      "quantity": 185.97,
+      "rate": 920.0,
+      "amount": 171092.4
+    }
+  ],
+  "extraItems": [
+    {
+      "itemNo": "E-04",
+      "bsr": "11.1.2",
+      "description": "Providing and fixing CPVC pipe 25mm",
+      "quantity": 15.0,
+      "unit": "Rmt",
+      "rate": 185.0,
+      "amount": 2775.0,
+      "remark": "Approved"
+    },
+    {
+      "itemNo": "E-02",
+      "bsr": "10.2.3",
+      "description": "Providing and fixing 6A 3-pin socket",
+      "quantity": 4.0,
+      "unit": "Each",
+      "rate": 320.0,
+      "amount": 1280.0,
+      "remark": "Approved"
+    },
+    {
+      "itemNo": "E-03",
+      "bsr": "10.3.1",
+      "description": "Providing and fixing MCB 32A",
+      "quantity": 2.0,
+      "unit": "Each",
+      "rate": 480.0,
+      "amount": 960.0,
+      "remark": "Approved"
+    },
+    {
+      "itemNo": "E-01",
+      "bsr": "10.1.1",
+      "description": "Providing and fixing LED light 18W",
+      "quantity": 2.0,
+      "unit": "Each",
+      "rate": 850.0,
+      "amount": 1700.0,
+      "remark": "Approved"
+    }
+  ],
+  "totalAmount": 2317488.0,
+  "hasExtraItems": true,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}

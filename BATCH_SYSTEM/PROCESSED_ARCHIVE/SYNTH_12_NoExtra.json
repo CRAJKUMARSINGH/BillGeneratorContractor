@@ -1,0 +1,93 @@
+{
+  "fileId": "SYNTH_12_NoExtra",
+  "fileName": "SYNTH_12_NoExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Providing and fixing ceramic tiles 300x300",
+      "unit": "sqm",
+      "quantitySince": 97.4,
+      "quantityUpto": 101.33,
+      "quantity": 101.33,
+      "rate": 680.0,
+      "amount": 68904.4
+    },
+    {
+      "itemNo": "2",
+      "description": "Providing and fixing MS door frame",
+      "unit": "each",
+      "quantitySince": 113.18,
+      "quantityUpto": 120.75,
+      "quantity": 120.75,
+      "rate": 2800.0,
+      "amount": 338100.0
+    },
+    {
+      "itemNo": "3",
+      "description": "Providing and laying PCC 1:4:8",
+      "unit": "cum",
+      "quantitySince": 27.06,
+      "quantityUpto": 34.11,
+      "quantity": 34.11,
+      "rate": 4200.0,
+      "amount": 143262.0
+    },
+    {
+      "itemNo": "4",
+      "description": "Providing and fixing UPVC window",
+      "unit": "sqm",
+      "quantitySince": 80.22,
+      "quantityUpto": 170.52,
+      "quantity": 170.52,
+      "rate": 1850.0,
+      "amount": 315462.0
+    },
+    {
+      "itemNo": "5",
+      "description": "Providing and laying vitrified tiles 600x600",
+      "unit": "sqm",
+      "quantitySince": 55.65,
+      "quantityUpto": 180.24,
+      "quantity": 180.24,
+      "rate": 920.0,
+      "amount": 165820.8
+    },
+    {
+      "itemNo": "6",
+      "description": "Providing and fixing MS grill",
+      "unit": "sqm",
+      "quantitySince": 16.92,
+      "quantityUpto": 51.31,
+      "quantity": 51.31,
+      "rate": 1200.0,
+      "amount": 61572.0
+    },
+    {
+      "itemNo": "7",
+      "description": "Brick masonry in CM 1:6",
+      "unit": "cum",
+      "quantitySince": 50.29,
+      "quantityUpto": 88.92,
+      "quantity": 88.92,
+      "rate": 3200.0,
+      "amount": 284544.0
+    }
+  ],
+  "extraItems": [],
+  "totalAmount": 1377665.0,
+  "hasExtraItems": false,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}

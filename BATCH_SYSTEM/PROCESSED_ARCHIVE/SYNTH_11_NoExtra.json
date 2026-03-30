@@ -1,0 +1,73 @@
+{
+  "fileId": "SYNTH_11_NoExtra",
+  "fileName": "SYNTH_11_NoExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Providing and laying vitrified tiles 600x600",
+      "unit": "sqm",
+      "quantitySince": 92.05,
+      "quantityUpto": 100.07,
+      "quantity": 100.07,
+      "rate": 920.0,
+      "amount": 92064.4
+    },
+    {
+      "itemNo": "2",
+      "description": "Brick masonry in CM 1:6",
+      "unit": "cum",
+      "quantitySince": 92.4,
+      "quantityUpto": 182.15,
+      "quantity": 182.15,
+      "rate": 3200.0,
+      "amount": 582880.0
+    },
+    {
+      "itemNo": "3",
+      "description": "Providing and fixing MS grill",
+      "unit": "sqm",
+      "quantitySince": 131.77,
+      "quantityUpto": 183.83,
+      "quantity": 183.83,
+      "rate": 1200.0,
+      "amount": 220596.0
+    },
+    {
+      "itemNo": "4",
+      "description": "Providing and laying DPC 40mm thick",
+      "unit": "sqm",
+      "quantitySince": 73.92,
+      "quantityUpto": 167.47,
+      "quantity": 167.47,
+      "rate": 320.0,
+      "amount": 53590.4
+    },
+    {
+      "itemNo": "5",
+      "description": "Providing and laying RCC M20",
+      "unit": "cum",
+      "quantitySince": 8.01,
+      "quantityUpto": 12.3,
+      "quantity": 12.3,
+      "rate": 6800.0,
+      "amount": 83640.0
+    }
+  ],
+  "extraItems": [],
+  "totalAmount": 1032771.0,
+  "hasExtraItems": false,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}

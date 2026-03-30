@@ -1,3 +1,13 @@
-INFO: Starting Robotic Audit Phase 9...
-INFO: Discovered 23 target files.
-INFO: Audit Complete. Success: 18, Fail: 1, Skip: 4
+ROBOTIC TEST RUN — 2026-03-30 08:47:36
+======================================================================
+PASS | 0511-N-extra.xlsx | HTML:7 PDF:7 Extra:True Total:84448
+PASS | 0511Wextra.xlsx | HTML:7 PDF:7 Extra:True Total:84448
+PASS | 3rdFinalNoExtra.xlsx | HTML:6 PDF:6 Extra:False Total:392828
+PASS | 3rdFinalVidExtra.xlsx | HTML:7 PDF:7 Extra:True Total:392828
+PASS | 3rdRunningNoExtra.xlsx | HTML:7 PDF:7 Extra:True Total:467585
+PASS | 3rdRunningVidExtra.xlsx | HTML:7 PDF:7 Extra:True Total:467585
+PASS | 9th and final Amli Fala with extra items.xlsx | HTML:6 PDF:6 Extra:False Total:52136455
+PASS | FirstFINALnoExtra.xlsx | HTML:6 PDF:6 Extra:False Total:411506
+PASS | FirstFINALvidExtra.xlsx | HTML:7 PDF:7 Extra:True Total:468805
+
+SUMMARY: 9 PASS / 0 FAIL

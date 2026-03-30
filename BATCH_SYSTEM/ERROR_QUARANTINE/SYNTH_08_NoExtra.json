@@ -1,0 +1,123 @@
+{
+  "fileId": "SYNTH_08_NoExtra",
+  "fileName": "SYNTH_08_NoExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Painting with OBD two coats",
+      "unit": "sqm",
+      "quantitySince": 54.71,
+      "quantityUpto": 92.6,
+      "quantity": 92.6,
+      "rate": 95.0,
+      "amount": 8797.0
+    },
+    {
+      "itemNo": "2",
+      "description": "Providing and fixing ceramic tiles 300x300",
+      "unit": "sqm",
+      "quantitySince": 24.38,
+      "quantityUpto": 36.86,
+      "quantity": 36.86,
+      "rate": 680.0,
+      "amount": 25064.8
+    },
+    {
+      "itemNo": "3",
+      "description": "Earthwork excavation in ordinary soil",
+      "unit": "cum",
+      "quantitySince": 61.87,
+      "quantityUpto": 107.26,
+      "quantity": 107.26,
+      "rate": 45.0,
+      "amount": 4826.7
+    },
+    {
+      "itemNo": "4",
+      "description": "Providing and fixing aluminium partition",
+      "unit": "sqm",
+      "quantitySince": 83.15,
+      "quantityUpto": 137.38,
+      "quantity": 137.38,
+      "rate": 2400.0,
+      "amount": 329712.0
+    },
+    {
+      "itemNo": "5",
+      "description": "Providing and laying vitrified tiles 600x600",
+      "unit": "sqm",
+      "quantitySince": 115.9,
+      "quantityUpto": 118.28,
+      "quantity": 118.28,
+      "rate": 920.0,
+      "amount": 108817.6
+    },
+    {
+      "itemNo": "6",
+      "description": "Providing and laying DPC 40mm thick",
+      "unit": "sqm",
+      "quantitySince": 55.69,
+      "quantityUpto": 84.35,
+      "quantity": 84.35,
+      "rate": 320.0,
+      "amount": 26992.0
+    },
+    {
+      "itemNo": "7",
+      "description": "Providing and fixing MS door frame",
+      "unit": "each",
+      "quantitySince": 82.89,
+      "quantityUpto": 100.76,
+      "quantity": 100.76,
+      "rate": 2800.0,
+      "amount": 282128.0
+    },
+    {
+      "itemNo": "8",
+      "description": "Providing and fixing MS grill",
+      "unit": "sqm",
+      "quantitySince": 122.37,
+      "quantityUpto": 130.04,
+      "quantity": 130.04,
+      "rate": 1200.0,
+      "amount": 156048.0
+    },
+    {
+      "itemNo": "9",
+      "description": "Brick masonry in CM 1:6",
+      "unit": "cum",
+      "quantitySince": 51.38,
+      "quantityUpto": 78.51,
+      "quantity": 78.51,
+      "rate": 3200.0,
+      "amount": 251232.0
+    },
+    {
+      "itemNo": "10",
+      "description": "Providing and laying PCC 1:4:8",
+      "unit": "cum",
+      "quantitySince": 57.75,
+      "quantityUpto": 176.93,
+      "quantity": 176.93,
+      "rate": 4200.0,
+      "amount": 743106.0
+    }
+  ],
+  "extraItems": [],
+  "totalAmount": 1936724.0,
+  "hasExtraItems": false,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}

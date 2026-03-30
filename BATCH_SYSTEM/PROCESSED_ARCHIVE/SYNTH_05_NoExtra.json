@@ -1,0 +1,103 @@
+{
+  "fileId": "SYNTH_05_NoExtra",
+  "fileName": "SYNTH_05_NoExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Providing and laying DPC 40mm thick",
+      "unit": "sqm",
+      "quantitySince": 134.97,
+      "quantityUpto": 147.06,
+      "quantity": 147.06,
+      "rate": 320.0,
+      "amount": 47059.2
+    },
+    {
+      "itemNo": "2",
+      "description": "Providing and fixing ceramic tiles 300x300",
+      "unit": "sqm",
+      "quantitySince": 78.62,
+      "quantityUpto": 123.96,
+      "quantity": 123.96,
+      "rate": 680.0,
+      "amount": 84292.8
+    },
+    {
+      "itemNo": "3",
+      "description": "Painting with OBD two coats",
+      "unit": "sqm",
+      "quantitySince": 130.45,
+      "quantityUpto": 189.97,
+      "quantity": 189.97,
+      "rate": 95.0,
+      "amount": 18047.15
+    },
+    {
+      "itemNo": "4",
+      "description": "Plastering 12mm thick CM 1:6",
+      "unit": "sqm",
+      "quantitySince": 30.51,
+      "quantityUpto": 43.49,
+      "quantity": 43.49,
+      "rate": 185.0,
+      "amount": 8045.65
+    },
+    {
+      "itemNo": "5",
+      "description": "Providing and fixing UPVC window",
+      "unit": "sqm",
+      "quantitySince": 145.72,
+      "quantityUpto": 176.02,
+      "quantity": 176.02,
+      "rate": 1850.0,
+      "amount": 325637.0
+    },
+    {
+      "itemNo": "6",
+      "description": "Providing and fixing flush door shutter",
+      "unit": "sqm",
+      "quantitySince": 89.7,
+      "quantityUpto": 110.04,
+      "quantity": 110.04,
+      "rate": 1450.0,
+      "amount": 159558.0
+    },
+    {
+      "itemNo": "7",
+      "description": "Brick masonry in CM 1:6",
+      "unit": "cum",
+      "quantitySince": 48.5,
+      "quantityUpto": 62.65,
+      "quantity": 62.65,
+      "rate": 3200.0,
+      "amount": 200480.0
+    },
+    {
+      "itemNo": "8",
+      "description": "Providing and laying PCC 1:4:8",
+      "unit": "cum",
+      "quantitySince": 43.09,
+      "quantityUpto": 125.82,
+      "quantity": 125.82,
+      "rate": 4200.0,
+      "amount": 528444.0
+    }
+  ],
+  "extraItems": [],
+  "totalAmount": 1371564.0,
+  "hasExtraItems": false,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}

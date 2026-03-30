@@ -1,0 +1,83 @@
+{
+  "fileId": "SYNTH_01_NoExtra",
+  "fileName": "SYNTH_01_NoExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Painting with OBD two coats",
+      "unit": "sqm",
+      "quantitySince": 68.2,
+      "quantityUpto": 165.42,
+      "quantity": 165.42,
+      "rate": 95.0,
+      "amount": 15714.9
+    },
+    {
+      "itemNo": "2",
+      "description": "Providing and fixing aluminium partition",
+      "unit": "sqm",
+      "quantitySince": 51.54,
+      "quantityUpto": 133.22,
+      "quantity": 133.22,
+      "rate": 2400.0,
+      "amount": 319728.0
+    },
+    {
+      "itemNo": "3",
+      "description": "Providing and fixing MS grill",
+      "unit": "sqm",
+      "quantitySince": 6.39,
+      "quantityUpto": 11.07,
+      "quantity": 11.07,
+      "rate": 1200.0,
+      "amount": 13284.0
+    },
+    {
+      "itemNo": "4",
+      "description": "Providing and laying RCC M20",
+      "unit": "cum",
+      "quantitySince": 109.3,
+      "quantityUpto": 156.97,
+      "quantity": 156.97,
+      "rate": 6800.0,
+      "amount": 1067396.0
+    },
+    {
+      "itemNo": "5",
+      "description": "Providing and fixing flush door shutter",
+      "unit": "sqm",
+      "quantitySince": 41.42,
+      "quantityUpto": 46.6,
+      "quantity": 46.6,
+      "rate": 1450.0,
+      "amount": 67570.0
+    },
+    {
+      "itemNo": "6",
+      "description": "Providing and fixing MS door frame",
+      "unit": "each",
+      "quantitySince": 85.58,
+      "quantityUpto": 183.62,
+      "quantity": 183.62,
+      "rate": 2800.0,
+      "amount": 514136.0
+    }
+  ],
+  "extraItems": [],
+  "totalAmount": 1997829.0,
+  "hasExtraItems": false,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}

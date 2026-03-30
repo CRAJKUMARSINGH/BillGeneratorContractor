@@ -1,0 +1,73 @@
+{
+  "fileId": "SYNTH_02_NoExtra",
+  "fileName": "SYNTH_02_NoExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Providing and fixing aluminium partition",
+      "unit": "sqm",
+      "quantitySince": 96.04,
+      "quantityUpto": 189.77,
+      "quantity": 189.77,
+      "rate": 2400.0,
+      "amount": 455448.0
+    },
+    {
+      "itemNo": "2",
+      "description": "Brick masonry in CM 1:6",
+      "unit": "cum",
+      "quantitySince": 118.94,
+      "quantityUpto": 145.94,
+      "quantity": 145.94,
+      "rate": 3200.0,
+      "amount": 467008.0
+    },
+    {
+      "itemNo": "3",
+      "description": "Providing and laying vitrified tiles 600x600",
+      "unit": "sqm",
+      "quantitySince": 110.89,
+      "quantityUpto": 173.96,
+      "quantity": 173.96,
+      "rate": 920.0,
+      "amount": 160043.2
+    },
+    {
+      "itemNo": "4",
+      "description": "Providing and fixing MS grill",
+      "unit": "sqm",
+      "quantitySince": 17.53,
+      "quantityUpto": 40.5,
+      "quantity": 40.5,
+      "rate": 1200.0,
+      "amount": 48600.0
+    },
+    {
+      "itemNo": "5",
+      "description": "Earthwork excavation in ordinary soil",
+      "unit": "cum",
+      "quantitySince": 99.03,
+      "quantityUpto": 102.64,
+      "quantity": 102.64,
+      "rate": 45.0,
+      "amount": 4618.8
+    }
+  ],
+  "extraItems": [],
+  "totalAmount": 1135718.0,
+  "hasExtraItems": false,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}

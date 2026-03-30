@@ -1,0 +1,104 @@
+{
+  "fileId": "SYNTH_24_WithExtra",
+  "fileName": "SYNTH_24_WithExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Providing and laying PCC 1:4:8",
+      "unit": "cum",
+      "quantitySince": 105.96,
+      "quantityUpto": 107.33,
+      "quantity": 107.33,
+      "rate": 4200.0,
+      "amount": 450786.0
+    },
+    {
+      "itemNo": "2",
+      "description": "Painting with OBD two coats",
+      "unit": "sqm",
+      "quantitySince": 91.83,
+      "quantityUpto": 145.77,
+      "quantity": 145.77,
+      "rate": 95.0,
+      "amount": 13848.15
+    },
+    {
+      "itemNo": "3",
+      "description": "Earthwork excavation in ordinary soil",
+      "unit": "cum",
+      "quantitySince": 31.72,
+      "quantityUpto": 75.65,
+      "quantity": 75.65,
+      "rate": 45.0,
+      "amount": 3404.25
+    },
+    {
+      "itemNo": "4",
+      "description": "Providing and fixing MS grill",
+      "unit": "sqm",
+      "quantitySince": 39.09,
+      "quantityUpto": 44.65,
+      "quantity": 44.65,
+      "rate": 1200.0,
+      "amount": 53580.0
+    },
+    {
+      "itemNo": "5",
+      "description": "Plastering 12mm thick CM 1:6",
+      "unit": "sqm",
+      "quantitySince": 134.4,
+      "quantityUpto": 140.2,
+      "quantity": 140.2,
+      "rate": 185.0,
+      "amount": 25937.0
+    }
+  ],
+  "extraItems": [
+    {
+      "itemNo": "E-01",
+      "bsr": "10.1.1",
+      "description": "Providing and fixing LED light 18W",
+      "quantity": 2.0,
+      "unit": "Each",
+      "rate": 850.0,
+      "amount": 1700.0,
+      "remark": "Approved"
+    },
+    {
+      "itemNo": "E-06",
+      "bsr": "12.1.1",
+      "description": "Providing and fixing exhaust fan 300mm",
+      "quantity": 2.0,
+      "unit": "Each",
+      "rate": 1200.0,
+      "amount": 2400.0,
+      "remark": "Approved"
+    },
+    {
+      "itemNo": "E-02",
+      "bsr": "10.2.3",
+      "description": "Providing and fixing 6A 3-pin socket",
+      "quantity": 4.0,
+      "unit": "Each",
+      "rate": 320.0,
+      "amount": 1280.0,
+      "remark": "Approved"
+    }
+  ],
+  "totalAmount": 552935.0,
+  "hasExtraItems": true,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}

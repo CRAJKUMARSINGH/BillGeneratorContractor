@@ -1,0 +1,114 @@
+{
+  "fileId": "SYNTH_19_WithExtra",
+  "fileName": "SYNTH_19_WithExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Providing and fixing MS door frame",
+      "unit": "each",
+      "quantitySince": 25.67,
+      "quantityUpto": 29.1,
+      "quantity": 29.1,
+      "rate": 2800.0,
+      "amount": 81480.0
+    },
+    {
+      "itemNo": "2",
+      "description": "Providing and laying RCC M20",
+      "unit": "cum",
+      "quantitySince": 53.19,
+      "quantityUpto": 54.43,
+      "quantity": 54.43,
+      "rate": 6800.0,
+      "amount": 370124.0
+    },
+    {
+      "itemNo": "3",
+      "description": "Providing and fixing UPVC window",
+      "unit": "sqm",
+      "quantitySince": 89.96,
+      "quantityUpto": 127.66,
+      "quantity": 127.66,
+      "rate": 1850.0,
+      "amount": 236171.0
+    },
+    {
+      "itemNo": "4",
+      "description": "Brick masonry in CM 1:6",
+      "unit": "cum",
+      "quantitySince": 20.4,
+      "quantityUpto": 35.8,
+      "quantity": 35.8,
+      "rate": 3200.0,
+      "amount": 114560.0
+    },
+    {
+      "itemNo": "5",
+      "description": "Providing and laying vitrified tiles 600x600",
+      "unit": "sqm",
+      "quantitySince": 9.94,
+      "quantityUpto": 30.55,
+      "quantity": 30.55,
+      "rate": 920.0,
+      "amount": 28106.0
+    }
+  ],
+  "extraItems": [
+    {
+      "itemNo": "E-05",
+      "bsr": "11.2.1",
+      "description": "Providing and fixing ball valve 25mm",
+      "quantity": 3.0,
+      "unit": "Each",
+      "rate": 420.0,
+      "amount": 1260.0,
+      "remark": "Approved"
+    },
+    {
+      "itemNo": "E-02",
+      "bsr": "10.2.3",
+      "description": "Providing and fixing 6A 3-pin socket",
+      "quantity": 4.0,
+      "unit": "Each",
+      "rate": 320.0,
+      "amount": 1280.0,
+      "remark": "Approved"
+    },
+    {
+      "itemNo": "E-04",
+      "bsr": "11.1.2",
+      "description": "Providing and fixing CPVC pipe 25mm",
+      "quantity": 15.0,
+      "unit": "Rmt",
+      "rate": 185.0,
+      "amount": 2775.0,
+      "remark": "Approved"
+    },
+    {
+      "itemNo": "E-03",
+      "bsr": "10.3.1",
+      "description": "Providing and fixing MCB 32A",
+      "quantity": 2.0,
+      "unit": "Each",
+      "rate": 480.0,
+      "amount": 960.0,
+      "remark": "Approved"
+    }
+  ],
+  "totalAmount": 836716.0,
+  "hasExtraItems": true,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}

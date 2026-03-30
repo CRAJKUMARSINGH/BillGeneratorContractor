@@ -1,0 +1,113 @@
+{
+  "fileId": "SYNTH_09_NoExtra",
+  "fileName": "SYNTH_09_NoExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Brick masonry in CM 1:6",
+      "unit": "cum",
+      "quantitySince": 149.43,
+      "quantityUpto": 180.24,
+      "quantity": 180.24,
+      "rate": 3200.0,
+      "amount": 576768.0
+    },
+    {
+      "itemNo": "2",
+      "description": "Providing and fixing MS door frame",
+      "unit": "each",
+      "quantitySince": 42.29,
+      "quantityUpto": 125.16,
+      "quantity": 125.16,
+      "rate": 2800.0,
+      "amount": 350448.0
+    },
+    {
+      "itemNo": "3",
+      "description": "Providing and fixing MS grill",
+      "unit": "sqm",
+      "quantitySince": 40.81,
+      "quantityUpto": 90.24,
+      "quantity": 90.24,
+      "rate": 1200.0,
+      "amount": 108288.0
+    },
+    {
+      "itemNo": "4",
+      "description": "Providing and laying PCC 1:4:8",
+      "unit": "cum",
+      "quantitySince": 7.34,
+      "quantityUpto": 13.91,
+      "quantity": 13.91,
+      "rate": 4200.0,
+      "amount": 58422.0
+    },
+    {
+      "itemNo": "5",
+      "description": "Providing and fixing UPVC window",
+      "unit": "sqm",
+      "quantitySince": 25.95,
+      "quantityUpto": 48.55,
+      "quantity": 48.55,
+      "rate": 1850.0,
+      "amount": 89817.5
+    },
+    {
+      "itemNo": "6",
+      "description": "Providing and laying vitrified tiles 600x600",
+      "unit": "sqm",
+      "quantitySince": 44.03,
+      "quantityUpto": 123.13,
+      "quantity": 123.13,
+      "rate": 920.0,
+      "amount": 113279.6
+    },
+    {
+      "itemNo": "7",
+      "description": "Providing and fixing aluminium partition",
+      "unit": "sqm",
+      "quantitySince": 19.31,
+      "quantityUpto": 25.1,
+      "quantity": 25.1,
+      "rate": 2400.0,
+      "amount": 60240.0
+    },
+    {
+      "itemNo": "8",
+      "description": "Providing and laying IPS flooring",
+      "unit": "sqm",
+      "quantitySince": 10.81,
+      "quantityUpto": 27.86,
+      "quantity": 27.86,
+      "rate": 280.0,
+      "amount": 7800.8
+    },
+    {
+      "itemNo": "9",
+      "description": "Earthwork excavation in ordinary soil",
+      "unit": "cum",
+      "quantitySince": 60.84,
+      "quantityUpto": 159.11,
+      "quantity": 159.11,
+      "rate": 45.0,
+      "amount": 7159.95
+    }
+  ],
+  "extraItems": [],
+  "totalAmount": 1372224.0,
+  "hasExtraItems": false,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "fileId": "SYNTH_04_NoExtra",
+  "fileName": "SYNTH_04_NoExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Providing and laying DPC 40mm thick",
+      "unit": "sqm",
+      "quantitySince": 79.45,
+      "quantityUpto": 117.91,
+      "quantity": 117.91,
+      "rate": 320.0,
+      "amount": 37731.2
+    },
+    {
+      "itemNo": "2",
+      "description": "Plastering 12mm thick CM 1:6",
+      "unit": "sqm",
+      "quantitySince": 5.2,
+      "quantityUpto": 15.16,
+      "quantity": 15.16,
+      "rate": 185.0,
+      "amount": 2804.6
+    },
+    {
+      "itemNo": "3",
+      "description": "Providing and fixing MS grill",
+      "unit": "sqm",
+      "quantitySince": 20.75,
+      "quantityUpto": 53.29,
+      "quantity": 53.29,
+      "rate": 1200.0,
+      "amount": 63948.0
+    },
+    {
+      "itemNo": "4",
+      "description": "Providing and laying PCC 1:4:8",
+      "unit": "cum",
+      "quantitySince": 24.91,
+      "quantityUpto": 70.63,
+      "quantity": 70.63,
+      "rate": 4200.0,
+      "amount": 296646.0
+    },
+    {
+      "itemNo": "5",
+      "description": "Providing and fixing ceramic tiles 300x300",
+      "unit": "sqm",
+      "quantitySince": 34.54,
+      "quantityUpto": 65.29,
+      "quantity": 65.29,
+      "rate": 680.0,
+      "amount": 44397.2
+    },
+    {
+      "itemNo": "6",
+      "description": "Painting with OBD two coats",
+      "unit": "sqm",
+      "quantitySince": 32.81,
+      "quantityUpto": 102.23,
+      "quantity": 102.23,
+      "rate": 95.0,
+      "amount": 9711.85
+    },
+    {
+      "itemNo": "7",
+      "description": "Providing and fixing UPVC window",
+      "unit": "sqm",
+      "quantitySince": 21.08,
+      "quantityUpto": 55.63,
+      "quantity": 55.63,
+      "rate": 1850.0,
+      "amount": 102915.5
+    }
+  ],
+  "extraItems": [],
+  "totalAmount": 558154.0,
+  "hasExtraItems": false,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}

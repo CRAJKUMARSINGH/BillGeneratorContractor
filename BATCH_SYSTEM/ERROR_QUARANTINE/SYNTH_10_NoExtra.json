@@ -1,0 +1,103 @@
+{
+  "fileId": "SYNTH_10_NoExtra",
+  "fileName": "SYNTH_10_NoExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Providing and fixing UPVC window",
+      "unit": "sqm",
+      "quantitySince": 12.65,
+      "quantityUpto": 30.68,
+      "quantity": 30.68,
+      "rate": 1850.0,
+      "amount": 56758.0
+    },
+    {
+      "itemNo": "2",
+      "description": "Providing and fixing MS grill",
+      "unit": "sqm",
+      "quantitySince": 14.37,
+      "quantityUpto": 27.64,
+      "quantity": 27.64,
+      "rate": 1200.0,
+      "amount": 33168.0
+    },
+    {
+      "itemNo": "3",
+      "description": "Providing and laying PCC 1:4:8",
+      "unit": "cum",
+      "quantitySince": 11.8,
+      "quantityUpto": 13.14,
+      "quantity": 13.14,
+      "rate": 4200.0,
+      "amount": 55188.0
+    },
+    {
+      "itemNo": "4",
+      "description": "Providing and fixing flush door shutter",
+      "unit": "sqm",
+      "quantitySince": 55.24,
+      "quantityUpto": 65.29,
+      "quantity": 65.29,
+      "rate": 1450.0,
+      "amount": 94670.5
+    },
+    {
+      "itemNo": "5",
+      "description": "Providing and fixing MS door frame",
+      "unit": "each",
+      "quantitySince": 49.77,
+      "quantityUpto": 114.14,
+      "quantity": 114.14,
+      "rate": 2800.0,
+      "amount": 319592.0
+    },
+    {
+      "itemNo": "6",
+      "description": "Providing and laying IPS flooring",
+      "unit": "sqm",
+      "quantitySince": 34.29,
+      "quantityUpto": 65.49,
+      "quantity": 65.49,
+      "rate": 280.0,
+      "amount": 18337.2
+    },
+    {
+      "itemNo": "7",
+      "description": "Painting with OBD two coats",
+      "unit": "sqm",
+      "quantitySince": 62.44,
+      "quantityUpto": 135.13,
+      "quantity": 135.13,
+      "rate": 95.0,
+      "amount": 12837.35
+    },
+    {
+      "itemNo": "8",
+      "description": "Providing and laying RCC M20",
+      "unit": "cum",
+      "quantitySince": 118.34,
+      "quantityUpto": 127.69,
+      "quantity": 127.69,
+      "rate": 6800.0,
+      "amount": 868292.0
+    }
+  ],
+  "extraItems": [],
+  "totalAmount": 1458843.0,
+  "hasExtraItems": false,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}

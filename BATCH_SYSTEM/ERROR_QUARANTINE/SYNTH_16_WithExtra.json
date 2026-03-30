@@ -1,0 +1,94 @@
+{
+  "fileId": "SYNTH_16_WithExtra",
+  "fileName": "SYNTH_16_WithExtra.xlsx",
+  "titleData": {
+    "Agreement No.": "",
+    "Name of Work": "",
+    "Name of Contractor": "",
+    "Work Order Amount Rs.": "0.0",
+    "Date of written order to commence work": "",
+    "St. Date of Completion": "",
+    "Date of actual completion of work": ""
+  },
+  "billItems": [
+    {
+      "itemNo": "1",
+      "description": "Providing and fixing MS door frame",
+      "unit": "each",
+      "quantitySince": 9.36,
+      "quantityUpto": 15.56,
+      "quantity": 15.56,
+      "rate": 2800.0,
+      "amount": 43568.0
+    },
+    {
+      "itemNo": "2",
+      "description": "Providing and laying DPC 40mm thick",
+      "unit": "sqm",
+      "quantitySince": 111.64,
+      "quantityUpto": 156.36,
+      "quantity": 156.36,
+      "rate": 320.0,
+      "amount": 50035.2
+    },
+    {
+      "itemNo": "3",
+      "description": "Providing and laying RCC M20",
+      "unit": "cum",
+      "quantitySince": 22.55,
+      "quantityUpto": 29.05,
+      "quantity": 29.05,
+      "rate": 6800.0,
+      "amount": 197540.0
+    },
+    {
+      "itemNo": "4",
+      "description": "Providing and laying vitrified tiles 600x600",
+      "unit": "sqm",
+      "quantitySince": 184.19,
+      "quantityUpto": 188.63,
+      "quantity": 188.63,
+      "rate": 920.0,
+      "amount": 173539.6
+    },
+    {
+      "itemNo": "5",
+      "description": "Providing and fixing flush door shutter",
+      "unit": "sqm",
+      "quantitySince": 90.31,
+      "quantityUpto": 133.54,
+      "quantity": 133.54,
+      "rate": 1450.0,
+      "amount": 193633.0
+    }
+  ],
+  "extraItems": [
+    {
+      "itemNo": "E-04",
+      "bsr": "11.1.2",
+      "description": "Providing and fixing CPVC pipe 25mm",
+      "quantity": 15.0,
+      "unit": "Rmt",
+      "rate": 185.0,
+      "amount": 2775.0,
+      "remark": "Approved"
+    },
+    {
+      "itemNo": "E-05",
+      "bsr": "11.2.1",
+      "description": "Providing and fixing ball valve 25mm",
+      "quantity": 3.0,
+      "unit": "Each",
+      "rate": 420.0,
+      "amount": 1260.0,
+      "remark": "Approved"
+    }
+  ],
+  "totalAmount": 662351.0,
+  "hasExtraItems": true,
+  "sheets": [
+    "Work Order",
+    "Bill Quantity",
+    "Extra Items"
+  ]
+}
