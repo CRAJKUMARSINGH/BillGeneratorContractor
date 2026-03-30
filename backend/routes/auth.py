@@ -2,7 +2,7 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from backend.database import get_session
 from backend.models import User
@@ -10,15 +10,26 @@ from backend.auth_utils import get_password_hash, verify_password, create_access
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
+_MIN_PASSWORD_LEN = 8
+
+
 class UserCreate(BaseModel):
     username: str
     password: str
+
+    @field_validator("password")
+    @classmethod
+    def password_strength(cls, v: str) -> str:
+        if len(v) < _MIN_PASSWORD_LEN:
+            raise ValueError(f"Password must be at least {_MIN_PASSWORD_LEN} characters.")
+        return v
+
 
 class Token(BaseModel):
     access_token: str
     token_type: str
 
-@router.post("/register", response_model=Token)
+@router.post("/register", response_model=Token, status_code=status.HTTP_201_CREATED)
 def register(user_in: UserCreate, session: Session = Depends(get_session)):
     existing = session.exec(select(User).where(User.username == user_in.username)).first()
     if existing:

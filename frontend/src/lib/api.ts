@@ -1,6 +1,7 @@
 /**
- * API client — all calls go to FastAPI backend.
- * Replaces Supabase. No auth yet (Phase 4 scope).
+ * api.ts — Authenticated FastAPI client for BillForge.
+ * Auth: Bearer JWT token injected automatically from localStorage.
+ * Download: Use downloadFile() — NOT downloadUrl() — to preserve auth header.
  */
 
 const BASE = import.meta.env.VITE_API_URL ?? '';
@@ -139,6 +140,35 @@ export const api = {
   getHistory: (): Promise<BillRecordAPI[]> => 
     request<BillRecordAPI[]>('/bills/history'),
 
-  downloadUrl: (jobId: string, format: 'zip' | 'pdf' | 'html') =>
-    `${BASE}/bills/jobs/${jobId}/download?format=${format}`,
+  downloadFile: async (jobId: string, format: 'zip' | 'pdf' | 'html') => {
+    const token = localStorage.getItem('token');
+    const headers = new Headers();
+    if (token) headers.set('Authorization', `Bearer ${token}`);
+
+    const res = await fetch(`${BASE}/bills/jobs/${jobId}/download?format=${format}`, { headers });
+    if (!res.ok) {
+        if (res.status === 401) {
+            localStorage.removeItem('token');
+            window.location.reload();
+        }
+        throw new Error(`Download failed: ${res.statusText}`);
+    }
+
+    const contentDisposition = res.headers.get('Content-Disposition');
+    let filename = `bill_${jobId.slice(0, 8)}.${format}`;
+    if (contentDisposition && contentDisposition.includes('filename="')) {
+      filename = contentDisposition.split('filename="')[1].split('"')[0];
+    }
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  },
 };

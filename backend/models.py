@@ -5,7 +5,7 @@ Derived from Git5 bill-api models, aligned to engine/model/document.py.
 from pydantic import BaseModel, Field
 from typing import Optional
 from sqlmodel import SQLModel, Field as SQLField
-from datetime import datetime
+from datetime import datetime, timezone
 
 # --- DATABASE MODELS ---
 class User(SQLModel, table=True):
@@ -21,7 +21,7 @@ class BillRecord(SQLModel, table=True):
     status: str
     message: str
     total_amount: float = 0.0
-    created_at: datetime = SQLField(default_factory=datetime.utcnow)
+    created_at: datetime = SQLField(default_factory=lambda: datetime.now(timezone.utc))
     file_paths: str = "" # serialized JSON string for simplicity
 
 # --- API MODELS ---

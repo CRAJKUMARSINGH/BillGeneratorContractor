@@ -203,9 +203,11 @@ def process_unified_bill(doc: UnifiedDocumentModel) -> Dict[str, Any]:
             "payable": payable,
             "last_bill_amount": meta["last_bill_deduction"],
             "net_payable": net_payable,
+            "cheque_amount": net_payable,  # [HIGH-5] Standardized field for templates
             "extra_items_sum": extra_total,
             "amount_words": number_to_words(net_payable)
         },
+        "cheque_amount": net_payable, # directly at top level for note_sheet.html
         "extra_item_amount": extra_total, # directly at top level for note_sheet.html
         "deviation": {
             "items": deviation_items,

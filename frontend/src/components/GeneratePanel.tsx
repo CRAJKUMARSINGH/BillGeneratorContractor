@@ -223,22 +223,19 @@ export default function GeneratePanel() {
                 </div>
               ))}
 
-              {/* Download buttons */}
               <div className="flex gap-2 pt-2">
-                <a
-                  href={api.downloadUrl(job.jobId, 'zip')}
-                  download
+                <button
+                  onClick={() => api.downloadFile(job.jobId, 'zip')}
                   className="btn-primary flex-1 text-center text-sm py-2 flex items-center justify-center gap-1.5"
                 >
                   <FileDown size={15} /> Download ZIP
-                </a>
-                <a
-                  href={api.downloadUrl(job.jobId, 'pdf')}
-                  download
+                </button>
+                <button
+                  onClick={() => api.downloadFile(job.jobId, 'pdf')}
                   className="btn-ghost flex-1 text-center text-sm py-2 flex items-center justify-center gap-1.5"
                 >
                   <FileDown size={15} /> PDFs Only
-                </a>
+                </button>
               </div>
             </div>
           )}

@@ -164,12 +164,12 @@ export default function Dashboard({ onOpenUploader, onOpenImageUploader, onOpenT
                     </div>
                     <div className="flex items-center gap-3">
                       {record.status === 'complete' && (
-                        <a 
-                          href={api.downloadUrl(record.job_id, 'pdf')}
+                        <button 
+                          onClick={() => api.downloadFile(record.job_id, 'pdf')}
                           className="text-[10px] font-bold text-accent-400 hover:text-white px-2 py-1 rounded bg-accent-500/10 hover:bg-accent-500 transition-all border border-accent-500/20"
                         >
                           PDF
-                        </a>
+                        </button>
                       )}
                     </div>
                   </div>

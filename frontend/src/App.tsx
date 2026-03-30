@@ -26,9 +26,9 @@ function AppInner() {
     setTimeout(() => setToastMsg(null), 3500);
   };
 
-  // if (!token) {
-  //   return <Login />;
-  // }
+  if (!token) {
+    return <Login />;
+  }
 
   return (
     <div className="min-h-screen bg-surface-950">
