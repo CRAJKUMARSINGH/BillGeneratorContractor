@@ -6,15 +6,16 @@
 import { useState, useEffect, useRef } from 'react';
 import { FileDown, Loader2, CheckCircle, AlertCircle, ArrowLeft } from 'lucide-react';
 import { api } from '../lib/api';
-import type { JobStatus, BillItemAPI, ExtraItemAPI } from '../lib/api';
+import type { BillItemAPI, ExtraItemAPI } from '../lib/api';
 import { useBillStore } from '../store/useBillStore';
+import { useAuthStore } from '../store/useAuthStore';
 import { computeSummary } from '../types/bill';
 
 export default function GeneratePanel() {
   const { header, billItems, parsedData, setViewMode, currentJob, setCurrentJob } = useBillStore();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [templateVersion, setTemplateVersion] = useState('v1');
+  const [templateVersion, setTemplateVersion] = useState<'v1' | 'v2'>('v1');
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Stop polling on unmount
@@ -109,10 +110,38 @@ export default function GeneratePanel() {
   const job = currentJob;
   const isComplete = job?.status === 'complete';
   const isError = job?.status === 'error';
-  const isRunning = job && !isComplete && !isError;
+
+  // Festive Success Balloons
+  const [balloons, setBalloons] = useState<number[]>([]);
+  useEffect(() => {
+    if (isComplete) {
+      const arr = Array.from({ length: 15 }, (_, i) => i);
+      setBalloons(arr);
+      const timer = setTimeout(() => setBalloons([]), 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [isComplete]);
 
   return (
-    <div className="space-y-4 animate-fade-in max-w-2xl mx-auto">
+    <div className="space-y-4 animate-fade-in max-w-2xl mx-auto relative">
+      {/* Balloons Animation */}
+      {balloons.map((i) => (
+        <div 
+          key={i} 
+          className="balloon pb-4 opacity-0 pointer-events-none"
+          style={{ 
+            left: `${Math.random() * 100}%`, 
+            animationDelay: `${Math.random() * 3}s`,
+            animationDuration: `${3 + Math.random() * 3}s`,
+            filter: `hue-rotate(${Math.random() * 360}deg)`
+          }}
+        >
+          <div className="w-8 h-10 bg-gold-500 rounded-t-full rounded-b-lg shadow-lg relative">
+             <div className="absolute top-1 left-2 w-2 h-2 bg-white/30 rounded-full" />
+             <div className="absolute -bottom-1 left-3.5 w-0.5 h-4 bg-white/20" />
+          </div>
+        </div>
+      ))}
       {/* Toolbar */}
       <div className="glass rounded-2xl px-5 py-4 flex items-center justify-between">
         <button onClick={() => setViewMode('edit')} className="btn-ghost py-1.5 flex items-center gap-1.5">
@@ -145,7 +174,7 @@ export default function GeneratePanel() {
           <label className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Template Version</label>
           <select 
             value={templateVersion}
-            onChange={(e) => setTemplateVersion(e.target.value)}
+            onChange={(e) => setTemplateVersion(e.target.value as 'v1' | 'v2')}
             className="w-full bg-surface-950 border border-white/[0.06] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-accent-500/50 transition-colors"
           >
             <option value="v1">Standard Template (v1)</option>
@@ -210,7 +239,7 @@ export default function GeneratePanel() {
               <p className="text-xs text-slate-500 uppercase tracking-wide">
                 Generated ({job.documents.length} files)
               </p>
-              {job.documents.map((doc) => (
+              {job.documents.map((doc: any) => (
                 <div key={doc.name} className="flex items-center justify-between glass rounded-xl px-3 py-2">
                   <div className="flex items-center gap-2">
                     <CheckCircle size={14} className="text-green-400 shrink-0" />

@@ -16,11 +16,11 @@ def main():
     try:
         import uvicorn
         
-        print("🚀 Starting Bill Generator API Server...")
-        print(f"📁 Project root: {PROJECT_ROOT}")
-        print(f"🌐 Server will be available at: http://localhost:8000")
-        print(f"📚 API docs will be available at: http://localhost:8000/docs")
-        print(f"🔍 Health check: http://localhost:8000/health")
+        print("Starting Bill Generator API Server...")
+        print(f"Project root: {PROJECT_ROOT}")
+        print(f"Server will be available at: http://localhost:8000")
+        print(f"API docs will be available at: http://localhost:8000/docs")
+        print(f"Health check: http://localhost:8000/health")
         print()
         
         # Start the server
@@ -36,7 +36,7 @@ def main():
     except KeyboardInterrupt:
         print("\n👋 Server stopped by user")
     except Exception as e:
-        print(f"❌ Failed to start server: {e}")
+        print(f"Failed to start server: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

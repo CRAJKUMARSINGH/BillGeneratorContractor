@@ -20,6 +20,7 @@ class BillRecord(SQLModel, table=True):
     user_id: int = SQLField(foreign_key="user.id")
     status: str
     message: str
+    work_name: Optional[str] = SQLField(default=None) # Added for better traceability
     total_amount: float = 0.0
     created_at: datetime = SQLField(default_factory=lambda: datetime.now(timezone.utc))
     file_paths: str = "" # serialized JSON string for simplicity

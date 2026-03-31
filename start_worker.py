@@ -16,10 +16,10 @@ def main():
     try:
         from backend.worker import main as worker_main
         
-        print("🔧 Starting Bill Generator Worker...")
-        print(f"📁 Project root: {PROJECT_ROOT}")
-        print(f"🔗 Redis URL: {os.getenv('REDIS_URL', 'redis://localhost:6379/0')}")
-        print(f"⚡ Concurrency: {os.getenv('WORKER_CONCURRENCY', '4')}")
+        print("Starting Bill Generator Worker...")
+        print(f"Project root: {PROJECT_ROOT}")
+        print(f"Redis URL: {os.getenv('REDIS_URL', 'redis://localhost:6379/0')}")
+        print(f"Concurrency: {os.getenv('WORKER_CONCURRENCY', '4')}")
         print()
         
         # Start the worker
@@ -29,7 +29,7 @@ def main():
     except KeyboardInterrupt:
         print("\n👋 Worker stopped by user")
     except Exception as e:
-        print(f"❌ Failed to start worker: {e}")
+        print(f"Failed to start worker: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

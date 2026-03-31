@@ -62,4 +62,4 @@ export function computeSummary(
   return { grand_total, premium_amount, total_with_premium, net_payable };
 }
 
-export type ViewMode = 'dashboard' | 'upload' | 'edit' | 'generating' | 'preview';
+export type ViewMode = 'landing' | 'dashboard' | 'upload' | 'edit' | 'generating' | 'preview';

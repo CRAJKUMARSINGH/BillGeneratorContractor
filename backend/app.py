@@ -18,7 +18,6 @@ import logging
 import sys
 import os
 from pathlib import Path
-from contextlib import asynccontextmanager
 
 import redis.asyncio as aioredis
 from arq import create_pool
@@ -28,16 +27,13 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # Ensure engine is importable
 ENGINE_DIR = Path(__file__).parent.parent / "engine"
-PROJECT_ROOT = Path(__file__).parent.parent
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
 if str(ENGINE_DIR) not in sys.path:
     sys.path.insert(0, str(ENGINE_DIR))
 
+from backend.database import create_db_and_tables
 from backend.routes.bills import router as bills_router
 from backend.routes.auth import router as auth_router
 from backend.models import HealthResponse
-from backend.config import get_settings
 
 logging.basicConfig(
     level=logging.INFO,
@@ -45,61 +41,25 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-@asynccontextmanager
-async def lifespan(application: FastAPI):
-    """Modern replacement for deprecated @app.on_event startup/shutdown."""
-    # Startup
-    logger.info("Bill Generator API starting up")
-    
-    logger.info("Bill Generator API starting up")
-    logger.info(f"Engine path: {ENGINE_DIR}")
-    
-    # Try to connect to Redis, but don't fail if it's not available
-    redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
-    try:
-        # Test connection first
-        import redis.asyncio as aioredis
-        test_redis = aioredis.from_url(redis_url, socket_timeout=2)
-        await test_redis.ping()
-        await test_redis.aclose()
-        
-        # If test succeeds, create the pool
-        application.state.redis_pool = await create_pool(RedisSettings.from_dsn(redis_url))
-        logger.info("✅ Redis connection established")
-    except Exception as e:
-        logger.warning(f"⚠️ Redis connection failed: {e}")
-        logger.warning("Background job processing will not be available")
-        application.state.redis_pool = None
-    
-    yield
-    
-    # Shutdown
-    if hasattr(application.state, "redis_pool") and application.state.redis_pool:
-        try:
-            await application.state.redis_pool.aclose()
-            logger.info("Redis connection closed")
-        except Exception as e:
-            logger.warning(f"Error closing Redis connection: {e}")
-
 app = FastAPI(
     title="Bill Generator API",
     description="PWD Contractor Bill Generation — Phase 4 Backend",
     version="1.0.0",
-    lifespan=lifespan,
 )
 
-# CORS — driven by settings, not hardcoded
-_settings = get_settings()
+# 2. CORS and Global Middleware - Hardened for Production
+cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:5173").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=_settings.cors_origins_list,  # explicit list, never "*" with credentials
+    allow_origins=cors_origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "DELETE"],
-    allow_headers=["Authorization", "Content-Type"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(bills_router)
 app.include_router(auth_router)
+
 
 # --- Standardized Health Checkpoints (Audit Fix) ---
 @app.get("/health", tags=["System"])
@@ -132,4 +92,22 @@ async def health_check():
     )
 
 
-# Remove deprecated @app.on_event handlers - replaced with lifespan
+@app.on_event("startup")
+async def startup():
+    create_db_and_tables()
+    logger.info("Bill Generator API starting up")
+    logger.info(f"Engine path: {ENGINE_DIR}")
+    
+    redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+    try:
+        app.state.redis_pool = await create_pool(RedisSettings.from_dsn(redis_url))
+        logger.info("Connected to Redis successfully")
+    except Exception as e:
+        logger.warning(f"Failed to connect to Redis: {e}. Background jobs will be unavailable.")
+        app.state.redis_pool = None
+
+@app.on_event("shutdown")
+async def shutdown():
+    if getattr(app.state, "redis_pool", None) is not None:
+        app.state.redis_pool.close()
+        await app.state.redis_pool.wait_closed()

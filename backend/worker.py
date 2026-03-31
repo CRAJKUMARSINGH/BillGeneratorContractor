@@ -51,13 +51,15 @@ class WorkerSettings:
     async def on_startup(ctx):
         logger.info("ARQ Worker started cleanly.")
 
+async def main():
+    """Run the ARQ worker."""
+    worker = Worker(
+        functions=[generate_bill_task],
+        redis_settings=WorkerSettings.redis_settings,
+        max_jobs=WorkerSettings.max_jobs,
+        on_startup=WorkerSettings.on_startup,
+    )
+    await worker.async_run()
+
 if __name__ == "__main__":
-    async def main():
-        worker = Worker(
-            functions=[generate_bill_task],
-            redis_settings=WorkerSettings.redis_settings,
-            max_jobs=WorkerSettings.max_jobs,
-            on_startup=WorkerSettings.on_startup,
-        )
-        await worker.async_run()
     asyncio.run(main())

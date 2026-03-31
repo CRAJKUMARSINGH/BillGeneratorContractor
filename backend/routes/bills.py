@@ -119,13 +119,18 @@ def _reconstruct_output_dir(job_id: str) -> Path:
 
 # Redis-backed rate limiting (works across multiple processes)
 async def is_rate_limited_redis(ip: str) -> bool:
-    """Redis-backed rate limiter that works across multiple processes."""
-    async with aioredis.from_url(_REDIS_URL) as rc:
-        rl_key = f"ratelimit:{ip}"
-        count = await rc.incr(rl_key)
-        if count == 1:
-            await rc.expire(rl_key, RATE_LIMIT_WINDOW_SEC)
-        return count > RATE_LIMIT_MAX_REQUESTS
+    """Redis-backed rate limiter that works across multiple processes. Robust to connection failures."""
+    try:
+        async with aioredis.from_url(_REDIS_URL, socket_timeout=1) as rc:
+            rl_key = f"ratelimit:{ip}"
+            count = await rc.incr(rl_key)
+            if count == 1:
+                await rc.expire(rl_key, RATE_LIMIT_WINDOW_SEC)
+            return count > RATE_LIMIT_MAX_REQUESTS
+    except Exception as e:
+        # Fallback to no rate limit if Redis is down
+        logger.warning(f"Redis rate limiter failed: {e}. Skipping rate check.")
+        return False
 
 def log_job_event(job_id: str, stage: str, message: str):
     """Structured job event log (ISO timestamp | job_id | stage | message)."""
@@ -334,10 +339,14 @@ async def generate_bill(
     async with aioredis.from_url(_REDIS_URL) as rc:
         await rc.set(f"job:{job_id}", json.dumps(initial_state), ex=86400)
 
+    # Extract work_name from titleData if available (for better history visibility)
+    work_name = req.titleData.get("Name of Work") or req.titleData.get("work_name")
+
     with Session(engine) as session:
         session.add(BillRecord(
             job_id=job_id, user_id=current_user.id,
-            status="pending", message="Generation queued", total_amount=0.0,
+            status="pending", message="Generation queued", 
+            work_name=work_name, total_amount=0.0,
         ))
         session.commit()
 
@@ -366,15 +375,29 @@ async def generate_bill(
 
 @router.get("/jobs/{job_id}", response_model=JobStatus)
 async def get_job_status(job_id: str):
-    redis_client = aioredis.from_url(os.getenv("REDIS_URL", "redis://localhost:6379/0"))
-    data = await redis_client.get(f"job:{job_id}")
-    await redis_client.aclose()
+    try:
+        redis_client = aioredis.from_url(os.getenv("REDIS_URL", "redis://localhost:6379/0"), socket_timeout=1)
+        data = await redis_client.get(f"job:{job_id}")
+        await redis_client.aclose()
+        if data:
+            job = json.loads(data)
+            return JobStatus(**{k: v for k, v in job.items() if k != "output_dir"})
+    except Exception:
+        pass
     
-    if not data:
-        raise HTTPException(404, "Job not found in queue")
-    
-    job = json.loads(data)
-    return JobStatus(**{k: v for k, v in job.items() if k != "output_dir"})
+    # Fallback to DB if Redis is down or job not found there
+    with Session(engine) as session:
+        record = session.exec(select(BillRecord).where(BillRecord.job_id == job_id)).first()
+        if not record:
+            raise HTTPException(404, "Job not found")
+        return JobStatus(
+            jobId=record.job_id,
+            status=record.status,
+            message=record.message,
+            progress=100 if record.status == "complete" else 0,
+            documents=[],
+            error=None
+        )
 
 @router.get("/history")
 async def get_history(current_user: User = Depends(get_current_user)):
@@ -397,7 +420,7 @@ async def download_result(
 
     job = json.loads(data)
     if job.get("status") != "complete":
-        raise HTTPException(400, f"Job not complete (status: {job.get('status')}).")
+        raise HTTPException(400, f"Job not complete (status: {job.get("status")}).")
 
     # Verify ownership via DB (do not trust Redis for authorization)
     with Session(engine) as session:

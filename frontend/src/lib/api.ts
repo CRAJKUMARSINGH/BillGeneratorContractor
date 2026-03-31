@@ -78,6 +78,7 @@ export interface BillRecordAPI {
   user_id: number;
   status: string;
   message: string;
+  work_name?: string;
   total_amount: number;
   created_at: string;
 }

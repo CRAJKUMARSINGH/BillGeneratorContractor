@@ -53,9 +53,9 @@ export default function EditableTable() {
   // Build original rate map from parsed data for part-rate detection
   const originalRates = new Map<string, number>();
   if (parsedData) {
-    parsedData.billItems.forEach((api, i) => {
+    parsedData.billItems.forEach((apiItem, i) => {
       const item = billItems[i];
-      if (item) originalRates.set(item.id, api.rate);
+      if (item) originalRates.set(item.id, apiItem.rate);
     });
   }
 
@@ -79,46 +79,57 @@ export default function EditableTable() {
   const grandTotal = billItems.reduce((s, i) => s + i.amount_since_previous, 0);
 
   return (
-    <div className="glass rounded-2xl overflow-hidden">
+    <div className="glass-card overflow-hidden">
       {parsedData?.anomaly_warnings && parsedData.anomaly_warnings.length > 0 && (
-        <div className="bg-red-500/10 border-b border-red-500/20 px-5 py-3">
-          <div className="flex items-center gap-2 text-red-400 mb-1">
-            <AlertTriangle size={16} />
-            <h3 className="text-sm font-semibold">AI Anomaly Warning: Dirty Scan Detected</h3>
+        <div className="bg-red-500/10 border-b border-red-500/20 px-6 py-4">
+          <div className="flex items-center gap-4 text-red-400 mb-2">
+            <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center">
+              <AlertTriangle size={18} />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold uppercase tracking-widest leading-none">AI Anomaly Warning</h3>
+              <p className="hindi text-[10px] text-red-500/60 mt-1 uppercase tracking-tighter">दस्तावेज़ में विसंगति पाई गई</p>
+            </div>
           </div>
-          <ul className="list-disc list-inside text-xs text-red-400/80 space-y-1 ml-6">
+          <ul className="list-disc list-inside text-[11px] text-red-400/80 space-y-1 ml-12">
             {parsedData.anomaly_warnings.map((warning, idx) => (
-              <li key={idx}>{warning}</li>
+              <li key={idx} className="font-medium">{warning}</li>
             ))}
           </ul>
-          <p className="text-xs text-red-400/60 mt-2 ml-6 font-medium">
-            Please carefully review and correct the highlighted quantities below before generating PDFs.
-            Or use the Export to Excel API to fix via desktop.
-          </p>
         </div>
       )}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
-        <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">
-          Bill Items ({billItems.length})
-        </p>
-        <button onClick={addItem} className="btn-primary py-1.5 text-xs flex items-center gap-1">
-          <Plus size={14} /> Add Row
+      
+      <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-gradient-to-r from-primary-400/10 to-transparent">
+        <div>
+          <p className="text-xs font-bold text-white uppercase tracking-[0.2em]">
+            Bill Items ({billItems.length})
+          </p>
+          <p className="hindi text-[10px] text-gold-500 font-medium uppercase tracking-tighter">बिल मदों की सूची</p>
+        </div>
+        <button 
+          onClick={addItem} 
+          className="px-4 py-2 rounded-xl bg-primary-400/20 border border-primary-400/30 text-primary-300 hover:bg-primary-400 hover:text-white transition-all text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 group"
+        >
+          <Plus size={14} className="group-hover:scale-125 transition-transform" /> Add New Row
         </button>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full">
+      <div className="overflow-x-auto selection:bg-gold-500/30">
+        <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-white/[0.06]">
+            <tr className="border-b border-indigo-500/20 bg-indigo-500/5">
               {COLUMNS.map((col) => (
                 <th
                   key={col.key}
-                  className={`table-header py-3 ${col.width ?? ''} ${col.numeric ? 'text-right' : 'text-left'} ${col.computed ? 'text-slate-500' : ''}`}
+                  className={`px-4 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest ${col.numeric ? 'text-right' : ''} ${col.computed ? 'opacity-50' : ''}`}
                 >
-                  {col.label}
+                  <div className="flex flex-col">
+                    <span>{col.label}</span>
+                    {col.computed && <span className="text-[8px] text-indigo-400 tracking-tighter">Computed</span>}
+                  </div>
                 </th>
               ))}
-              <th className="table-header py-3 w-10 text-center">×</th>
+              <th className="px-4 py-4 w-12 text-center opacity-30 text-[10px]">Actions</th>
             </tr>
           </thead>
 
@@ -128,10 +139,10 @@ export default function EditableTable() {
               return (
                 <tr
                   key={item.id}
-                  className={`border-b border-white/[0.04] transition-colors
-                    ${rowIdx % 2 === 0 ? '' : 'bg-white/[0.015]'}
-                    hover:bg-white/[0.04]
-                    ${partRate ? 'bg-yellow-500/5' : ''}`}
+                  className={`group transition-all duration-200 border-b border-white/[0.03]
+                    ${rowIdx % 2 === 0 ? '' : 'bg-white/[0.01]'}
+                    hover:bg-primary-400/[0.04]
+                    ${partRate ? 'bg-yellow-500/[0.03]' : ''}`}
                 >
                   {COLUMNS.map((col) => {
                     const isEditing = editing?.rowId === item.id && editing?.field === col.key;
@@ -140,48 +151,54 @@ export default function EditableTable() {
 
                     if (col.computed) {
                       return (
-                        <td key={col.key} className="table-cell py-2 text-right text-slate-500 bg-white/[0.02]">
-                          ₹{display}
+                        <td key={col.key} className="px-4 py-4 text-right font-mono text-sm text-indigo-400/80 bg-indigo-500/[0.01]">
+                          <span className="text-xs mr-0.5">₹</span>{display}
                         </td>
                       );
                     }
 
-                    // Part-rate indicator on rate column
                     const isRateCol = col.key === 'rate';
+                    const isEmpty = !display || display === '0.00' || display === '0';
+
                     return (
                       <td
                         key={col.key}
-                        className={`table-cell py-0 ${col.numeric ? 'text-right' : ''}`}
+                        className={`px-4 py-4 relative group/cell ${col.numeric ? 'text-right' : ''}`}
                         onClick={() => setEditing({ rowId: item.id, field: col.key as EditableField })}
                       >
                         {isEditing ? (
-                          <input
-                            ref={inputRef}
-                            type={col.numeric ? 'number' : 'text'}
-                            step={col.numeric ? '0.01' : undefined}
-                            defaultValue={val as string | number}
-                            onBlur={(e) => {
-                              updateItem(item.id, col.key as EditableField, e.target.value);
-                              setEditing(null);
-                            }}
-                            onChange={(e) => updateItem(item.id, col.key as EditableField, e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') setEditing(null);
-                              if (e.key === 'Tab') { e.preventDefault(); navigate(item.id, col.key as EditableField, e.shiftKey); }
-                              if (e.key === 'Escape') setEditing(null);
-                            }}
-                            className="w-full bg-accent-500/10 border border-accent-500/50 rounded px-2 py-1.5
-                                       text-sm text-white focus:outline-none focus:ring-1 focus:ring-accent-500 text-right"
-                          />
+                          <div className="absolute inset-x-1 inset-y-1 z-10 flex items-center">
+                            <input
+                              ref={inputRef}
+                              type={col.numeric ? 'number' : 'text'}
+                              step={col.numeric ? '0.01' : undefined}
+                              defaultValue={val as string | number}
+                              onBlur={(e) => {
+                                updateItem(item.id, col.key as EditableField, e.target.value);
+                                setEditing(null);
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') setEditing(null);
+                                if (e.key === 'Tab') { e.preventDefault(); navigate(item.id, col.key as EditableField, e.shiftKey); }
+                                if (e.key === 'Escape') setEditing(null);
+                              }}
+                              className="w-full h-full bg-surface-950 border border-gold-500/50 rounded-lg px-2 py-1
+                                         text-sm text-white focus:outline-none focus:ring-2 focus:ring-gold-500/30 
+                                         shadow-[0_0_15px_rgba(245,158,11,0.1)] transition-all"
+                            />
+                          </div>
                         ) : (
-                          <div className={`px-2 py-2 text-sm cursor-text rounded hover:bg-white/[0.04] transition-colors
-                            ${col.numeric ? 'text-right' : ''}
-                            ${!display || display === '0.00' ? 'text-slate-600' : 'text-slate-200'}
-                            ${isRateCol && partRate ? 'text-yellow-400' : ''}`}
+                          <div className={`text-sm transition-colors relative
+                            ${col.numeric ? 'font-mono text-right' : 'font-sans'}
+                            ${isEmpty ? 'text-slate-600' : 'text-slate-200'}
+                            ${isRateCol && partRate ? 'text-gold-400 font-bold' : ''}
+                            group-hover/cell:text-gold-400 cursor-text py-1`}
                           >
                             {col.numeric && display !== '0.00' ? display : (display || '—')}
                             {isRateCol && partRate && (
-                              <span className="ml-1 text-xs text-yellow-500 font-medium">(Part Rate)</span>
+                              <div className="absolute -top-3 right-0 text-[8px] font-bold text-gold-500 uppercase tracking-tighter opacity-70">
+                                Part Rate
+                              </div>
                             )}
                           </div>
                         )}
@@ -189,10 +206,10 @@ export default function EditableTable() {
                     );
                   })}
 
-                  <td className="table-cell py-2 text-center">
+                  <td className="px-4 py-4 text-center">
                     <button
                       onClick={() => removeItem(item.id)}
-                      className="text-slate-600 hover:text-red-400 transition-colors p-1 rounded"
+                      className="p-2 rounded-xl bg-red-500/5 text-red-500/30 hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -203,12 +220,18 @@ export default function EditableTable() {
           </tbody>
 
           <tfoot>
-            <tr className="border-t border-white/[0.10] bg-white/[0.03]">
-              <td colSpan={7} className="table-cell py-3 text-right font-semibold text-slate-300">
-                Grand Total
-              </td>
-              <td className="table-cell py-3 text-right font-bold text-white">
-                ₹{grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+            <tr className="bg-gradient-to-r from-primary-500/20 to-indigo-500/20">
+              <td colSpan={7} className="px-6 py-8 text-right">
+                <div className="inline-flex flex-col items-end">
+                   <div className="flex items-center gap-3 mb-1">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Measurement Total</span>
+                      <span className="hindi text-[10px] text-gold-500/50 tracking-tighter">कुल माप मूल्य</span>
+                   </div>
+                   <div className="text-3xl font-heading font-extrabold text-white tracking-tight flex items-center gap-2">
+                     <span className="text-lg font-bold text-slate-400">₹</span>
+                     {grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                   </div>
+                </div>
               </td>
               <td colSpan={2} />
             </tr>

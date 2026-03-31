@@ -44,8 +44,8 @@ function blankItem(order = 0): BillItem {
   };
 }
 
-export const useBillStore = create<BillStore>((set, get) => ({
-  viewMode: 'dashboard',
+export const useBillStore = create<BillStore>((set) => ({
+  viewMode: 'landing',
   setViewMode: (viewMode) => set({ viewMode }),
 
   parsedData: null,
