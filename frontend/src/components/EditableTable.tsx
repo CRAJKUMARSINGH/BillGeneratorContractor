@@ -1,103 +1,85 @@
 /**
- * EditableTable — reused from Bill-Contractor-Git4.
- * Supabase removed. Field names aligned to engine BillItem model.
- * Part-rate detection preserved from BillGeneratorUnified.
+ * EditableTable — Unified Version for Mode 1, 2, and 3.
+ * Supports confidence-based highlighting for OCR (Mode 3).
+ * Real-time calculation and manual editing.
  */
 import { useRef, useEffect, useState, memo } from 'react';
-import { Plus, Trash2, AlertTriangle } from 'lucide-react';
+import { Plus, Trash2, AlertTriangle, Info, ArrowDownAz, Merge } from 'lucide-react';
 import type { BillItem } from '../types/bill';
 import { useBillStore } from '../store/useBillStore';
 
 type EditableField = keyof Pick<
   BillItem,
-  'description' | 'unit' |
-  'qty_since_last_bill' | 'qty_to_date' | 'rate' | 'remarks'
+  'description' | 'unit' | 'quantitySince' | 'quantityUpto' | 'rate' | 'remarks' | 'itemNo'
 >;
 
 const COLUMNS: {
-  key: EditableField | 'serial_no' | 'amount_to_date' | 'amount_since_previous';
+  key: EditableField | 'amount' | 'confidence';
   label: string;
   numeric?: boolean;
   computed?: boolean;
   width?: string;
 }[] = [
-  // Display-only, derived from row index to avoid getting out of sync after insert/delete/import.
-  { key: 'serial_no',             label: 'S.No',           width: 'w-14', computed: true },
+  { key: 'itemNo',                label: 'Item No',        width: 'w-20' },
   { key: 'description',           label: 'Description',    width: 'min-w-[320px]' },
   { key: 'unit',                  label: 'Unit',           width: 'w-20' },
-  { key: 'qty_since_last_bill',   label: 'Qty Since Last', numeric: true, width: 'w-28' },
-  { key: 'qty_to_date',           label: 'Qty To Date',    numeric: true, width: 'w-28' },
+  { key: 'quantitySince',         label: 'Qty Since Prev', numeric: true, width: 'w-28' },
+  { key: 'quantityUpto',          label: 'Qty To Date',    numeric: true, width: 'w-28' },
   { key: 'rate',                  label: 'Rate (₹)',       numeric: true, width: 'w-28' },
-  { key: 'amount_to_date',        label: 'Amt To Date',    numeric: true, computed: true, width: 'w-32' },
-  { key: 'amount_since_previous', label: 'Amt Since Prev', numeric: true, computed: true, width: 'w-32' },
+  { key: 'amount',                label: 'Amount',         numeric: true, computed: true, width: 'w-32' },
   { key: 'remarks',               label: 'Remarks',        width: 'w-32' },
 ];
 
 const EDITABLE_FIELDS: EditableField[] = [
-  'description', 'unit',
-  'qty_since_last_bill', 'qty_to_date', 'rate', 'remarks',
+  'itemNo', 'description', 'unit', 'quantitySince', 'quantityUpto', 'rate', 'remarks',
 ];
 
 interface CellPos { rowId: string; field: EditableField }
 
-// Part-rate detection: rate reduced vs original (tolerance 0.01)
-function isPartRate(item: BillItem, originalRate?: number): boolean {
-  if (!originalRate || originalRate <= 0) return false;
-  return item.rate < originalRate - 0.01;
-}
-
 const TableRow = memo(({ 
   item, 
   rowIdx, 
-  originalRate, 
   editing, 
   setEditing, 
   updateItem, 
   removeItem, 
   navigate,
-  inputRef
+  inputRef,
+  isDuplicate
 }: {
   item: BillItem;
   rowIdx: number;
-  originalRate?: number;
   editing: CellPos | null;
   setEditing: (pos: CellPos | null) => void;
   updateItem: any;
   removeItem: any;
   navigate: any;
   inputRef: React.RefObject<HTMLInputElement>;
+  isDuplicate: boolean;
 }) => {
-  const partRate = isPartRate(item, originalRate);
+  const isLowConfidence = item.confidence < 0.7;
   
   return (
     <tr
-      className={`border-b border-white/[0.04] transition-colors
+      className={`border-b border-white/[0.04] transition-all duration-200
         ${rowIdx % 2 === 0 ? '' : 'bg-white/[0.015]'}
-        hover:bg-white/[0.04]
-        ${partRate ? 'bg-yellow-500/5' : ''}`}
+        hover:bg-white/[0.05]
+        ${isLowConfidence ? 'bg-red-500/5' : ''}
+        ${isDuplicate ? 'bg-amber-500/5' : ''}`}
     >
       {COLUMNS.map((col) => {
         const isEditing = editing?.rowId === item.id && editing?.field === col.key;
         const val = item[col.key as keyof BillItem];
-        const display = typeof val === 'number' ? val.toFixed(2) : String(val ?? '');
+        const display = typeof val === 'number' ? val.toLocaleString('en-IN', { minimumFractionDigits: 2 }) : String(val ?? '');
 
         if (col.computed) {
           return (
             <td key={col.key} className="table-cell py-2 text-right text-slate-500 bg-white/[0.02]">
-              {col.key === 'serial_no' ? (
-                <span className="tabular-nums text-slate-400">
-                  {item.serial_no && item.serial_no.trim() !== '' && item.serial_no !== '0'
-                    ? item.serial_no
-                    : rowIdx + 1}
-                </span>
-              ) : (
-                <>₹{display}</>
-              )}
+               ₹{display}
             </td>
           );
         }
 
-        const isRateCol = col.key === 'rate';
         return (
           <td
             key={col.key}
@@ -130,11 +112,18 @@ const TableRow = memo(({
               <div className={`px-2 py-2 text-sm cursor-text rounded hover:bg-white/[0.04] transition-colors
                 ${col.numeric ? 'text-right' : ''}
                 ${!display || display === '0.00' ? 'text-slate-600' : 'text-slate-200'}
-                ${isRateCol && partRate ? 'text-yellow-400' : ''}`}
+                ${isLowConfidence && col.key === 'description' ? 'text-red-400' : ''}`}
               >
-                {col.numeric && display !== '0.00' ? display : (display || '—')}
-                {isRateCol && partRate && (
-                  <span className="ml-1 text-xs text-yellow-500 font-medium">(Part Rate)</span>
+                {display || '—'}
+                {col.key === 'itemNo' && isDuplicate && (
+                  <div className="text-[10px] text-amber-400 mt-0.5 flex items-center gap-1">
+                    <AlertTriangle size={10} /> Duplicate
+                  </div>
+                )}
+                {col.key === 'description' && item.aiNote && (
+                  <div className="text-[10px] text-accent-400 mt-0.5 flex items-center gap-1">
+                    <Info size={10} /> {item.aiNote}
+                  </div>
                 )}
               </div>
             )}
@@ -155,18 +144,16 @@ const TableRow = memo(({
 });
 
 export default function EditableTable() {
-  const { billItems, parsedData, updateItem, addItem, removeItem } = useBillStore();
+  const { billItems, parsedData, updateItem, addItem, removeItem, sortItems, mergeDuplicates } = useBillStore();
   const [editing, setEditing] = useState<CellPos | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Build original rate map from parsed data for part-rate detection
-  const originalRates = new Map<string, number>();
-  if (parsedData) {
-    parsedData.billItems.forEach((api, i) => {
-      const item = billItems[i];
-      if (item) originalRates.set(item.id, api.rate);
-    });
-  }
+  // Duplicate detection
+  const duplicateCodes = new Set(
+    billItems
+      .map(i => i.itemNo.trim().toLowerCase())
+      .filter((code, index, array) => code && array.indexOf(code) !== index)
+  );
 
   useEffect(() => {
     if (editing) inputRef.current?.focus();
@@ -185,7 +172,7 @@ export default function EditableTable() {
     }
   };
 
-  const grandTotal = billItems.reduce((s, i) => s + i.amount_since_previous, 0);
+  const grandTotal = billItems.reduce((s, i) => s + i.amount, 0);
 
   return (
     <div className="glass rounded-2xl border border-white/[0.08]">
@@ -200,19 +187,32 @@ export default function EditableTable() {
               <li key={idx}>{warning}</li>
             ))}
           </ul>
-          <p className="text-xs text-red-400/60 mt-2 ml-6 font-medium">
-            Please carefully review and correct the highlighted quantities below before generating PDFs.
-            Or use the Export to Excel API to fix via desktop.
-          </p>
         </div>
       )}
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
         <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">
           Bill Items ({billItems.length})
         </p>
-        <button onClick={addItem} className="btn-primary py-1.5 text-xs flex items-center gap-1">
-          <Plus size={14} /> Add Row
-        </button>
+        <div className="flex items-center gap-2">
+            <button 
+              onClick={sortItems} 
+              className="px-3 py-1.5 text-[11px] font-medium text-slate-400 hover:text-white hover:bg-white/10 rounded-lg flex items-center gap-1.5 transition-all"
+              title="Sort hierarchically by Item Code"
+            >
+                <ArrowDownAz size={14} /> Smart Sort
+            </button>
+            <button 
+              onClick={mergeDuplicates} 
+              className="px-3 py-1.5 text-[11px] font-medium text-slate-400 hover:text-white hover:bg-white/10 rounded-lg flex items-center gap-1.5 transition-all"
+              title="Merge rows with identical Item Codes"
+            >
+                <Merge size={14} /> Merge Duplicates
+            </button>
+            <div className="w-px h-4 bg-white/10 mx-1" />
+            <button onClick={addItem} className="btn-primary py-1.5 px-4 text-xs flex items-center gap-1.5 shadow-lg shadow-accent-500/10">
+                <Plus size={14} /> Add Row
+            </button>
+        </div>
       </div>
 
       <div className="overflow-x-auto w-full">
@@ -237,20 +237,20 @@ export default function EditableTable() {
                 key={item.id}
                 item={item}
                 rowIdx={rowIdx}
-                originalRate={originalRates.get(item.id)}
                 editing={editing}
                 setEditing={setEditing}
                 updateItem={updateItem}
                 removeItem={removeItem}
                 navigate={navigate}
                 inputRef={inputRef}
+                isDuplicate={duplicateCodes.has(item.itemNo.trim().toLowerCase())}
               />
             ))}
           </tbody>
 
           <tfoot>
             <tr className="border-t border-white/[0.10] bg-white/[0.03]">
-              <td colSpan={7} className="table-cell py-3 text-right font-semibold text-slate-300">
+              <td colSpan={6} className="table-cell py-3 text-right font-semibold text-slate-300">
                 Grand Total
               </td>
               <td className="table-cell py-3 text-right font-bold text-white">

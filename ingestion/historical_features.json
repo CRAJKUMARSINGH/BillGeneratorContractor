@@ -274,5 +274,245 @@
     "item_count": 18,
     "avg_rate": 0,
     "max_quantity": 0
+  },
+  {
+    "total_amount": 0.0,
+    "item_count": 1,
+    "avg_rate": 0,
+    "max_quantity": 0
+  },
+  {
+    "total_amount": 0,
+    "item_count": 0,
+    "avg_rate": 0,
+    "max_quantity": 0
+  },
+  {
+    "total_amount": 0,
+    "item_count": 0,
+    "avg_rate": 0,
+    "max_quantity": 0
+  },
+  {
+    "total_amount": 0,
+    "item_count": 0,
+    "avg_rate": 0,
+    "max_quantity": 0
+  },
+  {
+    "total_amount": 127500.0,
+    "item_count": 2,
+    "avg_rate": 2325.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 127500.0,
+    "item_count": 2,
+    "avg_rate": 2325.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 127500.0,
+    "item_count": 2,
+    "avg_rate": 2325.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 127500.0,
+    "item_count": 2,
+    "avg_rate": 2325.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 127500.0,
+    "item_count": 2,
+    "avg_rate": 2325.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 12750.0,
+    "item_count": 2,
+    "avg_rate": 2325.0,
+    "max_quantity": 0
+  },
+  {
+    "total_amount": 127500.0,
+    "item_count": 2,
+    "avg_rate": 2325.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 127500.0,
+    "item_count": 2,
+    "avg_rate": 2325.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 127500.0,
+    "item_count": 2,
+    "avg_rate": 2325.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 127500.0,
+    "item_count": 2,
+    "avg_rate": 2325.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 127500.0,
+    "item_count": 2,
+    "avg_rate": 2325.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 637500.0,
+    "item_count": 2,
+    "avg_rate": 2325.0,
+    "max_quantity": 1000.0
+  },
+  {
+    "total_amount": 133500.0,
+    "item_count": 3,
+    "avg_rate": 1950.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 133500.0,
+    "item_count": 3,
+    "avg_rate": 1950.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 133500.0,
+    "item_count": 3,
+    "avg_rate": 1950.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 133500.0,
+    "item_count": 3,
+    "avg_rate": 1950.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 133500.0,
+    "item_count": 3,
+    "avg_rate": 1950.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 13350.0,
+    "item_count": 3,
+    "avg_rate": 1950.0,
+    "max_quantity": 0
+  },
+  {
+    "total_amount": 133500.0,
+    "item_count": 3,
+    "avg_rate": 1950.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 133500.0,
+    "item_count": 3,
+    "avg_rate": 1950.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 133500.0,
+    "item_count": 3,
+    "avg_rate": 1950.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 133500.0,
+    "item_count": 3,
+    "avg_rate": 1950.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 133500.0,
+    "item_count": 3,
+    "avg_rate": 1950.0,
+    "max_quantity": 100.0
+  },
+  {
+    "total_amount": 667500.0,
+    "item_count": 3,
+    "avg_rate": 1950.0,
+    "max_quantity": 0
+  },
+  {
+    "total_amount": 254648.0,
+    "item_count": 26,
+    "avg_rate": 1026.4166666666667,
+    "max_quantity": 88.0
+  },
+  {
+    "total_amount": 254648.0,
+    "item_count": 26,
+    "avg_rate": 1026.4166666666667,
+    "max_quantity": 88.0
+  },
+  {
+    "total_amount": 254648.0,
+    "item_count": 26,
+    "avg_rate": 1026.4166666666667,
+    "max_quantity": 88.0
+  },
+  {
+    "total_amount": 192977.0,
+    "item_count": 20,
+    "avg_rate": 1629.4285714285713,
+    "max_quantity": 88.0
+  },
+  {
+    "total_amount": 2685637.0,
+    "item_count": 76,
+    "avg_rate": 608.5652173913044,
+    "max_quantity": 2985.0
+  },
+  {
+    "total_amount": 2685637.0,
+    "item_count": 76,
+    "avg_rate": 608.5652173913044,
+    "max_quantity": 2985.0
+  },
+  {
+    "total_amount": 2685637.0,
+    "item_count": 76,
+    "avg_rate": 608.5652173913044,
+    "max_quantity": 2985.0
+  },
+  {
+    "total_amount": 2685637.0,
+    "item_count": 76,
+    "avg_rate": 608.5652173913044,
+    "max_quantity": 2985.0
+  },
+  {
+    "total_amount": 2685637.0,
+    "item_count": 76,
+    "avg_rate": 608.5652173913044,
+    "max_quantity": 2985.0
+  },
+  {
+    "total_amount": 2685637.0,
+    "item_count": 76,
+    "avg_rate": 608.5652173913044,
+    "max_quantity": 2985.0
+  },
+  {
+    "total_amount": 2685637.0,
+    "item_count": 76,
+    "avg_rate": 608.5652173913044,
+    "max_quantity": 2985.0
+  },
+  {
+    "total_amount": 2685637.0,
+    "item_count": 76,
+    "avg_rate": 608.5652173913044,
+    "max_quantity": 2985.0
   }
 ]

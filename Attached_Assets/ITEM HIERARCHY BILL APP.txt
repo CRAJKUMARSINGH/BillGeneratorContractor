@@ -1,0 +1,21 @@
+ITEM HIERARCHY 
+DO U UNDERSTAND HIERARCHY OF WORK ORDER ITEMS>>>THEIR IMPORTANCE >>>HOW SHUD WE TREAT ANY ITEM WHERE ALL SUB ITEMS AND SUB-SUB ITEMS AND SUB-SUB-SUB ITEMS HAVE ZERO QUANTITY??? SUGGEST BRIALLANTLY..
+
+>>>>Yes, I understand the hierarchy of work order items and their importance. Let me explain the hierarchical structure and provide brilliant suggestions for handling items with zero quantities at all levels.
+Understanding Work Order Item Hierarchy
+In construction and engineering projects, work order items typically follow a hierarchical structure:
+Main Item (Level 1)
+├── Sub Item (Level 2)
+│   ├── Sub-Sub Item (Level 3)
+│   │   ├── Sub-Sub-Sub Item (Level 4)
+│   │   └── Sub-Sub-Sub Item (Level 4)
+│   └── Sub-Sub Item (Level 3)
+└── Sub Item (Level 2)
+Importance Hierarchy
+Main Items (1.0, 2.0, 3.0) - Major work categories
+Sub Items (1.1, 1.2, 1.3) - Specific work types within categories
+Sub-Sub Items (1.1.1, 1.1.2) - Detailed components
+Sub-Sub-Sub Items (1.1.1.1, 1.1.1.2) - Granular tasks/materials
+
+NOT TO POPULATE
+>WE ARE INTERESTED with resperct to first page ande deviation >>>.....>>>>1. not to populate main item >>>if all sub, sub-sub, sub-sub-sub are zero >>>>1. not to populate sub item >>>if all  sub-sub, sub-sub-sub are zero >>>>>likewise

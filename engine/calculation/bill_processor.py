@@ -42,6 +42,23 @@ def number_to_words(number):
         # Fallback if num2words not available or invalid number
         return str(number)
 
+def _natural_sort_key(code: str):
+    """
+    Natural (numeric-aware) sort key for PWD BSR dot-delimited item codes.
+    Ensures "1.2" < "1.10" < "1.11" instead of lexicographic "1.10" < "1.11" < "1.2".
+    """
+    if not code:
+        return (0,)
+    parts = code.split('.')
+    result = []
+    for part in parts:
+        try:
+            result.append(int(part))
+        except ValueError:
+            result.append(0)
+    return tuple(result)
+
+
 def process_bill(ws_wo, ws_bq, ws_extra, premium_percent, premium_type, previous_bill_amount=0):
     """
     Process bill data from Excel sheets
@@ -75,11 +92,86 @@ def process_bill(ws_wo, ws_bq, ws_extra, premium_percent, premium_type, previous
 
     first_page_data["header"] = header_data
 
-    # Work Order items — only include rows with non-zero rate AND non-zero bill quantity
+    # BQ quantity resolution strategy:
+    # These Excel files use two layouts:
+    #   A) Sub-items have nan item codes — WO and BQ are row-aligned, use positional match
+    #   B) Items have explicit dot-notation codes (e.g. "1.1", "1.10") — use code-based lookup
+    #      to survive row-count differences between sheets
+    #
+    # Strategy: build a code-based lookup for named items; fall back to positional
+    # (ws_bq.iloc[i, 3]) for nan-coded rows where sheets are row-aligned.
+    bq_qty_lookup: dict = {}
+    for bq_i in range(21, ws_bq.shape[0]):
+        code_raw = ws_bq.iloc[bq_i, 0] if pd.notnull(ws_bq.iloc[bq_i, 0]) else None
+        qty_raw_bq = ws_bq.iloc[bq_i, 3] if pd.notnull(ws_bq.iloc[bq_i, 3]) else None
+        if code_raw is not None:
+            code_str = str(code_raw).strip()
+            if code_str and code_str.lower() not in ('nan', 'item', 'item no.', 'item no'):
+                qty_val = 0.0
+                if isinstance(qty_raw_bq, (int, float)):
+                    qty_val = float(qty_raw_bq)
+                elif isinstance(qty_raw_bq, str):
+                    cleaned = qty_raw_bq.strip().replace(',', '').replace(' ', '')
+                    try:
+                        qty_val = float(cleaned) if cleaned else 0.0
+                    except ValueError:
+                        qty_val = 0.0
+                bq_qty_lookup[code_str] = qty_val
+
+    # SORT STRATEGY: preserve original Excel row order within each parent group.
+    # Only reorder top-level parent items (those with a non-nan code) relative to
+    # each other using natural sort. Sub-items (nan code) stay glued to their parent.
+    #
+    # Algorithm:
+    #   1. Walk rows in original order, grouping each named parent with its
+    #      immediately following nan-coded children.
+    #   2. Sort the groups by the parent's natural key.
+    #   3. Flatten back to a list of row indices.
     last_row_wo = ws_wo.shape[0]
-    serial_counter = 0  # strict sequential counter for items that appear
+
+    # Build groups: each group = [parent_row_idx, child_row_idx, child_row_idx, ...]
+    groups = []
+    current_group = []
     for i in range(21, last_row_wo):
-        qty_raw = ws_bq.iloc[i, 3] if i < ws_bq.shape[0] and pd.notnull(ws_bq.iloc[i, 3]) else None
+        code_raw = ws_wo.iloc[i, 0] if pd.notnull(ws_wo.iloc[i, 0]) else None
+        code_str = str(code_raw).strip() if code_raw is not None else ""
+        is_nan = (not code_str or code_str.lower() in ('nan', 'item', 'item no.'))
+        if is_nan:
+            # sub-item — append to current group
+            current_group.append(i)
+        else:
+            # new named item — save previous group, start new one
+            if current_group:
+                groups.append(current_group)
+            current_group = [i]
+    if current_group:
+        groups.append(current_group)
+
+    # Sort groups by the natural key of their first (parent) row's item code
+    def _group_sort_key(grp):
+        i = grp[0]
+        code_raw = ws_wo.iloc[i, 0] if pd.notnull(ws_wo.iloc[i, 0]) else None
+        code_str = str(code_raw).strip() if code_raw is not None else ""
+        return _natural_sort_key(code_str)
+
+    groups.sort(key=_group_sort_key)
+
+    # Flatten back to ordered row indices
+    wo_row_indices = [i for grp in groups for i in grp]
+
+    serial_counter = 0  # strict sequential counter for items that appear
+    for i in wo_row_indices:
+        item_code_raw = ws_wo.iloc[i, 0] if pd.notnull(ws_wo.iloc[i, 0]) else None
+        item_code_str = str(item_code_raw).strip() if item_code_raw is not None else ""
+        is_nan_code = (not item_code_str or item_code_str.lower() in ('nan', 'item', 'item no.'))
+
+        # Quantity resolution: code-based for named items, positional for nan-coded sub-items
+        if not is_nan_code and item_code_str in bq_qty_lookup:
+            qty_raw = bq_qty_lookup[item_code_str]
+        else:
+            # Positional fallback — sheets are row-aligned for nan-coded sub-items
+            qty_raw = ws_bq.iloc[i, 3] if i < ws_bq.shape[0] and pd.notnull(ws_bq.iloc[i, 3]) else None
+
         rate_raw = ws_wo.iloc[i, 4] if pd.notnull(ws_wo.iloc[i, 4]) else None
 
         qty = 0
@@ -87,7 +179,6 @@ def process_bill(ws_wo, ws_bq, ws_extra, premium_percent, premium_type, previous
             qty = float(qty_raw)
         elif isinstance(qty_raw, str):
             cleaned_qty = qty_raw.strip().replace(',', '').replace(' ', '')
-            # Handle empty string case
             if cleaned_qty == '':
                 qty = 0
             else:
@@ -101,7 +192,6 @@ def process_bill(ws_wo, ws_bq, ws_extra, premium_percent, premium_type, previous
             rate = float(rate_raw)
         elif isinstance(rate_raw, str):
             cleaned_rate = rate_raw.strip().replace(',', '').replace(' ', '')
-            # Handle empty string case
             if cleaned_rate == '':
                 rate = 0
             else:
@@ -110,16 +200,28 @@ def process_bill(ws_wo, ws_bq, ws_extra, premium_percent, premium_type, previous
                 except ValueError:
                     rate = 0
 
-        # Skip rows with no rate AND no quantity — these are sub-headings or blank rows
-        # that must not appear in first_page or deviation_statement
-        if (rate is None or rate == 0) and (qty is None or qty == 0):
-            continue
+        # Keep parent/heading rows that have a description but zero rate AND zero quantity.
+        # Only skip truly blank rows (no description) and Excel summary label rows.
+        has_description = bool(str(ws_wo.iloc[i, 1]).strip()) if pd.notnull(ws_wo.iloc[i, 1]) else False
+        desc_text = str(ws_wo.iloc[i, 1]).strip().lower() if pd.notnull(ws_wo.iloc[i, 1]) else ""
+        is_summary = desc_text in ('total', 'grand total', 'add tender premium',
+                                   'prem', 'premium', 'description') \
+                     or 'tender premium' in desc_text
+        if is_summary:
+            continue  # skip Excel summary rows
+        if (rate == 0) and (qty == 0) and not has_description:
+            continue  # truly blank row — skip
+
+        # FIX (Anomaly 2): Preserve item code exactly as stored in Excel.
+        # Float codes like 3.0 stay as "3.0"; dot-notation "1.10" stays as "1.10".
+        # Blank for nan-coded sub-items (cleaner than showing literal "nan").
+        serial_no_display = "" if is_nan_code else item_code_str
 
         # Zero-rate rows (sub-headings with description only) — include description only
         if rate is None or rate == 0:
             serial_counter += 1
             item = {
-                "serial_no": str(serial_counter),
+                "serial_no": serial_no_display,
                 "description": str(ws_wo.iloc[i, 1]) if pd.notnull(ws_wo.iloc[i, 1]) else "",
                 "unit": "",
                 "quantity": "",
@@ -137,7 +239,7 @@ def process_bill(ws_wo, ws_bq, ws_extra, premium_percent, premium_type, previous
             amount_since_previous = amount_upto_date  # Same as upto_date for first bill
             serial_counter += 1
             item = {
-                "serial_no": str(serial_counter),
+                "serial_no": serial_no_display,
                 "description": str(ws_wo.iloc[i, 1]) if pd.notnull(ws_wo.iloc[i, 1]) else "",
                 "unit": str(ws_wo.iloc[i, 2]) if pd.notnull(ws_wo.iloc[i, 2]) else "",
                 "quantity": qty,
@@ -275,17 +377,25 @@ def process_bill(ws_wo, ws_bq, ws_extra, premium_percent, premium_type, previous
     overall_excess = 0
     overall_saving = 0
     dev_serial = 0
-    for i in range(21, last_row_wo):
+    # FIX: iterate in group-sorted order (same parent-child grouping as first_page)
+    # and use hybrid quantity resolution.
+    for i in wo_row_indices:
+        item_code_raw_dev = ws_wo.iloc[i, 0] if pd.notnull(ws_wo.iloc[i, 0]) else None
+        item_code_str_dev = str(item_code_raw_dev).strip() if item_code_raw_dev is not None else ""
+        is_nan_code_dev = (not item_code_str_dev or item_code_str_dev.lower() in ('nan', 'item', 'item no.'))
         qty_wo_raw = ws_wo.iloc[i, 3] if pd.notnull(ws_wo.iloc[i, 3]) else None
         rate_raw = ws_wo.iloc[i, 4] if pd.notnull(ws_wo.iloc[i, 4]) else None
-        qty_bill_raw = ws_bq.iloc[i, 3] if i < ws_bq.shape[0] and pd.notnull(ws_bq.iloc[i, 3]) else None
+        # Hybrid BQ quantity resolution
+        if not is_nan_code_dev and item_code_str_dev in bq_qty_lookup:
+            qty_bill_raw = bq_qty_lookup[item_code_str_dev]
+        else:
+            qty_bill_raw = ws_bq.iloc[i, 3] if i < ws_bq.shape[0] and pd.notnull(ws_bq.iloc[i, 3]) else None
 
         qty_wo = 0
         if isinstance(qty_wo_raw, (int, float)):
             qty_wo = float(qty_wo_raw)
         elif isinstance(qty_wo_raw, str):
             cleaned_qty_wo = qty_wo_raw.strip().replace(',', '').replace(' ', '')
-            # Handle empty string case
             if cleaned_qty_wo == '':
                 qty_wo = 0
             else:
@@ -293,6 +403,7 @@ def process_bill(ws_wo, ws_bq, ws_extra, premium_percent, premium_type, previous
                     qty_wo = float(cleaned_qty_wo)
                 except ValueError:
                     qty_wo = 0
+        # Note: extra items get qty_wo = 0 explicitly in the extra-items loop below
 
         rate = 0
         if isinstance(rate_raw, (int, float)):
@@ -329,15 +440,25 @@ def process_bill(ws_wo, ws_bq, ws_extra, premium_percent, premium_type, previous
         saving_qty = qty_wo - qty_bill if qty_bill < qty_wo else 0
         saving_amt = round_up(saving_qty * rate) if saving_qty > 0 else 0
 
-        # Skip rows with no rate AND no quantities — blank/sub-heading rows
-        if (rate is None or rate == 0) and qty_wo == 0 and qty_bill == 0:
+        # Skip truly blank rows AND Excel summary/header label rows
+        has_desc_dev = bool(str(ws_wo.iloc[i, 1]).strip()) if pd.notnull(ws_wo.iloc[i, 1]) else False
+        desc_lower = str(ws_wo.iloc[i, 1]).strip().lower() if pd.notnull(ws_wo.iloc[i, 1]) else ""
+        is_summary_label = desc_lower in ('total', 'grand total', 'add tender premium',
+                                          'prem', 'premium', 'description') \
+                           or 'tender premium' in desc_lower
+        if is_summary_label:
             continue
+        if (rate is None or rate == 0) and qty_wo == 0 and qty_bill == 0 and not has_desc_dev:
+            continue  # truly blank row
+
+        # Use actual item code as serial_no for deviation; blank for nan-coded sub-items
+        dev_serial_no_display = "" if is_nan_code_dev else item_code_str_dev
 
         # Check if rate is blank or zero - if so, only populate Item No.
         if rate is None or rate == 0:
             dev_serial += 1
             item = {
-                "serial_no": str(dev_serial),
+                "serial_no": dev_serial_no_display,
                 "description": str(ws_wo.iloc[i, 1]) if pd.notnull(ws_wo.iloc[i, 1]) else "",
                 "unit": "",
                 "qty_wo": "",
@@ -359,7 +480,7 @@ def process_bill(ws_wo, ws_bq, ws_extra, premium_percent, premium_type, previous
             dev_serial += 1
             full_description = str(ws_wo.iloc[i, 1]) if pd.notnull(ws_wo.iloc[i, 1]) else ""
             item = {
-                "serial_no": str(dev_serial),
+                "serial_no": dev_serial_no_display,
                 "description": full_description,
                 "unit": str(ws_wo.iloc[i, 2]) if pd.notnull(ws_wo.iloc[i, 2]) else "",
                 "qty_wo": qty_wo,

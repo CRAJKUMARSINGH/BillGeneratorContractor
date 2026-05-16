@@ -8,6 +8,7 @@ import {
   BadgeCheck,
   Flame,
   LayoutDashboard,
+  Wand2,
 } from 'lucide-react';
 import { useBillStore } from '../store/useBillStore';
 
@@ -15,6 +16,7 @@ interface Props {
   onOpenUploader: () => void;
   onOpenImageUploader: () => void;
   onOpenTemplateGenerator: () => void;
+  onOpenAIAssistant?: () => void;
 }
 
 // Diya SVG ornament — inline, no external deps
@@ -73,6 +75,7 @@ export default function HindiLanding({
   onOpenUploader,
   onOpenImageUploader,
   onOpenTemplateGenerator,
+  onOpenAIAssistant,
 }: Props) {
   const { setViewMode } = useBillStore();
 
@@ -168,7 +171,21 @@ export default function HindiLanding({
             >
               <FileSpreadsheet size={15} /> Excel Import
             </button>
-            <button
+            {onOpenAIAssistant && (
+              <button
+                onClick={onOpenAIAssistant}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm transition-all duration-150 hover:-translate-y-px border"
+                style={{
+                  background: 'rgba(139,92,246,0.12)',
+                  borderColor: 'rgba(139,92,246,0.35)',
+                  color: '#c4b5fd',
+                  boxShadow: '0 0 16px rgba(139,92,246,0.15)',
+                }}
+                type="button"
+              >
+                <Wand2 size={15} /> AI Excel
+              </button>
+            )}            <button
               onClick={() => setViewMode('dashboard')}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm transition-all duration-150 hover:-translate-y-px border"
               style={{
@@ -200,9 +217,19 @@ export default function HindiLanding({
       >
         {[
           {
+            icon: <Wand2 size={22} style={{ color: '#a78bfa' }} />,
+            title: 'AI Excel Assistant',
+            sub: 'Upload any haphazard Excel — AI detects columns, extracts quantities, lets you edit before import.',
+            accent: 'rgba(139,92,246,0.10)',
+            border: 'rgba(139,92,246,0.25)',
+            onClick: onOpenAIAssistant ?? onOpenUploader,
+            label: 'Open AI-powered Excel input assistant',
+            badge: 'NEW',
+          },
+          {
             icon: <FileSpreadsheet size={22} style={{ color: '#4ade80' }} />,
             title: 'Excel Import',
-            sub: 'Auto-parse PWD bill formats — Work Order, Bill Quantity, Extra Items sheets.',
+            sub: 'Auto-parse standard PWD bill formats — Work Order, Bill Quantity, Extra Items sheets.',
             accent: 'rgba(74,222,128,0.08)',
             border: 'rgba(74,222,128,0.15)',
             onClick: onOpenUploader,
@@ -257,10 +284,16 @@ export default function HindiLanding({
               {card.icon}
             </div>
             <div className="flex items-center justify-between mb-1">
-              <p className="font-bold text-white text-sm">{card.title}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-bold text-white text-sm">{card.title}</p>
+                {(card as any).badge && (
+                  <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-violet-500/30 text-violet-300 border border-violet-500/40 uppercase tracking-wide">
+                    {(card as any).badge}
+                  </span>
+                )}
+              </div>
               <ArrowRight size={14} className="text-slate-600 group-hover:text-slate-400 transition-colors group-hover:translate-x-0.5 transition-transform" />
-            </div>
-            <p className="text-xs leading-relaxed" style={{ color: '#64748b' }}>{card.sub}</p>
+            </div>            <p className="text-xs leading-relaxed" style={{ color: '#64748b' }}>{card.sub}</p>
           </button>
         ))}
       </div>

@@ -3,6 +3,7 @@ from typing import List, Optional, Any, Dict
 
 class DocumentRow(BaseModel):
     item_id: Optional[str] = None
+    item_code: Optional[str] = None   # FIX: preserve PWD BSR item code (e.g. "1.1", "1.10")
     description: str
     quantity: float = 0.0
     unit: str = ""

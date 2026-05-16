@@ -54,18 +54,19 @@ export default function ExcelUploader({ onClose, toast }: Props) {
     setParsedData(result);
 
     // Map API items → store BillItems
-    const items = result.billItems.map((api, i) => ({
+    const items = result.billItems.map((api) => ({
       id: crypto.randomUUID(),
-      serial_no: api.itemNo || String(i + 1),
+      itemNo: api.itemNo || '',
       description: api.description,
       unit: api.unit,
-      qty_since_last_bill: api.quantitySince,
-      qty_to_date: api.quantityUpto,
+      quantitySince: api.quantitySince,
+      quantityUpto: api.quantityUpto,
+      quantity: api.quantity,
       rate: api.rate,
-      amount_to_date: api.quantityUpto * api.rate,
-      amount_since_previous: api.quantitySince * api.rate,
+      amount: api.amount,
+      confidence: api.confidence || 1.0,
+      aiNote: api.aiNote,
       remarks: '',
-      sort_order: i,
     }));
     setBillItems(items);
 

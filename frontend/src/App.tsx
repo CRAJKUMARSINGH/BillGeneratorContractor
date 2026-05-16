@@ -10,6 +10,7 @@ import HindiLanding from './components/HindiLanding';
 import ExcelUploader from './components/ExcelUploader';
 import ImageUploader from './components/ImageUploader';
 import TemplateGenerator from './components/TemplateGenerator';
+import ExcelInputAssistant from './components/ExcelInputAssistant';
 const queryClient = new QueryClient();
 
 function AppInner() {
@@ -18,6 +19,7 @@ function AppInner() {
   const [showUploader, setShowUploader] = useState(false);
   const [showImageUploader, setShowImageUploader] = useState(false);
   const [showTemplateGenerator, setShowTemplateGenerator] = useState(false);
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
   const [toastMsg, setToastMsg] = useState<{ type: string; msg: string } | null>(null);
 
   const toast = (type: 'success' | 'error' | 'warning' | 'info', msg: string) => {
@@ -72,9 +74,16 @@ function AppInner() {
             onOpenUploader={() => setShowUploader(true)}
             onOpenImageUploader={() => setShowImageUploader(true)}
             onOpenTemplateGenerator={() => setShowTemplateGenerator(true)}
+            onOpenAIAssistant={() => setShowAIAssistant(true)}
           />
         )}
-        {viewMode === 'dashboard'   && <Dashboard onOpenUploader={() => setShowUploader(true)} onOpenImageUploader={() => setShowImageUploader(true)} onOpenTemplateGenerator={() => setShowTemplateGenerator(true)} />}
+        {viewMode === 'dashboard' && (
+          <Dashboard
+            onOpenUploader={() => setShowUploader(true)}
+            onOpenImageUploader={() => setShowImageUploader(true)}
+            onOpenTemplateGenerator={() => setShowTemplateGenerator(true)}
+          />
+        )}
         {viewMode === 'edit'        && <BillEditor />}
         {viewMode === 'generating'  && <GeneratePanel />}
       </main>
@@ -87,6 +96,9 @@ function AppInner() {
       )}
       {showTemplateGenerator && (
         <TemplateGenerator onClose={() => setShowTemplateGenerator(false)} toast={toast} />
+      )}
+      {showAIAssistant && (
+        <ExcelInputAssistant onClose={() => setShowAIAssistant(false)} toast={toast} />
       )}
     </div>
   );

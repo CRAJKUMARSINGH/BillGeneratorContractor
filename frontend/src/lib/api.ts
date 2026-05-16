@@ -5,6 +5,54 @@
 
 const BASE = import.meta.env.VITE_API_URL ?? '';
 
+export interface AIRow {
+  itemNo: string;
+  description: string;
+  unit: string;
+  quantity: number;
+  rate: number;
+  amount: number;
+  remark: string;
+  confidence: number;
+  aiNote: string;
+}
+
+export interface ColumnMapping {
+  canonical: string;
+  colIndex: number;
+  headerText: string;
+  confidence: number;
+}
+
+export interface AISheetResult {
+  sheetName: string;
+  headerRowIndex: number;
+  columnMappings: ColumnMapping[];
+  rows: AIRow[];
+  unmappedColumns: string[];
+  warnings: string[];
+  totalAmount: number;
+}
+
+export interface AIParseResult {
+  fileId: string;
+  fileName: string;
+  sheets: AISheetResult[];
+  workOrderSheet: AISheetResult | null;
+  titleData: Record<string, string>;
+  aiSuggestions: string[];
+  confidenceOverall: number;
+}
+
+export interface CommitRequest {
+  fileId: string;
+  fileName: string;
+  titleData: Record<string, string>;
+  rows: AIRow[];
+  premiumPercent?: number;
+  premiumType?: 'above' | 'below';
+}
+
 export interface BillItemAPI {
   itemNo: string;
   description: string;
@@ -54,6 +102,20 @@ export interface GenerateRequest {
   billItems: BillItemAPI[];
   extraItems: ExtraItemAPI[];
   options: GenerateOptions;
+}
+
+export interface PreviewRequest {
+  document_type: string;
+  fileId: string;
+  titleData: Record<string, string>;
+  billItems: BillItemAPI[];
+  extraItems: ExtraItemAPI[];
+  options: GenerateOptions;
+}
+
+export interface PreviewResponse {
+  document_type: string;
+  html: string;
 }
 
 export interface DocumentInfo {
@@ -155,6 +217,31 @@ export const api = {
   getHistory: (): Promise<BillRecordAPI[]> => 
     request<BillRecordAPI[]>('/bills/history'),
 
+  preview: (req: PreviewRequest): Promise<PreviewResponse> =>
+    request<PreviewResponse>('/bills/preview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req),
+      timeoutMs: 3000,
+    } as any),
+
   downloadUrl: (jobId: string, format: 'zip' | 'pdf' | 'html') =>
     `${BASE}/bills/jobs/${jobId}/download?format=${format}`,
+
+  // AI Excel Assistant
+  aiParseExcel: (file: File, useLlm = false): Promise<AIParseResult> => {
+    const form = new FormData();
+    form.append('file', file);
+    return request<AIParseResult>(
+      `/ai-excel/parse?use_llm=${useLlm}`,
+      { method: 'POST', body: form, timeoutMs: 30000 } as any,
+    );
+  },
+
+  aiCommit: (req: CommitRequest): Promise<ParsedBillData> =>
+    request<ParsedBillData>('/ai-excel/commit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req),
+    }),
 };

@@ -37,6 +37,7 @@ from sqlmodel import Session, select
 from database import create_db_and_tables, engine
 from routes.bills import router as bills_router
 from routes.auth import router as auth_router
+from routes.ai_excel import router as ai_excel_router
 from models import HealthResponse, User
 from auth_utils import get_password_hash
 
@@ -67,6 +68,7 @@ app.add_middleware(
 
 app.include_router(bills_router)
 app.include_router(auth_router)
+app.include_router(ai_excel_router)
 
 
 @app.get("/health", response_model=HealthResponse, tags=["health"])

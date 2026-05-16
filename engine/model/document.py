@@ -83,6 +83,9 @@ class BillDocument:
     work_order_amount: float = 0.0
     extra_item_amount: float = 0.0
     notes: List[str] = field(default_factory=list)
+    # v2 template fields
+    title_data: dict = field(default_factory=dict)
+    source_filename: str = ""
 
     def to_template_dict(self) -> dict:
         """Return dict that Jinja2 templates receive as `data`."""
@@ -95,13 +98,49 @@ class BillDocument:
             (round(payable * 0.02 + 0.5) // 2 * 2) +
             round(payable * 0.01)
         )))
+
+        # Compute extra items fields for v2 extra_items.html
+        extra_items_only = [i for i in self.extra_items if not i.get("is_divider")]
+        extra_total = sum(float(i.get("amount", 0) or 0) for i in extra_items_only)
+        premium_pct = self.totals.get("premium", {}).get("percent", 0) or 0
+        premium_type = self.totals.get("premium", {}).get("type", "above")
+        if premium_type == "above":
+            extra_premium = round(extra_total * premium_pct)
+        else:
+            extra_premium = -round(extra_total * premium_pct)
+        extra_grand_total = extra_total + extra_premium
+
+        # Deduction amounts for v2 note_sheet_new.html
+        sd_amount = round(payable * 0.10)
+        it_amount = round(payable * 0.02)
+        gst_amount = (round(payable * 0.02 + 0.5) // 2) * 2
+        lc_amount = round(payable * 0.01)
+        total_deductions = sd_amount + it_amount + gst_amount + lc_amount
+
+        # Augmented totals dict with v2 note_sheet fields
+        totals_augmented = dict(self.totals)
+        totals_augmented.update({
+            "sd_amount": sd_amount,
+            "it_amount": it_amount,
+            "gst_amount": gst_amount,
+            "lc_amount": lc_amount,
+            "total_deductions": total_deductions,
+            "work_order_amount": self.work_order_amount,
+            "last_bill_amount": self.totals.get("last_bill_amount", 0) or 0,
+            "extra_items_sum": self.totals.get("extra_items_sum", 0) or 0,
+        })
+
         return {
             "header": self.header,
             "items": self.items,
-            "totals": self.totals,
+            "totals": totals_augmented,
             "deviation_items": self.deviation_items,
             "summary": self.deviation_summary,
             "extra_items": self.extra_items,
+            "extra_items_only": extra_items_only,
+            "extra_total": extra_total,
+            "extra_premium": extra_premium,
+            "extra_grand_total": extra_grand_total,
             "agreement_no": self.agreement_no,
             "name_of_work": self.name_of_work,
             "name_of_firm": self.name_of_firm,
@@ -111,6 +150,11 @@ class BillDocument:
             "work_order_amount": self.work_order_amount,
             "extra_item_amount": self.extra_item_amount,
             "notes": self.notes,
+            # v2 template fields
+            "title_data": self.title_data,
+            "source_filename": self.source_filename,
+            "delay_days": 0,
+            "liquidated_damages_amount": 0,
             # certificate_iii.html uses these
             "payable_words": number_to_words(int(round(payable))),
             "net_payable_words": number_to_words(int(round(net_payable))),

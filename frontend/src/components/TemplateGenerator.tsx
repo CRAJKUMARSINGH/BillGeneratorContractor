@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Sparkles, Loader2, X, Code, CheckCircle } from 'lucide-react';
 import { api } from '../lib/api';
+import { useBillStore } from '../store/useBillStore';
+import { blankItem } from '../store/useBillStore';
 
 interface Props {
   onClose: () => void;
@@ -11,6 +13,8 @@ export default function TemplateGenerator({ onClose, toast }: Props) {
   const [prompt, setPrompt] = useState('');
   const [generating, setGenerating] = useState(false);
   const [schema, setSchema] = useState<any>(null);
+
+  const { setBillItems, setViewMode } = useBillStore();
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
@@ -32,8 +36,21 @@ export default function TemplateGenerator({ onClose, toast }: Props) {
   };
 
   const handleApply = () => {
-    // In a real implementation this might map to BillEditor config or send to API
-    toast('success', `Applied template config: ${schema?.name}`);
+    if (!schema) return;
+
+    // FIX: create a set of blank bill items pre-seeded with the schema's item codes
+    // so the hierarchy structure is visible in the editor from the start.
+    // The schema's table_columns tell us what columns exist; we seed 5 blank rows
+    // with placeholder item codes matching PWD BSR hierarchy (1, 1.1, 1.2, 1.3, 2).
+    const seedCodes = ['1', '1.1', '1.2', '1.3', '2'];
+    const items = seedCodes.map((code, i) => ({
+      ...blankItem(i),
+      serial_no: code,
+    }));
+
+    setBillItems(items);
+    setViewMode('edit');
+    toast('success', `Template "${schema?.name}" applied — ${items.length} blank rows ready`);
     onClose();
   };
 

@@ -22,25 +22,27 @@ interface BillStore {
   updateItem: (id: string, field: keyof BillItem, value: unknown) => void;
   addItem: () => void;
   removeItem: (id: string) => void;
+  sortItems: () => void;
+  mergeDuplicates: () => void;
 
   // Generation job
   currentJob: JobStatus | null;
   setCurrentJob: (j: JobStatus | null) => void;
 }
 
-function blankItem(order = 0): BillItem {
+function blankItem(): BillItem {
   return {
     id: crypto.randomUUID(),
-    serial_no: String(order + 1),
+    itemNo: '',
     description: '',
     unit: '',
-    qty_since_last_bill: 0,
-    qty_to_date: 0,
+    quantitySince: 0,
+    quantityUpto: 0,
+    quantity: 0,
     rate: 0,
-    amount_to_date: 0,
-    amount_since_previous: 0,
+    amount: 0,
+    confidence: 1.0,
     remarks: '',
-    sort_order: order,
   };
 }
 
@@ -72,8 +74,7 @@ export const useBillStore = create<BillStore>((set) => ({
 
       const item = s.billItems[index];
       const numericFields = [
-        'qty_since_last_bill', 'qty_to_date', 'rate',
-        'amount_to_date', 'amount_since_previous', 'sort_order',
+        'quantitySince', 'quantityUpto', 'quantity', 'rate', 'amount', 'confidence'
       ];
       const coerced = numericFields.includes(field as string)
         ? parseFloat(String(value)) || 0
@@ -92,16 +93,58 @@ export const useBillStore = create<BillStore>((set) => ({
   addItem: () =>
     set((s) => ({
       isDirty: true,
-      billItems: [...s.billItems, blankItem(s.billItems.length)],
+      billItems: [...s.billItems, blankItem()],
     })),
 
   removeItem: (id) =>
     set((s) => ({
       isDirty: true,
-      billItems: s.billItems
-        .filter((i) => i.id !== id)
-        .map((i, idx) => ({ ...i, sort_order: idx, serial_no: String(idx + 1) })),
+      billItems: s.billItems.filter((i) => i.id !== id),
     })),
+
+  sortItems: () =>
+    set((s) => {
+      const sorted = [...s.billItems].sort((a, b) => {
+        const parseCode = (c: string) => c.split('.').map(p => {
+          const m = p.match(/(\d+)([a-z]*)/);
+          return m ? [parseInt(m[1]), m[2]] : [p];
+        }).flat();
+        
+        const ak = parseCode(a.itemNo || 'zzzz');
+        const bk = parseCode(b.itemNo || 'zzzz');
+        
+        for (let i = 0; i < Math.max(ak.length, bk.length); i++) {
+          if (ak[i] === undefined) return -1;
+          if (bk[i] === undefined) return 1;
+          if (ak[i] < bk[i]) return -1;
+          if (ak[i] > bk[i]) return 1;
+        }
+        return 0;
+      });
+      return { billItems: sorted, isDirty: true };
+    }),
+
+  mergeDuplicates: () =>
+    set((s) => {
+      const map: Record<string, BillItem> = {};
+      const uniqueItems: BillItem[] = [];
+      
+      s.billItems.forEach(item => {
+        const code = item.itemNo.trim().toLowerCase();
+        if (code && map[code]) {
+          map[code].quantityUpto += item.quantityUpto;
+          map[code].quantitySince += item.quantitySince;
+          map[code].amount = map[code].quantityUpto * map[code].rate;
+          map[code].aiNote = `Merged duplicate: ${code}`;
+        } else {
+          const newItem = { ...item };
+          if (code) map[code] = newItem;
+          uniqueItems.push(newItem);
+        }
+      });
+      
+      return { billItems: uniqueItems, isDirty: true };
+    }),
 
   currentJob: null,
   setCurrentJob: (currentJob) => set({ currentJob }),

@@ -21,9 +21,12 @@ import json
 
 from models import (
     BillItem, DocumentInfo, ExtraItem, GenerateRequest,
-    JobStatus, ParsedBillData, User, BillRecord, TemplateRequest
+    JobStatus, ParsedBillData, User, BillRecord, TemplateRequest,
+    PreviewRequest, PreviewResponse
 )
+from utils.preview_annotator import annotate_preview_html
 from dependencies import get_current_user
+from engine.rendering.html_renderer_enterprise import EnterpriseHTMLRenderer, DocumentType, RenderConfig
 from database import engine
 from sqlmodel import Session, select
 
@@ -90,16 +93,12 @@ async def upload_excel(file: UploadFile = File(...)):
     logger.info(f"Saved upload {file.filename} → {save_path}")
 
     try:
-        data = await asyncio.get_event_loop().run_in_executor(
-            None, _parse_excel, save_path, file_id, file.filename
-        )
+        from services.ingestion_service import IngestionService
+        data = await IngestionService.process_file(save_path, file_id, file.filename)
         
         # Phase 12: Integrate Anomaly Detector
         from ingestion.anomaly_detector import extract_features, detect_anomalies
-        rows_for_features = []
-        for item in data.billItems:
-            rows_for_features.append({"rate": item.rate, "quantity": item.quantity, "amount": item.amount})
-        
+        rows_for_features = [{"rate": item.rate, "quantity": item.quantity, "amount": item.amount} for item in data.billItems]
         features = extract_features(rows_for_features)
         data.anomaly_warnings = detect_anomalies(features)
         
@@ -129,43 +128,16 @@ async def upload_image(file: UploadFile = File(...)):
     logger.info(f"Saved image upload {file.filename} → {save_path}")
 
     try:
-        from ingestion.ocr_extractor import extract_table_from_image
-        from ingestion.normalizer import normalize_to_unified_model
-
-        raw_data = await asyncio.get_event_loop().run_in_executor(None, extract_table_from_image, str(save_path))
-        unified = normalize_to_unified_model(raw_data, source_type="ocr")
-
-        # Map UnifiedDocumentModel -> ParsedBillData
-        bill_items = []
-        for i, row in enumerate(unified.rows):
-            bill_items.append(BillItem(
-                itemNo=str(i+1),
-                description=row.description,
-                unit=row.unit,
-                quantitySince=row.quantity,
-                quantityUpto=row.quantity,
-                quantity=row.quantity,
-                rate=row.rate,
-                amount=row.amount
-            ))
-
+        from services.ingestion_service import IngestionService
+        data = await IngestionService.process_file(save_path, file_id, file.filename)
+        
         # Phase 12: Integrate Anomaly Detector for OCR
         from ingestion.anomaly_detector import extract_features, detect_anomalies
-        rows_for_features = [{"rate": item.rate, "quantity": item.quantity, "amount": item.amount} for item in bill_items]
+        rows_for_features = [{"rate": item.rate, "quantity": item.quantity, "amount": item.amount} for item in data.billItems]
         features = extract_features(rows_for_features)
-        warnings = detect_anomalies(features)
+        data.anomaly_warnings = detect_anomalies(features)
 
-        return ParsedBillData(
-            fileId=file_id,
-            fileName=file.filename,
-            titleData=unified.raw_metadata,
-            billItems=bill_items,
-            extraItems=[],
-            totalAmount=unified.total_amount,
-            hasExtraItems=False,
-            sheets=["OCR Output"],
-            anomaly_warnings=warnings
-        )
+        return data
 
     except Exception as e:
         logger.exception("OCR parse failed")
@@ -200,97 +172,10 @@ async def export_excel(data: ParsedBillData):
         raise HTTPException(500, f"Failed to generate Excel: {e}")
 
 
-def _parse_excel(path: Path, file_id: str, filename: str) -> ParsedBillData:
-    """Parse using engine's EnterpriseExcelProcessor + bill_processor."""
-    from engine.calculation.excel_processor_enterprise import EnterpriseExcelProcessor
-    from engine.calculation.bill_processor import process_bill
-    import pandas as pd
 
-    processor = EnterpriseExcelProcessor(sanitize_strings=True, validate_schemas=False)
-    result = processor.process_file(
-        path,
-        sheet_names=["Work Order", "Bill Quantity", "Extra Items"]
-    )
-    if not result.success:
-        raise RuntimeError(f"Excel load failed: {result.errors}")
+# legacy _parse_excel removed, replaced by services.ingestion_service.IngestionService
 
-    sheets = result.data
-    ws_wo    = sheets.get("Work Order")
-    ws_bq    = sheets.get("Bill Quantity")
-    ws_extra = sheets.get("Extra Items", pd.DataFrame())
-
-    if ws_wo is None or ws_bq is None:
-        raise RuntimeError("Required sheets (Work Order, Bill Quantity) not found")
-
-    first_page, _, _, extra_items_data, _ = process_bill(
-        ws_wo, ws_bq, ws_extra,
-        premium_percent=0.0,
-        premium_type="above",
-        previous_bill_amount=0.0
-    )
-
-    # Build title data from header rows
-    title_data = {}
-    for row in first_page.get("header", []):
-        cells = [str(c).strip() for c in row if str(c).strip() and str(c).strip() != "nan"]
-        for i, cell in enumerate(cells):
-            if i + 1 < len(cells):
-                title_data[cell] = cells[i + 1]
-
-    # Convert items to BillItem models
-    bill_items = []
-    for item in first_page.get("items", []):
-        if item.get("is_divider"):
-            continue
-        try:
-            qty = float(item.get("quantity", 0) or 0)
-            rate = float(item.get("rate", 0) or 0)
-            amount = float(item.get("amount", 0) or 0)
-        except (TypeError, ValueError):
-            qty = rate = amount = 0.0
-        bill_items.append(BillItem(
-            itemNo=str(item.get("serial_no", "")),
-            description=str(item.get("description", "")),
-            unit=str(item.get("unit", "")),
-            quantitySince=qty,
-            quantityUpto=qty,
-            quantity=qty,
-            rate=rate,
-            amount=amount,
-        ))
-
-    extra_items = []
-    for item in extra_items_data.get("items", []):
-        if item.get("is_divider"):
-            continue
-        try:
-            qty = float(item.get("quantity", 0) or 0)
-            rate = float(item.get("rate", 0) or 0)
-            amount = float(item.get("amount", 0) or 0)
-        except (TypeError, ValueError):
-            qty = rate = amount = 0.0
-        extra_items.append(ExtraItem(
-            itemNo=str(item.get("serial_no", "")),
-            bsr=str(item.get("remark", "")),
-            description=str(item.get("description", "")),
-            quantity=qty,
-            unit=str(item.get("unit", "")),
-            rate=rate,
-            amount=amount,
-        ))
-
-    total = first_page.get("totals", {}).get("grand_total", 0) or 0
-
-    return ParsedBillData(
-        fileId=file_id,
-        fileName=filename,
-        titleData=title_data,
-        billItems=bill_items,
-        extraItems=extra_items,
-        totalAmount=float(total),
-        hasExtraItems=len(extra_items) > 0,
-        sheets=list(sheets.keys()),
-    )
+# legacy _parse_excel removed, replaced by services.ingestion_service.IngestionService
 
 
 # ── Generate ──────────────────────────────────────────────────────────────────
@@ -306,6 +191,40 @@ async def generate_template(req: TemplateRequest):
     except Exception as e:
         logger.exception("Template generation failed")
         raise HTTPException(500, f"AI generation failed: {e}")
+
+@router.post("/preview", response_model=PreviewResponse)
+def preview_document(req: PreviewRequest, current_user: User = Depends(get_current_user)):
+    """Synchronously render a single document type to HTML for browser preview."""
+    # Validate document_type against the enum
+    try:
+        doc_type = DocumentType(req.document_type)
+    except ValueError:
+        valid = [dt.value for dt in DocumentType]
+        raise HTTPException(
+            status_code=422,
+            detail=f"Invalid document_type '{req.document_type}'. Must be one of: {valid}"
+        )
+
+    # Build template_data using the unified service logic
+    from services.bill_service import BillService
+    template_data = BillService.prepare_template_data(req.model_dump())
+
+    config = RenderConfig(
+        pdf_ready=True,
+        template_dir=Path("engine/templates") / req.options.templateVersion,
+        output_dir=Path("backend/outputs/preview"),
+        enable_security_checks=True,
+    )
+    renderer = EnterpriseHTMLRenderer(config)
+
+    result = renderer.render(doc_type, template_data)
+
+    if not result.success:
+        raise HTTPException(status_code=500, detail=f"Render failed: {result.errors}")
+
+    annotated_html = annotate_preview_html(result.html_content, req.document_type)
+    return PreviewResponse(document_type=req.document_type, html=annotated_html)
+
 
 @router.post("/generate", response_model=JobStatus)
 async def generate_bill(req: GenerateRequest, request: Request, current_user: User = Depends(get_current_user)):

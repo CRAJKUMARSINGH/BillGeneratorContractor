@@ -47,47 +47,119 @@ def _fallback_mock_text() -> str:
 def _parse_text_to_unified_format(raw_text: str) -> Dict[str, Any]:
     """
     Regex parsing of the unstructured blob returned by OCR into a structured layout
-    compatible with normalizer.py
+    compatible with normalizer.py.
+    Now optimized for PWD Rajasthan samples using pipe '|' delimiters and section headers.
     """
     lines = raw_text.splitlines()
     rows = []
+    extra_items = []
     metadata = {}
     
-    # Very basic regex extraction for the table format "Item | Desc | Qty | Unit | Rate" or similar space-padded
-    # e.g., "1 Excavation 150 Cum 45.00"
-    row_pattern = re.compile(r'^(\d+)\s*\|?\s*(.*?)\s*\|?\s*([\d\.]+)\s*\|?\s*([A-Za-z]+)\s*\|?\s*([\d\.]+)$')
+    current_section = "wo" # default
     
     for line in lines:
         line = line.strip()
-        if not line:
+        if not line: continue
+            
+        # 1. Metadata extraction
+        if ":" in line:
+            parts = line.split(":", 1)
+            key = parts[0].strip().lower()
+            val = parts[1].strip()
+            if any(k in key for k in ["work", "project"]):
+                metadata["Name of Work"] = val
+            elif any(k in key for k in ["contractor", "firm", "supplier"]):
+                metadata["Name of Contractor or supplier"] = val
+            elif any(k in key for k in ["agreement", "agg"]):
+                metadata["Agreement No."] = val
+            elif "premium" in key:
+                metadata["premium"] = val
             continue
-            
-        if "Name of Work:" in line:
-            metadata["Name of Work"] = line.split(":", 1)[1].strip()
-        elif "Contractor:" in line:
-            metadata["Name of Contractor or supplier"] = line.split(":", 1)[1].strip()
-            
-        match = row_pattern.match(line)
-        if match:
-            item_no, desc, qty, unit, rate = match.groups()
-            
-            try:
-                qty_val = float(qty)
-                rate_val = float(rate)
-            except ValueError:
-                qty_val = 0.0
-                rate_val = 0.0
+
+        # 2. Section detection
+        lower_line = line.lower()
+        if "extra" in lower_line:
+            current_section = "extra"
+            continue
+        elif "bill qty" in lower_line or "executed" in lower_line:
+            current_section = "bill"
+            continue
+        elif "work order items" in lower_line or "wo qty" in lower_line:
+            current_section = "wo"
+            continue
+
+        # 3. Table row matching (Pipe-based)
+        if "|" in line:
+            parts = [p.strip() for p in line.split("|")]
+            if len(parts) >= 4:
+                # Basic heuristics for mapping parts
+                item_no = parts[0]
+                if item_no.lower() in ["s.no.", "sno", "item"]: continue # skip header
                 
-            rows.append({
-                "Description": desc.strip(' |'),
-                "Quantity": qty_val,
-                "Rate": rate_val,
-                "Amount": qty_val * rate_val,
-                "Unit": unit.strip(' |')
-            })
-            
-    # Mocking standard excel wrapper structure
+                # Check if it's a valid row (starts with digit or E-)
+                if not re.match(r'^[\d\.E\-]+', item_no): continue
+                
+                desc = parts[1]
+                
+                try:
+                    if current_section == "extra":
+                        # E-01 | BSR-201 | Desc | Qty | Unit | Rate | Amt
+                        qty = float(parts[3].replace(',', '')) if len(parts) > 3 else 0.0
+                        unit = parts[4] if len(parts) > 4 else ""
+                        rate = float(parts[5].replace(',', '')) if len(parts) > 5 else 0.0
+                        amt = float(parts[6].replace(',', '')) if len(parts) > 6 else (qty * rate)
+                    elif current_section == "bill":
+                        # S.No | Desc | Unit | Bill Qty
+                        unit = parts[2]
+                        qty = float(parts[3].replace(',', ''))
+                        rate = 0.0 # Unknown from this section
+                        amt = 0.0
+                    else: # WO
+                        # S.No | Desc | Unit | WO Qty | Rate | Amt
+                        unit = parts[2]
+                        qty = float(parts[3].replace(',', ''))
+                        rate = float(parts[4].replace(',', '')) if len(parts) > 4 else 0.0
+                        amt = float(parts[5].replace(',', '')) if len(parts) > 5 else (qty * rate)
+                    
+                    row_data = {
+                        "item_no": item_no,
+                        "description": desc,
+                        "quantity": qty,
+                        "rate": rate,
+                        "amount": amt,
+                        "unit": unit,
+                        "section": current_section
+                    }
+                    
+                    if current_section == "extra":
+                        extra_items.append(row_data)
+                    else:
+                        rows.append(row_data)
+                except (ValueError, IndexError):
+                    continue
+
+    # 4. Fallback: Regex for non-pipe lines (legacy support)
+    if not rows and not extra_items:
+        row_pattern = re.compile(r'^([\d\.\- ]+[a-z]?)\s+(.*?)\s+([\d\.,]+)\s+([A-Za-z/]+)\s+([\d\.,]+)$')
+        for line in lines:
+            match = row_pattern.match(line.strip())
+            if match:
+                item_no, desc, qty_str, unit, rate_str = match.groups()
+                try:
+                    qty_val = float(qty_str.replace(',', ''))
+                    rate_val = float(rate_str.replace(',', ''))
+                    rows.append({
+                        "item_no": item_no.strip(),
+                        "description": desc.strip(),
+                        "quantity": qty_val,
+                        "rate": rate_val,
+                        "amount": qty_val * rate_val,
+                        "unit": unit.strip()
+                    })
+                except ValueError: continue
+
     return {
         "metadata": metadata,
-        "raw_rows": rows
+        "raw_rows": rows,
+        "extra_rows": extra_items
     }

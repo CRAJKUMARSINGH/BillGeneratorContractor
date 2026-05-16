@@ -1,9 +1,10 @@
 """Quick pipeline test — upload → generate → poll → verify."""
 import time
+from pathlib import Path
 import requests
 
 BASE = "http://localhost:8000"
-EXCEL = r"F:\New-Folder\BillGeneratorHistorical\test_input_files\SAMPLE BILL INPUT- NO EXTRA ITEMS.xlsx"
+EXCEL = Path(__file__).parent.parent / "archived_apps" / "BillGeneratorHistorical" / "test_input_files" / "SAMPLE BILL INPUT- NO EXTRA ITEMS.xlsx"
 
 # 1. Upload
 with open(EXCEL, "rb") as f:

@@ -81,18 +81,19 @@ export default function ImageUploader({ onClose, toast }: Props) {
     if (!result) return;
     setParsedData(result);
 
-    const items = result.billItems.map((apiItem, i) => ({
+    const items = result.billItems.map((api) => ({
       id: crypto.randomUUID(),
-      serial_no: apiItem.itemNo || String(i + 1),
-      description: apiItem.description,
-      unit: apiItem.unit,
-      qty_since_last_bill: apiItem.quantitySince,
-      qty_to_date: apiItem.quantityUpto,
-      rate: apiItem.rate,
-      amount_to_date: apiItem.quantityUpto * apiItem.rate,
-      amount_since_previous: apiItem.quantitySince * apiItem.rate,
+      itemNo: api.itemNo || '',
+      description: api.description,
+      unit: api.unit,
+      quantitySince: api.quantitySince,
+      quantityUpto: api.quantityUpto,
+      quantity: api.quantity,
+      rate: api.rate,
+      amount: api.amount,
+      confidence: api.confidence || 1.0,
+      aiNote: api.aiNote,
       remarks: '',
-      sort_order: i,
     }));
     setBillItems(items);
 
@@ -163,7 +164,7 @@ export default function ImageUploader({ onClose, toast }: Props) {
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { label: 'Rows Extracted', value: result.billItems.length },
-                  { label: 'Confidence', value: result.anomaly_warnings && result.anomaly_warnings.length > 0 ? '72% (Warnings)' : '94% (High)' },
+                  { label: 'Confidence', value: `${Math.round(result.confidenceOverall * 100)}%` },
                 ].map((s) => (
                   <div key={s.label} className="glass rounded-xl px-3 py-2 text-center">
                     <p className="text-lg font-bold text-white">{s.value}</p>

@@ -40,6 +40,7 @@ logger = logging.getLogger(__name__)
 SHEET_WORK_ORDER   = "WORK ORDER"
 SHEET_BILL_QTY     = "BILL QUANTITY"
 SHEET_EXTRA_ITEMS  = "EXTRA ITEMS"
+SHEET_TITLE        = "TITLE"
 
 DOCUMENT_TYPES = [
     DocumentType.FIRST_PAGE,
@@ -63,9 +64,10 @@ def _resolve_sheet_names(input_path: Path) -> dict:
     actual = {s.upper(): s for s in wb.sheetnames}
     wb.close()
     canonical = {
-        SHEET_WORK_ORDER: actual.get(SHEET_WORK_ORDER),
-        SHEET_BILL_QTY:   actual.get(SHEET_BILL_QTY),
+        SHEET_WORK_ORDER:  actual.get(SHEET_WORK_ORDER),
+        SHEET_BILL_QTY:    actual.get(SHEET_BILL_QTY),
         SHEET_EXTRA_ITEMS: actual.get(SHEET_EXTRA_ITEMS),
+        SHEET_TITLE:       actual.get(SHEET_TITLE),
     }
     return canonical  # value is None if sheet not found
 
@@ -140,8 +142,29 @@ def _extract_header_meta(header_rows: list) -> dict:
 
 
 # ── Build BillDocument from process_bill() output ────────────────────────────
+def _parse_title_sheet(df) -> dict:
+    """
+    Parse the Title sheet (key-value layout) into a flat dict for v2 templates.
+    Rows are scanned for label→value pairs. Handles both 2-column and multi-column layouts.
+    """
+    title_data = {}
+    if df is None or df.empty:
+        return title_data
+    import numpy as np
+    for _, row in df.iterrows():
+        cells = [str(c).strip() for c in row if str(c).strip() and str(c).strip() not in ("nan", "NaN")]
+        if len(cells) >= 2:
+            key = cells[0]
+            val = cells[1]
+            title_data[key] = val
+        elif len(cells) == 1:
+            # Single-cell row — could be a section header, skip
+            pass
+    return title_data
+
+
 def build_document(sheets: dict, premium_percent: float, premium_type: str,
-                   previous_bill_amount: float) -> BillDocument:
+                   previous_bill_amount: float, source_filename: str = "") -> BillDocument:
     """
     Call the deterministic process_bill() engine and map output to BillDocument.
     process_bill() signature is preserved exactly — no modification.
@@ -151,6 +174,7 @@ def build_document(sheets: dict, premium_percent: float, premium_type: str,
     ws_wo    = sheets.get(SHEET_WORK_ORDER)
     ws_bq    = sheets.get(SHEET_BILL_QTY)
     ws_extra = sheets.get(SHEET_EXTRA_ITEMS)
+    ws_title = sheets.get(SHEET_TITLE)
 
     if ws_wo is None or ws_bq is None:
         raise RuntimeError(
@@ -171,6 +195,19 @@ def build_document(sheets: dict, premium_percent: float, premium_type: str,
     meta = _extract_header_meta(header_rows)
     extra_item_amount = float(first_page["totals"].get("extra_items_sum", 0) or 0)
 
+    # Parse Title sheet for v2 templates (key-value metadata)
+    title_data = _parse_title_sheet(ws_title)
+    # Fallback: populate title_data from header meta if Title sheet absent
+    if not title_data:
+        title_data = {
+            "Agreement No.": meta["agreement_no"],
+            "Name of Work ;-": meta["name_of_work"],
+            "Name of Contractor or supplier :": meta["name_of_firm"],
+            "Date of written order to commence work :": meta["date_commencement"],
+            "St. date of completion :": meta["date_completion"],
+            "Date of actual completion of work :": meta["actual_completion"],
+        }
+
     doc = BillDocument(
         header=header_rows,
         items=first_page.get("items", []),
@@ -186,6 +223,8 @@ def build_document(sheets: dict, premium_percent: float, premium_type: str,
         actual_completion=meta["actual_completion"],
         work_order_amount=meta["work_order_amount"],
         extra_item_amount=extra_item_amount,
+        title_data=title_data,
+        source_filename=source_filename,
     )
     return doc
 
@@ -209,10 +248,30 @@ def render_html(doc: BillDocument, output_dir: Path,
 
     rendered_paths = []
 
+    # v2 uses note_sheet_new.html; v1 uses note_sheet.html
+    NOTE_SHEET_OVERRIDE = "note_sheet_new.html" if template_version == "v2" else None
+
     for doc_type in DOCUMENT_TYPES:
         # extra_items is always rendered (PWD statutory requirement) — empty table when no items
 
         filename = f"{doc_type.value}.html"
+
+        # For v2 note_sheet, override the template file used
+        if NOTE_SHEET_OVERRIDE and doc_type == DocumentType.NOTE_SHEET:
+            # Render directly using the overridden template name
+            try:
+                tpl = renderer.template_manager.get_template(NOTE_SHEET_OVERRIDE)
+                html_content = tpl.render(data=template_data)
+                if renderer.config.pdf_ready:
+                    html_content = renderer._optimize_for_pdf(html_content)
+                output_path = output_dir / filename
+                output_path.write_text(html_content, encoding="utf-8")
+                rendered_paths.append(output_path)
+                logger.info(f"✅ Rendered {doc_type.value} (v2→{NOTE_SHEET_OVERRIDE}) → {filename}")
+            except Exception as e:
+                logger.warning(f"⚠️  Skipped {doc_type.value}: {e}")
+            continue
+
         result = renderer.render(doc_type, {"data": template_data}, filename)
 
         if result.success:
@@ -307,6 +366,7 @@ def main():
             premium_percent=args.premium_percent,
             premium_type=args.premium_type,
             previous_bill_amount=args.previous_bill,
+            source_filename=input_path.name,
         )
         logger.info(f"  Items: {len(doc.items)}, Extra: {len(doc.extra_items)}")
         logger.info(f"  Grand total: {doc.totals.get('grand_total', 'N/A')}")

@@ -3,16 +3,18 @@
 
 export interface BillItem {
   id: string;
-  serial_no: string;
+  itemNo: string;              // Aligned to engine.models
   description: string;
   unit: string;
-  qty_since_last_bill: number;
-  qty_to_date: number;
+  quantitySince: number;       // Aligned to engine.models
+  quantityUpto: number;        // Aligned to engine.models
+  quantity: number;
   rate: number;
-  amount_to_date: number;       // computed: qty_to_date * rate
-  amount_since_previous: number; // computed: qty_since_last_bill * rate
+  amount: number;
+  wo_quantity?: number;        // For Mode 2 reference
+  confidence: number;          // For Mode 3 highlighting
+  aiNote?: string;             // For Mode 3 suggestions
   remarks: string;
-  sort_order: number;
 }
 
 export interface BillHeader {
@@ -42,8 +44,7 @@ export interface BillSummary {
 export function computeItem(item: BillItem): BillItem {
   return {
     ...item,
-    amount_since_previous: item.qty_since_last_bill * item.rate,
-    amount_to_date: item.qty_to_date * item.rate,
+    amount: item.quantity * item.rate,
   };
 }
 
