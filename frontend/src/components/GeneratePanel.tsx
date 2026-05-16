@@ -6,7 +6,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { FileDown, Loader2, CheckCircle, AlertCircle, ArrowLeft } from 'lucide-react';
 import { api } from '../lib/api';
-import type { JobStatus, BillItemAPI, ExtraItemAPI } from '../lib/api';
+import type { BillItemAPI, ExtraItemAPI } from '../lib/api';
 import { useBillStore } from '../store/useBillStore';
 import { computeSummary } from '../types/bill';
 
@@ -81,7 +81,7 @@ export default function GeneratePanel() {
         options: {
           generatePdf: true,
           generateHtml: true,
-          templateVersion: templateVersion,
+          templateVersion: templateVersion as 'v1' | 'v2',
           premiumPercent: header.tender_premium_percentage ?? 0,
           premiumType: header.premium_type ?? 'above',
           previousBillAmount: header.last_bill_deduction ?? 0,
@@ -109,7 +109,7 @@ export default function GeneratePanel() {
   const job = currentJob;
   const isComplete = job?.status === 'complete';
   const isError = job?.status === 'error';
-  const isRunning = job && !isComplete && !isError;
+  void (job && !isComplete && !isError); // isRunning — reserved for future progress indicator
 
   return (
     <div className="space-y-4 animate-fade-in max-w-2xl mx-auto">

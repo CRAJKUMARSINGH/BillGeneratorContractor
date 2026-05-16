@@ -31,6 +31,9 @@ export default {
         glass: '0 4px 24px -1px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)',
         'glass-lg': '0 8px 40px -4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)',
         glow: '0 0 20px rgba(99,102,241,0.3)',
+        neumorphic: '6px 6px 12px rgba(0,0,0,0.4), -6px -6px 12px rgba(255,255,255,0.02)',
+        'neumorphic-inner': 'inset 4px 4px 8px rgba(0,0,0,0.5), inset -4px -4px 8px rgba(255,255,255,0.02)',
+        spatial: '0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05)',
       },
       animation: {
         'fade-in': 'fadeIn 0.2s ease-out',

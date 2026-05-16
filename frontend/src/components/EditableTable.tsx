@@ -3,26 +3,27 @@
  * Supabase removed. Field names aligned to engine BillItem model.
  * Part-rate detection preserved from BillGeneratorUnified.
  */
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, memo } from 'react';
 import { Plus, Trash2, AlertTriangle } from 'lucide-react';
 import type { BillItem } from '../types/bill';
 import { useBillStore } from '../store/useBillStore';
 
 type EditableField = keyof Pick<
   BillItem,
-  'serial_no' | 'description' | 'unit' |
+  'description' | 'unit' |
   'qty_since_last_bill' | 'qty_to_date' | 'rate' | 'remarks'
 >;
 
 const COLUMNS: {
-  key: EditableField | 'amount_to_date' | 'amount_since_previous';
+  key: EditableField | 'serial_no' | 'amount_to_date' | 'amount_since_previous';
   label: string;
   numeric?: boolean;
   computed?: boolean;
   width?: string;
 }[] = [
-  { key: 'serial_no',             label: 'S.No',           width: 'w-14' },
-  { key: 'description',           label: 'Description',    width: 'min-w-[220px]' },
+  // Display-only, derived from row index to avoid getting out of sync after insert/delete/import.
+  { key: 'serial_no',             label: 'S.No',           width: 'w-14', computed: true },
+  { key: 'description',           label: 'Description',    width: 'min-w-[320px]' },
   { key: 'unit',                  label: 'Unit',           width: 'w-20' },
   { key: 'qty_since_last_bill',   label: 'Qty Since Last', numeric: true, width: 'w-28' },
   { key: 'qty_to_date',           label: 'Qty To Date',    numeric: true, width: 'w-28' },
@@ -33,7 +34,7 @@ const COLUMNS: {
 ];
 
 const EDITABLE_FIELDS: EditableField[] = [
-  'serial_no', 'description', 'unit',
+  'description', 'unit',
   'qty_since_last_bill', 'qty_to_date', 'rate', 'remarks',
 ];
 
@@ -44,6 +45,114 @@ function isPartRate(item: BillItem, originalRate?: number): boolean {
   if (!originalRate || originalRate <= 0) return false;
   return item.rate < originalRate - 0.01;
 }
+
+const TableRow = memo(({ 
+  item, 
+  rowIdx, 
+  originalRate, 
+  editing, 
+  setEditing, 
+  updateItem, 
+  removeItem, 
+  navigate,
+  inputRef
+}: {
+  item: BillItem;
+  rowIdx: number;
+  originalRate?: number;
+  editing: CellPos | null;
+  setEditing: (pos: CellPos | null) => void;
+  updateItem: any;
+  removeItem: any;
+  navigate: any;
+  inputRef: React.RefObject<HTMLInputElement>;
+}) => {
+  const partRate = isPartRate(item, originalRate);
+  
+  return (
+    <tr
+      className={`border-b border-white/[0.04] transition-colors
+        ${rowIdx % 2 === 0 ? '' : 'bg-white/[0.015]'}
+        hover:bg-white/[0.04]
+        ${partRate ? 'bg-yellow-500/5' : ''}`}
+    >
+      {COLUMNS.map((col) => {
+        const isEditing = editing?.rowId === item.id && editing?.field === col.key;
+        const val = item[col.key as keyof BillItem];
+        const display = typeof val === 'number' ? val.toFixed(2) : String(val ?? '');
+
+        if (col.computed) {
+          return (
+            <td key={col.key} className="table-cell py-2 text-right text-slate-500 bg-white/[0.02]">
+              {col.key === 'serial_no' ? (
+                <span className="tabular-nums text-slate-400">
+                  {item.serial_no && item.serial_no.trim() !== '' && item.serial_no !== '0'
+                    ? item.serial_no
+                    : rowIdx + 1}
+                </span>
+              ) : (
+                <>₹{display}</>
+              )}
+            </td>
+          );
+        }
+
+        const isRateCol = col.key === 'rate';
+        return (
+          <td
+            key={col.key}
+            className={`table-cell py-0 ${col.numeric ? 'text-right' : ''}`}
+            onClick={() => setEditing({ rowId: item.id, field: col.key as EditableField })}
+          >
+            {isEditing ? (
+              <input
+                ref={inputRef}
+                type={col.numeric ? 'number' : 'text'}
+                step={col.numeric ? '0.01' : undefined}
+                defaultValue={val as string | number}
+                onBlur={(e) => {
+                  updateItem(item.id, col.key as EditableField, e.target.value);
+                  setEditing(null);
+                }}
+                onChange={(e) => updateItem(item.id, col.key as EditableField, e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') setEditing(null);
+                  if (e.key === 'Tab') { 
+                    e.preventDefault(); 
+                    navigate(item.id, col.key as EditableField, e.shiftKey); 
+                  }
+                  if (e.key === 'Escape') setEditing(null);
+                }}
+                className="w-full bg-accent-500/10 border border-accent-500/50 rounded px-2 py-1.5
+                           text-sm text-white focus:outline-none focus:ring-1 focus:ring-accent-500 text-right"
+              />
+            ) : (
+              <div className={`px-2 py-2 text-sm cursor-text rounded hover:bg-white/[0.04] transition-colors
+                ${col.numeric ? 'text-right' : ''}
+                ${!display || display === '0.00' ? 'text-slate-600' : 'text-slate-200'}
+                ${isRateCol && partRate ? 'text-yellow-400' : ''}`}
+              >
+                {col.numeric && display !== '0.00' ? display : (display || '—')}
+                {isRateCol && partRate && (
+                  <span className="ml-1 text-xs text-yellow-500 font-medium">(Part Rate)</span>
+                )}
+              </div>
+            )}
+          </td>
+        );
+      })}
+
+      <td className="table-cell py-2 text-center">
+        <button
+          onClick={() => removeItem(item.id)}
+          className="text-slate-600 hover:text-red-400 transition-colors p-1 rounded"
+        >
+          <Trash2 size={14} />
+        </button>
+      </td>
+    </tr>
+  );
+});
 
 export default function EditableTable() {
   const { billItems, parsedData, updateItem, addItem, removeItem } = useBillStore();
@@ -79,7 +188,7 @@ export default function EditableTable() {
   const grandTotal = billItems.reduce((s, i) => s + i.amount_since_previous, 0);
 
   return (
-    <div className="glass rounded-2xl overflow-hidden">
+    <div className="glass rounded-2xl border border-white/[0.08]">
       {parsedData?.anomaly_warnings && parsedData.anomaly_warnings.length > 0 && (
         <div className="bg-red-500/10 border-b border-red-500/20 px-5 py-3">
           <div className="flex items-center gap-2 text-red-400 mb-1">
@@ -106,8 +215,8 @@ export default function EditableTable() {
         </button>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full">
+      <div className="overflow-x-auto w-full">
+        <table className="w-full min-w-[900px]">
           <thead>
             <tr className="border-b border-white/[0.06]">
               {COLUMNS.map((col) => (
@@ -123,83 +232,20 @@ export default function EditableTable() {
           </thead>
 
           <tbody>
-            {billItems.map((item, rowIdx) => {
-              const partRate = isPartRate(item, originalRates.get(item.id));
-              return (
-                <tr
-                  key={item.id}
-                  className={`border-b border-white/[0.04] transition-colors
-                    ${rowIdx % 2 === 0 ? '' : 'bg-white/[0.015]'}
-                    hover:bg-white/[0.04]
-                    ${partRate ? 'bg-yellow-500/5' : ''}`}
-                >
-                  {COLUMNS.map((col) => {
-                    const isEditing = editing?.rowId === item.id && editing?.field === col.key;
-                    const val = item[col.key as keyof BillItem];
-                    const display = typeof val === 'number' ? val.toFixed(2) : String(val ?? '');
-
-                    if (col.computed) {
-                      return (
-                        <td key={col.key} className="table-cell py-2 text-right text-slate-500 bg-white/[0.02]">
-                          ₹{display}
-                        </td>
-                      );
-                    }
-
-                    // Part-rate indicator on rate column
-                    const isRateCol = col.key === 'rate';
-                    return (
-                      <td
-                        key={col.key}
-                        className={`table-cell py-0 ${col.numeric ? 'text-right' : ''}`}
-                        onClick={() => setEditing({ rowId: item.id, field: col.key as EditableField })}
-                      >
-                        {isEditing ? (
-                          <input
-                            ref={inputRef}
-                            type={col.numeric ? 'number' : 'text'}
-                            step={col.numeric ? '0.01' : undefined}
-                            defaultValue={val as string | number}
-                            onBlur={(e) => {
-                              updateItem(item.id, col.key as EditableField, e.target.value);
-                              setEditing(null);
-                            }}
-                            onChange={(e) => updateItem(item.id, col.key as EditableField, e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') setEditing(null);
-                              if (e.key === 'Tab') { e.preventDefault(); navigate(item.id, col.key as EditableField, e.shiftKey); }
-                              if (e.key === 'Escape') setEditing(null);
-                            }}
-                            className="w-full bg-accent-500/10 border border-accent-500/50 rounded px-2 py-1.5
-                                       text-sm text-white focus:outline-none focus:ring-1 focus:ring-accent-500 text-right"
-                          />
-                        ) : (
-                          <div className={`px-2 py-2 text-sm cursor-text rounded hover:bg-white/[0.04] transition-colors
-                            ${col.numeric ? 'text-right' : ''}
-                            ${!display || display === '0.00' ? 'text-slate-600' : 'text-slate-200'}
-                            ${isRateCol && partRate ? 'text-yellow-400' : ''}`}
-                          >
-                            {col.numeric && display !== '0.00' ? display : (display || '—')}
-                            {isRateCol && partRate && (
-                              <span className="ml-1 text-xs text-yellow-500 font-medium">(Part Rate)</span>
-                            )}
-                          </div>
-                        )}
-                      </td>
-                    );
-                  })}
-
-                  <td className="table-cell py-2 text-center">
-                    <button
-                      onClick={() => removeItem(item.id)}
-                      className="text-slate-600 hover:text-red-400 transition-colors p-1 rounded"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
+            {billItems.map((item, rowIdx) => (
+              <TableRow
+                key={item.id}
+                item={item}
+                rowIdx={rowIdx}
+                originalRate={originalRates.get(item.id)}
+                editing={editing}
+                setEditing={setEditing}
+                updateItem={updateItem}
+                removeItem={removeItem}
+                navigate={navigate}
+                inputRef={inputRef}
+              />
+            ))}
           </tbody>
 
           <tfoot>

@@ -4,8 +4,10 @@ Derived from Git5 bill-api models, aligned to engine/model/document.py.
 """
 from pydantic import BaseModel, Field
 from typing import Optional
-from sqlmodel import SQLModel, Field as SQLField
-from datetime import datetime
+from sqlmodel import SQLModel, Field as SQLField, Column as SQLColumn
+from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy import Column
+from datetime import datetime, timezone
 
 # --- DATABASE MODELS ---
 class User(SQLModel, table=True):
@@ -21,8 +23,9 @@ class BillRecord(SQLModel, table=True):
     status: str
     message: str
     total_amount: float = 0.0
-    created_at: datetime = SQLField(default_factory=datetime.utcnow)
-    file_paths: str = "" # serialized JSON string for simplicity
+    created_at: datetime = SQLField(default_factory=lambda: datetime.now(timezone.utc))
+    file_paths: dict = SQLField(default_factory=dict, sa_column=SQLColumn(JSON))
+    data_hash: Optional[str] = SQLField(default=None)
 
 # --- API MODELS ---
 class BillItem(BaseModel):

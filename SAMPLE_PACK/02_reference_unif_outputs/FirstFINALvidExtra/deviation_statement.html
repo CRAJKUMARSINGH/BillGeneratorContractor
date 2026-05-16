@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deviation Statement</title>
+    <style>
+        @page { 
+            size: A4 landscape; 
+            margin: 10mm;
+            @top-left { content: none; }
+            @top-center { content: none; }
+            @top-right { content: none; }
+            @bottom-left { content: none; }
+            @bottom-center { content: none; }
+            @bottom-right { content: none; }
+        }
+        @media print {
+            html, body {
+                width: 277mm !important;
+                min-width: 277mm !important;
+                max-width: 277mm !important;
+            }
+            table {
+                width: 277mm !important;
+                min-width: 277mm !important;
+                max-width: 277mm !important;
+            }
+        }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        html {
+            zoom: 1.0 !important;
+            -webkit-text-size-adjust: none !important;
+        }
+        body { 
+            font-family: Calibri, sans-serif; 
+            font-size: 7pt; 
+            margin: 0; 
+            line-height: 1.1;
+            width: 277mm !important;
+            max-width: 277mm !important;
+            min-width: 277mm !important;
+            transform: scale(1.0) !important;
+            overflow-x: visible !important;
+        }
+        .container { 
+            width: 277mm !important;
+            max-width: 277mm !important;
+            min-width: 277mm !important;
+            min-height: 190mm; 
+            margin: 0; 
+            padding: 0;
+            transform: scale(1.0) !important;
+        }
+        table { 
+            width: 277mm !important;
+            min-width: 277mm !important;
+            max-width: 277mm !important;
+            border-collapse: collapse !important; 
+            table-layout: fixed !important; 
+            font-size: 7pt;
+            transform: scale(1.0) !important;
+            border: 2px solid black !important;
+        }
+        /* OPTIMIZED column widths for deviation statement - better fit */
+        table th:nth-child(1), table td:nth-child(1) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(2), table td:nth-child(2) { width: 65mm !important; min-width: 65mm !important; max-width: 65mm !important; border: 1px solid black !important; }
+        table th:nth-child(3), table td:nth-child(3) { width: 12mm !important; min-width: 12mm !important; max-width: 12mm !important; border: 1px solid black !important; }
+        table th:nth-child(4), table td:nth-child(4) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(5), table td:nth-child(5) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(6), table td:nth-child(6) { width: 22mm !important; min-width: 22mm !important; max-width: 22mm !important; border: 1px solid black !important; }
+        table th:nth-child(7), table td:nth-child(7) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(8), table td:nth-child(8) { width: 22mm !important; min-width: 22mm !important; max-width: 22mm !important; border: 1px solid black !important; }
+        table th:nth-child(9), table td:nth-child(9) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(10), table td:nth-child(10) { width: 22mm !important; min-width: 22mm !important; max-width: 22mm !important; border: 1px solid black !important; }
+        table th:nth-child(11), table td:nth-child(11) { width: 18mm !important; min-width: 18mm !important; max-width: 18mm !important; border: 1px solid black !important; }
+        table th:nth-child(12), table td:nth-child(12) { width: 22mm !important; min-width: 22mm !important; max-width: 22mm !important; border: 1px solid black !important; }
+        table th:nth-child(13), table td:nth-child(13) { width: 44mm !important; min-width: 44mm !important; max-width: 44mm !important; border: 1px solid black !important; }
+        th, td { 
+            border: 1px solid black !important; 
+            padding: 2px 1px; 
+            text-align: left; 
+            vertical-align: top; 
+            overflow: visible; 
+            word-wrap: break-word;
+            white-space: normal;
+            font-size: 7pt;
+            box-sizing: border-box;
+        }
+        th {
+            font-size: 6.5pt;
+            line-height: 1.1;
+            border: 1px solid black !important;
+            text-align: center !important;
+        }
+        /* Force borders on all sides */
+        table {
+            border: 1px solid black !important;
+        }
+        tr {
+            border: 1px solid black !important;
+        }
+        .header { text-align: left; margin-bottom: 12px; }
+        .header h2 { 
+            font-size: 14pt; 
+            margin-bottom: 10px; 
+            text-align: center; 
+            font-weight: bold;
+            border: 2px solid #000000;
+            padding: 10px;
+        }
+        .header-item { margin: 6px 0; font-size: 9pt; }
+        .header-item strong { font-weight: bold; }
+        .header-value { font-weight: bold; font-size: 10pt; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>DEVIATION STATEMENT</h2>
+            <div class="header-item">
+                <strong>Name of Work :-</strong> <span class="header-value">Plumbing Installation and MTC work at Govt. Nehru hostel Mansarovar, Sanganer, Jaipur</span>
+            </div>
+            <div class="header-item">
+                <strong>Name of Contractor or supplier :</strong> <span class="header-value">M/s. Shree Krishna Builders Jaipur</span>
+            </div>
+            <div class="header-item">
+                <strong>Serial No. of this bill :</strong> <span class="header-value">First & Final Bill</span>
+            </div>
+            <div class="header-item">
+                <strong>Agreement No.</strong> <span class="header-value">48/2024-25</span>
+            </div>
+        </div>
+        <table>
+            <colgroup>
+                <col style="width: 8mm;">
+                <col style="width: 120mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 12mm;">
+                <col style="width: 37mm;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th style="width: 8mm;">ITEM No.</th>
+                    <th style="width: 120mm;">Description</th>
+                    <th style="width: 12mm;">Unit</th>
+                    <th style="width: 12mm;">Qty as per Work Order</th>
+                    <th style="width: 12mm;">Rate</th>
+                    <th style="width: 12mm;">Amt as per Work Order Rs.</th>
+                    <th style="width: 12mm;">Qty Executed</th>
+                    <th style="width: 12mm;">Amt as per Executed Rs.</th>
+                    <th style="width: 12mm;">Excess Qty</th>
+                    <th style="width: 12mm;">Excess Amt Rs.</th>
+                    <th style="width: 12mm;">Saving Qty</th>
+                    <th style="width: 12mm;">Saving Amt Rs.</th>
+                    <th style="width: 37mm;">REMARKS/ REASON.</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                    
+                    <tr >
+                        
+                            <td>1.0</td>
+                            <td>
+                                
+                                    Rewiring of light point/ fan point/ exhaust fan point/ call bell point with 1.5 sq. mm nominal size FR PVC insulated unsheathed flexible copper conductor 1.1 kV grade  and 1.5 sq. mm nominal size FR PVC insulated unsheathed flexible copper earth conductor 1.1 kV grade (IS:694) in recessed  ISI marked MMS ( IS:9537 P - III ) virgin material PVC conduit & it's ISI marked (IS:3419-1988) accessories, round tiles, 1.2 mm thick MS box with earth terminal, 6 A switch, 3 pin ceiling rose/holder / 3 way connector , 3.0 mm thick ISI marked (IS:2036-1995) phenolic laminated sheet, Al.alloy / Cadmium plated iron/  brass  screws, cup washers, making connections, testing etc. as required. For specification of copper  Conductor,  Phenolic Laminated sheet's & Electrical/ Wiring accessories refer Chapter E - 04, E - 05 & E - 07 For additional technical parameters of product / work refer Annexure 'A' attached with this BSR
+                                
+                            </td>
+                            
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    Short point (up to 3 mtr.)
+                                
+                            </td>
+                            
+                                <td>P. point</td>
+                                <td>50</td>
+                                <td>256.00</td>
+                                <td>12800.00</td>
+                                <td>52</td>
+                                <td>13312.00</td>
+                                <td>2</td>
+                                <td>512.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    Medium point (up to 6 mtr.)
+                                
+                            </td>
+                            
+                                <td>P. point</td>
+                                <td>50</td>
+                                <td>472.00</td>
+                                <td>23600.00</td>
+                                <td>48</td>
+                                <td>22656.00</td>
+                                <td></td>
+                                <td></td>
+                                <td>2</td>
+                                <td>944.00</td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    Long point  (up to 10 mtr.)
+                                
+                            </td>
+                            
+                                <td>P. point</td>
+                                <td>50</td>
+                                <td>662.00</td>
+                                <td>33100.00</td>
+                                <td>52</td>
+                                <td>34424.00</td>
+                                <td>2</td>
+                                <td>1324.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>2.0</td>
+                            <td>
+                                
+                                    Rewiring of 3/5 pin 6 amp. Light plug point with 1.5 sq. mm nominal size  FR PVC insulated unsheathed flexible copper conductor 1.1 kV grade  and 1.5 sq. mm nominal size FR PVC insulated unsheathed flexible copper earth conductor 1.1 kV grade(IS:694)   in recessed ISI marked MMS ( IS:9537 P - III ) virgin material  PVC conduit & it's  ISI marked (IS:3419-1988) accessories, 1.2 mm thick  MS box with earth terminal of required size,  6 A  switch, 3/5 pin 6 A socket, 3.0 mm thick ISI marked (IS:2036-1995) phenolic laminated sheet, Al.alloy / Cadmium plated iron/ brass  screws, cup washers, making connections, testing etc. as required.  For specification of copper  Conductor,  Phenolic Laminated sheet's & Electrical/ Wiring accessories refer Chapter E - 04, E - 05 & E - 07 For additional technical parameters of product / work refer Annexure 'A' attached with this BSR
+                                
+                            </td>
+                            
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    On board
+                                
+                            </td>
+                            
+                                <td>P. point</td>
+                                <td>100</td>
+                                <td>136.00</td>
+                                <td>13600.00</td>
+                                <td>102</td>
+                                <td>13872.00</td>
+                                <td>2</td>
+                                <td>272.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>3.0</td>
+                            <td>
+                                
+                                    P & F ISI marked (IS:3854) 6 amp. flush type non modular switch  with CM/L no. printed and made out from industrial grade Polycarbonate or fire resistant ABS material including cutting hole in tile and making connection testing etc. as required. All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure "A" attached with this BSR .
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td>10</td>
+                                <td>23.00</td>
+                                <td>230.00</td>
+                                <td>8</td>
+                                <td>184.00</td>
+                                <td></td>
+                                <td></td>
+                                <td>2</td>
+                                <td>46.00</td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>4.0</td>
+                            <td>
+                                
+                                    P & F ISI marked (IS :3854) 16 amp. flush type non modular switch CM/L no. printed and made out from industrial grade Polycarbonate or fire resistant ABS material including cutting hole in tile and making connection testing etc. as required. All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure "A" attached with this BSR .
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td>30</td>
+                                <td>50.00</td>
+                                <td>1500.00</td>
+                                <td>32</td>
+                                <td>1600.00</td>
+                                <td>2</td>
+                                <td>100.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>5.0</td>
+                            <td>
+                                
+                                    Providing & Fixing of  of 3/5 pin 6 amp. flush type  non modular socket  made out from industrial grade Polycarbonate or fire resistant ABS material, brass terminal with Porcelain based back cover & captive screws including cutting hole in tile and making connection testing etc. as required.All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure "A" attached with this BSR .
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td>10</td>
+                                <td>33.00</td>
+                                <td>330.00</td>
+                                <td>22</td>
+                                <td>726.00</td>
+                                <td>12</td>
+                                <td>396.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>6.0</td>
+                            <td>
+                                
+                                    Providing & Fixing of  3/6 pin 16 amp flush type non modular socket  made out from Industrial grade Polycarbonate or fire resistant ABS material, brass terminal with Porcelain based back cover & captive screws including cutting hole in tile and making connection testing etc. as required.All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure "A" attached with this BSR .
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td>10</td>
+                                <td>78.00</td>
+                                <td>780.00</td>
+                                <td>36</td>
+                                <td>2808.00</td>
+                                <td>26</td>
+                                <td>2028.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>7.0</td>
+                            <td>
+                                
+                                    Providing & Fixing of  ISI marked (IS:371) 6 amp surface type 3 pin ceiling rose with CM/L no. printed and made out from industrial grade Polycarbonate or fire resistant ABS material, brass terminal & captive screws including making connection testing etc. as required.All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure "A" attached with this BSR .
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td>10</td>
+                                <td>30.00</td>
+                                <td>300.00</td>
+                                <td>12</td>
+                                <td>360.00</td>
+                                <td>2</td>
+                                <td>60.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>8.0</td>
+                            <td>
+                                
+                                    Providing & Fixing of ISI marked (IS:1258) batten/angle lamp  holder with CM/L no. printed and made out from industrial grade Polycarbonate or fire resistant ABS material, brass terminal & captive screwsincluding making connection testing etc. as required.  All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure "A" attached with this BSR .
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td>10</td>
+                                <td>30.00</td>
+                                <td>300.00</td>
+                                <td>8</td>
+                                <td>240.00</td>
+                                <td></td>
+                                <td></td>
+                                <td>2</td>
+                                <td>60.00</td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>9.0</td>
+                            <td>
+                                
+                                    Providing & Fixing of IS 11037:1984  marked  non modular socket size flush type 180 watt rotary minimum 5 step fan regulator with CM/L no. printed and made out from industrial grade Polycarbonate or fire resistant ABS material including making connection testing etc. as required.All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure "A" attached with this BSR .
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td>33</td>
+                                <td>219.00</td>
+                                <td>7227.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>33</td>
+                                <td>7227.00</td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>10.0</td>
+                            <td>
+                                
+                                    Providing and fixing of   power plug point with non modular accessories as per PWD specification for electrical Works with  Galvanized   box of 1.2 mm thick  with earth terminal with suitable size phenolic laminated sheet (IS : 2036 -  1995) cover including cost of 16 amp. Switch (IS :3854) and 3/6 pin 16 amp. socket outlet  making connection , testing , etc. as required. . For specification of  Wiring accessories refer Chapter  E - 07 related item &  For additional technical parameters of product / work refer Annexure 'A' attached with this BSR
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td>44</td>
+                                <td>303.00</td>
+                                <td>13332.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>44</td>
+                                <td>13332.00</td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>11.0</td>
+                            <td>
+                                
+                                    S&F following sizes (dia.) of ISI marked virgin material MMS ( IS:9537 P - III ) PVC conduit along with  ISI marked (IS:3419-1988) accessories as required  in  recess  including  cutting the wall, covering conduit and making good the same as required. For additional technical parameters of product / work refer Annexure 'A' attached with this BSR
+                                
+                            </td>
+                            
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    20 mm
+                                
+                            </td>
+                            
+                                <td>R. mtr.</td>
+                                <td>300</td>
+                                <td>40.00</td>
+                                <td>12000.00</td>
+                                <td>2985</td>
+                                <td>119400.00</td>
+                                <td>2685</td>
+                                <td>107400.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    25 mm
+                                
+                            </td>
+                            
+                                <td>R. mtr.</td>
+                                <td>100</td>
+                                <td>56.00</td>
+                                <td>5600.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>100</td>
+                                <td>5600.00</td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>12.0</td>
+                            <td>
+                                
+                                    Supplying and drawing FR PVC insulated & unsheathed flexible copper conductor as per PWD specification for electrical Works with ISI marked (IS:694) and as per IS 8130 : 2013 of 1.1 kV grade . Wire should be made from  99.90 % purity copper, class 2 stranding in acc. to IS:8130/IEC 60228 for  lower watt loss , oxygen free for less chances of oxidization, insulation PVC type A/C/D , flame retardant as per IS 10810-53, better amperage rating as per IS:3961 part 5,  in existing  surface or recessed PVC/ MS conduit/casing capping making connections with Copper Lugs of suitable size, Ferrules,testing etc. as required. OEM Must have its own in house NABL lab setup for all testing facilities for wires.   For additional technical parameters of product / work refer Annexure 'A' attached with this BSR
+                                
+                            </td>
+                            
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    2 x 2.5 sq. mm. + 1x1.5sqmm
+                                
+                            </td>
+                            
+                                <td>Mtr.</td>
+                                <td>900</td>
+                                <td>81.00</td>
+                                <td>72900.00</td>
+                                <td>92</td>
+                                <td>7452.00</td>
+                                <td></td>
+                                <td></td>
+                                <td>808</td>
+                                <td>65448.00</td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    2 x 4.0 sq. mm. + 1 x 2.5 sq. mm.
+                                
+                            </td>
+                            
+                                <td>Mtr.</td>
+                                <td>180</td>
+                                <td>122.00</td>
+                                <td>21960.00</td>
+                                <td>12</td>
+                                <td>1464.00</td>
+                                <td></td>
+                                <td></td>
+                                <td>168</td>
+                                <td>20496.00</td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>13.0</td>
+                            <td>
+                                
+                                    Plate Earthing  as per IS:3043 with Hot dipped G.I. Earth plate of size 600mm x 600mm x 6.0mm by embodying  3 to 4 mtr. below the ground level with 20  mm dia. G.I. 'B' class watering Pipe ,including all accessories like nut, bolts, reducer, nipple, wire meshed funnel, and Heavy duty weather proof poly-propylene earth pit chamber with lockable Jam free lid suitable for safe working load 5000 Kg or more of size Top Dia. 225 to 260 mm, Bottom Dia 300 to 350 mm. and Height  250 to 300 mm. and embodying the pipe  complete with alternate layers salt and coke/ charcoal, testing of earth resistance for value of 5 ohms or less  as required & must record by engineer in charge during site visit and ensure to enter in measurment book.All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure "A" attached with this BSR .
+                                
+                            </td>
+                            
+                                <td>Set</td>
+                                <td>4</td>
+                                <td>5733.00</td>
+                                <td>22932.00</td>
+                                <td>15</td>
+                                <td>85995.00</td>
+                                <td>11</td>
+                                <td>63063.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>14.0</td>
+                            <td>
+                                
+                                    Supply & Laying following size earth wire in horizontal or vertical run in ground/surface/recess including riveting, soldering, saddles,  making connection with GI/Cu purity purity >95%  thimble etc. as required.  All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure "A" attached with this BSR .
+                                
+                            </td>
+                            
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    8 SWG G.I. ( Hot Dipped  ) Wire
+                                
+                            </td>
+                            
+                                <td>Mtr.</td>
+                                <td>100</td>
+                                <td>20.00</td>
+                                <td>2000.00</td>
+                                <td>35</td>
+                                <td>700.00</td>
+                                <td></td>
+                                <td></td>
+                                <td>65</td>
+                                <td>1300.00</td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>15.0</td>
+                            <td>
+                                
+                                    Providing & Fixing of  BEE  Star rated copper wounded double ball bearing capacitor start, aluminium body & Metallic  blade ceiling  fan  Conforming to all the performance requirements laid down in IS 374:2019 including all amendments, as applicable ; & Carry BIS licensing (i.e. ISI marking) with down rod up to 80 cm with secondary support safety cable ( steel rope) , cotter pin with 3 x 1.5 sq.mm pvc insulated flexible copper conductor making connection testing etc. as required. All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure "A" attached with this BSR .
+                                
+                            </td>
+                            
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    1200 mm Sweep BEE 1 Star rated (service value >=4.0 to < 4.5 )
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td>10</td>
+                                <td>1890.00</td>
+                                <td>18900.00</td>
+                                <td>12</td>
+                                <td>22680.00</td>
+                                <td>2</td>
+                                <td>3780.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>16.0</td>
+                            <td>
+                                
+                                    Providing & Fixing of IP20 SMD Mid Power LED batten type integrated light fixture made from Powder coated Extruded aluminium  housing with in built driver  , System lumen efficacy ≥ 110 lm/Watt output, internal surge protection of 2.5 KV with Short & Open circuit protection ,THD < 10% , P. F.≥0.95, CRI >80 , life time of minimum  50000 Burning Hours with , 70% of intial Lumen maintaned till life ends  , CCT 3000°K / 4000°K  / 5700°K /6000°K/6500°K (As per ANSI Bin) , Maximum power consumption should not more than the specified rating and Fixture shall be of  BIS standard and  trade mark certificate ( T.C.). Manufactures Word Mark/ Name Engraved/ Embossing/ Screen printing on housing. OEM must have its own in house NABL lab setup for all testing facilities for LED fixtures. (LM79 & LM80) certificate / Report from OEM shall be submitted.  All as per pre approved by Engineer in charge.  For additional technical parameters of products/ work  , refer   Annexure "A" attached with this BSR .
+                                
+                            </td>
+                            
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    1170mm(+/-10%) LED batten with min. lumen output 2200 lm
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td>80</td>
+                                <td>492.00</td>
+                                <td>39360.00</td>
+                                <td>78</td>
+                                <td>38376.00</td>
+                                <td></td>
+                                <td></td>
+                                <td>2</td>
+                                <td>984.00</td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>17.0</td>
+                            <td>
+                                
+                                    Providing & Fixing of 240/415 V AC MCB with positive isolation of 10 kA breaking capacity (B/ C/D tripping characteristic as per type of load and  site requirement) 4 KV impulse withstand voltage, ISI marked IS 8828(1996) / conforming to IEC 60898-1 2002, IEC 60947-2, low watt losses, trip free mechanisum , energy limiting of  class 3 as per IEC,  minimum phase termination capacity of 35sq.mm. , conductor line load reversibility , IP 20 contact protection and fitted in  existing distribution board/sheets, minimum electrical operation 20,000 upto 20 A rating and 10,000 upto 63 A, 5000 for 80 A & above rating  including making connections, testing etc. as required. OEM shall have submit  NABL / CPRI / ERDA accrediated   lab type test reports  & All as per pre approved by Engineer in charge. For additional technical parameters of product / work refer Annexure 'A' attached with this BSR
+                                
+                            </td>
+                            
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    Single pole MCB   (With B/C curve tripping Characteristics)
+                                
+                            </td>
+                            
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    6 A to 32 A rating
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td>50</td>
+                                <td>187.00</td>
+                                <td>9350.00</td>
+                                <td>88</td>
+                                <td>16456.00</td>
+                                <td>38</td>
+                                <td>7106.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    Double pole MCB(With B/C curve tripping Characteristics)
+                                
+                            </td>
+                            
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    50/63 A rating
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td>10</td>
+                                <td>900.00</td>
+                                <td>9000.00</td>
+                                <td>35</td>
+                                <td>31500.00</td>
+                                <td>25</td>
+                                <td>22500.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>18.0</td>
+                            <td>
+                                
+                                    Providing & Fixing of Recessed/surface mounting heavy duty horizontal type Double Door ( Metal / Glazed )Distribution board with Metal end box made out from Galvanized steel / CRCA sheet not less then 1.2 mm thick  conforming to IS-8623-1 & 3 /  IEC 61439- 1 & 3, powder painted complete with reversible door (for double door DB only )100 amp.  insulated copper bus bar/shorting link , copper neutral link, copper earth link , color coded interconnecting wire set  of suitable rating and din bar,masking sheet,  making internal DB  terminations with copper lugs, Ferrules,  detachable gland plate, including making connections, testing etc. as required. OEM shall have submit  NABL / CPRI / ERDA accrediated   lab type test reports  & All as per pre approved by Engineer in charge. For additional technical parameters of product / work refer Annexure 'A' attached with this BSR
+                                
+                            </td>
+                            
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    Metal door (single phase) IK-09 and IP-43 with Metal end box
+                                
+                            </td>
+                            
+                                <!-- Leave columns 3 to 12 blank when rate is zero or blank (parent items) -->
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td></td>
+                            <td>
+                                
+                                    8 Way (8+2)
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td>8</td>
+                                <td>2184.00</td>
+                                <td>17472.00</td>
+                                <td>25</td>
+                                <td>54600.00</td>
+                                <td>17</td>
+                                <td>37128.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr style="font-weight: bold; background-color: #f0f0f0;">
+                        
+                            <td></td>
+                            <td style="text-align: left; font-weight: bold; text-decoration: underline;">
+                                <strong><u>EXTRA ITEM/S</u></strong>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>E-01</td>
+                            <td>
+                                
+                                    Minimum lumen output 2500 Im Post top Luminarie
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td></td>
+                                <td>5075.00</td>
+                                <td></td>
+                                <td>2</td>
+                                <td>10150.00</td>
+                                <td>2</td>
+                                <td>10150.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>E-02</td>
+                            <td>
+                                
+                                    6 A 3/5 pin shuttered socket
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td></td>
+                                <td>107.00</td>
+                                <td></td>
+                                <td>4</td>
+                                <td>428.00</td>
+                                <td>4</td>
+                                <td>428.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>E-03</td>
+                            <td>
+                                
+                                    6/16 A shuttered socket
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td></td>
+                                <td>176.00</td>
+                                <td></td>
+                                <td>5</td>
+                                <td>880.00</td>
+                                <td>5</td>
+                                <td>880.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>E-04</td>
+                            <td>
+                                
+                                    Providing & Fixing of modular type lockable feature socket duly made out of unbreakable and fire retardant vergin poly carbonate with brass terminals and captive screws & silver alloy contact tip with IP-20 rating, including all as per pre approved by Engineer in charge, making connections, testing etc. as required. For additional technical parameters of product / work refer Annexure 'A' attached with this BSR
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td></td>
+                                <td>345.00</td>
+                                <td></td>
+                                <td>5</td>
+                                <td>1725.00</td>
+                                <td>5</td>
+                                <td>1725.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>E-05</td>
+                            <td>
+                                
+                                    6 A 3/5 pin shuttered socket
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td></td>
+                                <td>107.00</td>
+                                <td></td>
+                                <td>4</td>
+                                <td>428.00</td>
+                                <td>4</td>
+                                <td>428.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                    
+                    <tr >
+                        
+                            <td>E-06</td>
+                            <td>
+                                
+                                    6/16 A shuttered socket
+                                
+                            </td>
+                            
+                                <td>Each</td>
+                                <td></td>
+                                <td>176.00</td>
+                                <td></td>
+                                <td>5</td>
+                                <td>880.00</td>
+                                <td>5</td>
+                                <td>880.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            
+                        
+                    </tr>
+                
+                <tr>
+                    <td></td>
+                    <td>Grand Total Rs.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>338573.00</td>
+                    <td></td>
+                    <td>483296.00</td>
+                    <td></td>
+                    <td>260160.00</td>
+                    <td></td>
+                    <td>115437.00</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Add Tender Premium (5.11%)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>17301.08</td>
+                    <td></td>
+                    <td>24696.43</td>
+                    <td></td>
+                    <td>13294.18</td>
+                    <td></td>
+                    <td>5898.83</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Grand Total including Tender Premium Rs.</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>355874.08</td>
+                    <td></td>
+                    <td>507992.43</td>
+                    <td></td>
+                    <td>273454.18</td>
+                    <td></td>
+                    <td>121335.83</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: left;">
+                        
+                            Overall Excess With Respect to the Work Order Amount Rs.
+                        
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    
+                        <td>152118.35</td>
+                        <td></td>
+                        <td></td>
+                    
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: left; font-weight: bold;">
+                        
+                            Percentage of Excess %
+                        
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    
+                        <td style="font-weight: bold;">42.74%</td>
+                        <td></td>
+                        <td></td>
+                    
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

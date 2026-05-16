@@ -6,11 +6,10 @@ import { useAuthStore } from './store/useAuthStore';
 import Dashboard from './components/Dashboard';
 import BillEditor from './components/BillEditor';
 import GeneratePanel from './components/GeneratePanel';
+import HindiLanding from './components/HindiLanding';
 import ExcelUploader from './components/ExcelUploader';
 import ImageUploader from './components/ImageUploader';
 import TemplateGenerator from './components/TemplateGenerator';
-import Login from './components/Login';
-
 const queryClient = new QueryClient();
 
 function AppInner() {
@@ -26,10 +25,6 @@ function AppInner() {
     setTimeout(() => setToastMsg(null), 3500);
   };
 
-  if (!token) {
-    return <Login />;
-  }
-
   return (
     <div className="min-h-screen bg-surface-950">
       {/* Nav */}
@@ -42,12 +37,15 @@ function AppInner() {
             <span className="font-bold text-white tracking-tight">BillForge</span>
             <span className="text-xs text-slate-600 ml-1">PWD Contractor Bill Generator</span>
           </div>
-          <button 
-            onClick={logout}
-            className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-colors border border-white/5"
-          >
-            <LogOut size={16} /> Logout
-          </button>
+          {token && (
+            <button
+              onClick={logout}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-colors border border-white/5"
+              aria-label="Logout of BillForge session"
+            >
+              <LogOut size={16} /> Logout
+            </button>
+          )}
         </div>
       </nav>
 
@@ -63,8 +61,19 @@ function AppInner() {
         </div>
       )}
 
-      {/* Main */}
-      <main className="max-w-5xl mx-auto px-4 py-6">
+      {/* Main — full width for editor, constrained for landing/dashboard */}
+      <main className={
+        viewMode === 'edit' || viewMode === 'generating'
+          ? 'w-full px-4 py-4'
+          : 'max-w-5xl mx-auto px-4 py-6'
+      }>
+        {viewMode === 'landing' && (
+          <HindiLanding
+            onOpenUploader={() => setShowUploader(true)}
+            onOpenImageUploader={() => setShowImageUploader(true)}
+            onOpenTemplateGenerator={() => setShowTemplateGenerator(true)}
+          />
+        )}
         {viewMode === 'dashboard'   && <Dashboard onOpenUploader={() => setShowUploader(true)} onOpenImageUploader={() => setShowImageUploader(true)} onOpenTemplateGenerator={() => setShowTemplateGenerator(true)} />}
         {viewMode === 'edit'        && <BillEditor />}
         {viewMode === 'generating'  && <GeneratePanel />}

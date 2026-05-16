@@ -6,11 +6,13 @@ from pathlib import Path
 import time
 
 # Add paths to sys.path
-root_dir = Path("c:/Users/Rajkumar/New-Folder")
-unif_dir = root_dir / "BillGeneratorUnified"
+# Add paths to sys.path
+root_dir = Path(__file__).parent.parent
+unif_dir = root_dir / "archived_apps" / "BillGeneratorUnified"
 engine_dir = root_dir / "engine"
 
 sys.path.append(str(unif_dir))
+sys.path.append(str(root_dir / "archived_apps"))
 sys.path.append(str(root_dir))
 
 from BillGeneratorUnified.core.processors.excel_processor import ExcelProcessor as UnifExcelProcessor

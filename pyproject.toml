@@ -1,0 +1,40 @@
+[project]
+name = "bill-generator-consolidated"
+version = "1.0.0"
+description = "Consolidated SaaS PWD Bill Generator Platform"
+authors = [
+    { name = "Antigravity AI Auditor", email = "antigravity@deepmind.com" }
+]
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "sqlmodel",
+    "pydantic",
+    "pydantic-settings",
+    "python-multipart",
+    "python-jose[cryptography]",
+    "passlib[bcrypt]",
+    "arq",
+    "redis",
+    "pandas",
+    "openpyxl",
+    "xlsxwriter",
+    "pytesseract",
+    "pdfkit",
+    "jinja2",
+    "scipy",
+    "numpy"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["backend*", "engine*", "ingestion*"]
+
+[tool.pyright]
+include = ["backend", "engine", "ingestion"]
+exclude = ["archived_apps"]
+typeCheckingMode = "basic"
+
+[tool.black]
+line-length = 100
+target-version = ['py310']

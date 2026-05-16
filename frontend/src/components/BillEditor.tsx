@@ -11,8 +11,8 @@ export default function BillEditor() {
       {/* Toolbar */}
       <div className="glass rounded-2xl px-5 py-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <button onClick={() => setViewMode('dashboard')} className="btn-ghost py-1.5 flex items-center gap-1.5">
-            <ArrowLeft size={15} /> Dashboard
+          <button onClick={() => setViewMode('landing')} className="btn-ghost py-1.5 flex items-center gap-1.5">
+            <ArrowLeft size={15} /> Landing
           </button>
           {isDirty && (
             <div className="flex items-center gap-1.5 text-xs text-yellow-400">

@@ -1,4 +1,4 @@
-import type { DocumentStatus, BillStatus } from '../../types/bill';
+import type { DocumentStatus, BillStatus } from '../../types/bill'; // eslint-disable-line @typescript-eslint/no-unused-vars
 
 const STATUS_CONFIG: Record<string, { label: string; cls: string }> = {
   draft:        { label: 'Draft',        cls: 'bg-slate-500/20 text-slate-300' },

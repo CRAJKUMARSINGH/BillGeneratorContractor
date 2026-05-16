@@ -1,24 +1,33 @@
+# --- Builder Stage ---
+FROM python:3.11-slim as builder
+WORKDIR /build
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libffi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY pyproject.toml .
+RUN pip install --no-cache-dir .
+
+# --- Runtime Stage ---
 FROM python:3.11-slim
 WORKDIR /app
 
-# Install system dependencies for weasyprint
-RUN apt-get update && apt-get install -y \
+# Install runtime dependencies ONLY
+RUN apt-get update && apt-get install -y --no-install-recommends \
     libpango-1.0-0 \
     libpangoft2-1.0-0 \
-    libffi-dev \
     libglib2.0-0 \
+    tesseract-ocr \
     && rm -rf /var/lib/apt/lists/*
 
-COPY backend/requirements.txt /app/backend/requirements.txt
-COPY engine/requirements.txt /app/engine/requirements.txt
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
-RUN pip install --no-cache-dir -r /app/backend/requirements.txt
-
-COPY backend /app/backend
-COPY engine /app/engine
-
-WORKDIR /app/backend
+COPY . /app
 
 EXPOSE 8000
-
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -5,7 +5,11 @@ ROOT_DIR = Path(__file__).parent.parent
 print(f"ROOT_DIR: {ROOT_DIR}")
 
 def discover_test_files():
-    folders = [f for f in ROOT_DIR.iterdir() if f.is_dir() and (f.name.startswith("INPUT") or f.name.startswith("TEST"))]
+    bench_root = ROOT_DIR / "MASTER_INPUT_BENCHMARKS"
+    if not bench_root.exists():
+        return []
+        
+    folders = [f for f in bench_root.iterdir() if f.is_dir()]
     print(f"Folders found: {[f.name for f in folders]}")
     files = []
     

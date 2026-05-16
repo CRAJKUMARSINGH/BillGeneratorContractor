@@ -6,16 +6,13 @@ from pathlib import Path
 
 def discover_test_folders():
     """
-    Auto-discover folders matching TEST* and INPUT* in the root directory.
+    Auto-discover folders inside MASTER_INPUT_BENCHMARKS.
     """
-    base_dir = Path(__file__).parent.parent
-    folders = []
-    
-    # Simple pattern matching for folders
-    for f in base_dir.iterdir():
-        if f.is_dir() and (f.name.startswith("TEST") or f.name.startswith("INPUT")):
-            folders.append(f)
-            
+    bench_root = Path(__file__).parent.parent / "MASTER_INPUT_BENCHMARKS"
+    if not bench_root.exists():
+        return []
+
+    folders = [f for f in bench_root.iterdir() if f.is_dir()]
     return folders
 
 def get_test_files():

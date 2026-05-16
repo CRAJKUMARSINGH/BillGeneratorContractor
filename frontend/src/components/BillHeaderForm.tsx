@@ -52,8 +52,8 @@ export default function BillHeaderForm() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-3 px-5 pb-3">
             {group.fields.map((f) => {
               const colSpan =
-                f.span === 3 ? 'sm:col-span-2 lg:col-span-3' :
-                f.span === 2 ? 'sm:col-span-2' : '';
+                f.span === 2 ? 'sm:col-span-2' :
+                (f.span as number) === 3 ? 'sm:col-span-2 lg:col-span-3' : '';
               
               const val = header[f.key as keyof typeof header];
               

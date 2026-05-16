@@ -4,6 +4,7 @@ import {
   Image as ImageIcon, Sparkles, Clock, CheckCircle, TrendingUp 
 } from 'lucide-react';
 import { useBillStore, blankItem } from '../store/useBillStore';
+import { useAuthStore } from '../store/useAuthStore';
 import { api, BillRecordAPI } from '../lib/api';
 
 interface Props {
@@ -16,8 +17,8 @@ function StatCard({ icon, label, value, color }: {
   icon: React.ReactNode; label: string; value: string | number; color: string;
 }) {
   return (
-    <div className="glass rounded-2xl p-4 flex flex-col gap-2 hover:bg-white/[0.06] transition-all group border border-white/[0.03]">
-      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${color} mb-1 group-hover:scale-110 transition-transform`}>
+    <div className="neumorphic rounded-2xl p-4 flex flex-col gap-2 hover:bg-white/[0.02] transition-all group">
+      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${color} mb-1 group-hover:scale-110 transition-transform shadow-glow`}>
         {icon}
       </div>
       <div>
@@ -30,8 +31,10 @@ function StatCard({ icon, label, value, color }: {
 
 export default function Dashboard({ onOpenUploader, onOpenImageUploader, onOpenTemplateGenerator }: Props) {
   const { setViewMode, setBillItems, setHeader, setParsedData } = useBillStore();
+  const { token } = useAuthStore();
   const [history, setHistory] = useState<BillRecordAPI[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
+  const [historyError, setHistoryError] = useState<string>('');
 
   const createNew = () => {
     setParsedData(null);
@@ -41,16 +44,27 @@ export default function Dashboard({ onOpenUploader, onOpenImageUploader, onOpenT
   };
 
   const fetchHistory = () => {
+    if (!token) {
+      setHistory([]);
+      setHistoryError('');
+      setLoadingHistory(false);
+      return;
+    }
     setLoadingHistory(true);
+    setHistoryError('');
     api.getHistory()
       .then(setHistory)
-      .catch(console.error)
+      .catch((err) => {
+        console.error(err);
+        setHistory([]);
+        setHistoryError(err instanceof Error ? err.message : String(err));
+      })
       .finally(() => setLoadingHistory(false));
   };
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [token]);
 
   const stats = {
     total: history.length,
@@ -93,7 +107,8 @@ export default function Dashboard({ onOpenUploader, onOpenImageUploader, onOpenT
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button
               onClick={onOpenUploader}
-              className="glass rounded-2xl p-6 text-left hover:bg-white/[0.06] transition-all group border border-white/[0.05]"
+              className="spatial-card rounded-2xl p-6 text-left"
+              aria-label="Import data from Excel spreadsheet"
             >
               <FileSpreadsheet size={24} className="text-green-400 mb-4 group-hover:scale-110 transition-transform" />
               <p className="font-bold text-white mb-1">Import Excel</p>
@@ -102,7 +117,8 @@ export default function Dashboard({ onOpenUploader, onOpenImageUploader, onOpenT
 
             <button
               onClick={onOpenImageUploader}
-              className="glass rounded-2xl p-6 text-left hover:bg-white/[0.06] transition-all group border border-purple-500/20 hover:border-purple-500/40"
+              className="spatial-card rounded-2xl p-6 text-left border-purple-500/20 hover:border-purple-500/40"
+              aria-label="Upload scanned image for OCR extraction"
             >
               <ImageIcon size={24} className="text-purple-400 mb-4 group-hover:scale-110 transition-transform" />
               <p className="font-bold text-white mb-1">OCR Upload</p>
@@ -111,7 +127,8 @@ export default function Dashboard({ onOpenUploader, onOpenImageUploader, onOpenT
 
             <button
               onClick={createNew}
-              className="glass rounded-2xl p-6 text-left hover:bg-white/[0.06] transition-all group border border-white/[0.05]"
+              className="spatial-card rounded-2xl p-6 text-left"
+              aria-label="Create a new bill via manual entry"
             >
               <Plus size={24} className="text-accent-400 mb-4 group-hover:scale-110 transition-transform" />
               <p className="font-bold text-white mb-1">Manual Entry</p>
@@ -120,7 +137,8 @@ export default function Dashboard({ onOpenUploader, onOpenImageUploader, onOpenT
 
             <button
               onClick={onOpenTemplateGenerator}
-              className="glass rounded-2xl p-6 text-left hover:bg-white/[0.06] transition-all group border border-yellow-500/20 hover:border-yellow-500/40"
+              className="spatial-card rounded-2xl p-6 text-left border-yellow-500/20 hover:border-yellow-500/40"
+              aria-label="Generate bill template using AI prompt"
             >
               <Sparkles size={24} className="text-yellow-400 mb-4 group-hover:scale-110 transition-transform" />
               <p className="font-bold text-white mb-1">AI Template Gen</p>
@@ -135,6 +153,7 @@ export default function Dashboard({ onOpenUploader, onOpenImageUploader, onOpenT
                <button 
                  className="text-xs flex items-center gap-1 text-slate-500 hover:text-white transition-colors" 
                  onClick={fetchHistory}
+                 aria-label="Refresh recent activity history"
                >
                  <RefreshCw size={12} className={loadingHistory ? 'animate-spin' : ''} /> Refresh
                </button>
@@ -142,6 +161,16 @@ export default function Dashboard({ onOpenUploader, onOpenImageUploader, onOpenT
             
             {loadingHistory ? (
               <div className="py-20 text-center"><Loader2 className="animate-spin mx-auto text-accent-500" /></div>
+            ) : !token ? (
+              <div className="text-sm text-slate-500 text-center py-10 bg-white/[0.01] rounded-xl border border-dashed border-white/[0.05] space-y-2">
+                <p className="font-semibold text-slate-300">History requires sign-in.</p>
+                <p className="text-xs text-slate-500">You can still use Manual Entry / Excel / OCR without server history.</p>
+              </div>
+            ) : historyError ? (
+              <div className="text-sm text-slate-500 text-center py-10 bg-white/[0.01] rounded-xl border border-dashed border-white/[0.05] space-y-2">
+                <p className="font-semibold text-slate-300">Couldn’t load history.</p>
+                <p className="text-xs text-slate-500">{historyError}</p>
+              </div>
             ) : history.length === 0 ? (
               <p className="text-sm text-slate-500 text-center py-10 bg-white/[0.01] rounded-xl border border-dashed border-white/[0.05]">No activity detected.</p>
             ) : (
@@ -155,7 +184,7 @@ export default function Dashboard({ onOpenUploader, onOpenImageUploader, onOpenT
                       }`} />
                       <div>
                         <p className="text-sm font-semibold text-slate-200">
-                          {record.work_name || `Job ${record.job_id.slice(0,8)}`}
+                          {`Job ${record.job_id.slice(0,8)}`}
                         </p>
                         <p className="text-[10px] text-slate-500 mt-0.5">
                           {new Date(record.created_at).toLocaleDateString()} • {record.message}

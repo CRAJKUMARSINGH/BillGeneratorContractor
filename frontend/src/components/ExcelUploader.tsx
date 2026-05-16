@@ -4,7 +4,7 @@
  * UI structure preserved from Git4.
  */
 import { useRef, useState } from 'react';
-import { Upload, FileSpreadsheet, AlertTriangle, CheckCircle, Loader2, X } from 'lucide-react';
+import { Upload, FileSpreadsheet, CheckCircle, Loader2, X } from 'lucide-react';
 import { api } from '../lib/api';
 import type { ParsedBillData } from '../lib/api';
 import { useBillStore } from '../store/useBillStore';
@@ -162,11 +162,11 @@ export default function ExcelUploader({ onClose, toast }: Props) {
               {result.billItems.length > 0 && (
                 <div className="glass rounded-xl overflow-hidden">
                   <p className="text-xs text-slate-500 uppercase tracking-wide px-3 pt-3 pb-2">
-                    Preview (first 3 items)
+                    All items ({result.billItems.length})
                   </p>
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto max-h-96 overflow-y-auto">
                     <table className="w-full text-xs">
-                      <thead>
+                      <thead className="sticky top-0 bg-surface-950">
                         <tr className="border-t border-white/[0.05]">
                           {['#', 'Description', 'Unit', 'Rate'].map((h) => (
                             <th key={h} className="table-header py-1.5">{h}</th>
@@ -174,7 +174,7 @@ export default function ExcelUploader({ onClose, toast }: Props) {
                         </tr>
                       </thead>
                       <tbody>
-                        {result.billItems.slice(0, 3).map((row, i) => (
+                        {result.billItems.map((row, i) => (
                           <tr key={i} className="border-t border-white/[0.04]">
                             <td className="table-cell py-1.5">{row.itemNo}</td>
                             <td className="table-cell py-1.5 max-w-[160px] truncate">{row.description}</td>

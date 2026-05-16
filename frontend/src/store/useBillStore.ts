@@ -44,8 +44,8 @@ function blankItem(order = 0): BillItem {
   };
 }
 
-export const useBillStore = create<BillStore>((set, get) => ({
-  viewMode: 'dashboard',
+export const useBillStore = create<BillStore>((set) => ({
+  viewMode: 'landing',
   setViewMode: (viewMode) => set({ viewMode }),
 
   parsedData: null,
@@ -66,20 +66,28 @@ export const useBillStore = create<BillStore>((set, get) => ({
   setBillItems: (billItems) => set({ billItems, isDirty: true }),
 
   updateItem: (id, field, value) =>
-    set((s) => ({
-      isDirty: true,
-      billItems: s.billItems.map((item) => {
-        if (item.id !== id) return item;
-        const numericFields = [
-          'qty_since_last_bill', 'qty_to_date', 'rate',
-          'amount_to_date', 'amount_since_previous', 'sort_order',
-        ];
-        const coerced = numericFields.includes(field as string)
-          ? parseFloat(String(value)) || 0
-          : value;
-        return computeItem({ ...item, [field]: coerced });
-      }),
-    })),
+    set((s) => {
+      const index = s.billItems.findIndex((item) => item.id === id);
+      if (index === -1) return {};
+
+      const item = s.billItems[index];
+      const numericFields = [
+        'qty_since_last_bill', 'qty_to_date', 'rate',
+        'amount_to_date', 'amount_since_previous', 'sort_order',
+      ];
+      const coerced = numericFields.includes(field as string)
+        ? parseFloat(String(value)) || 0
+        : value;
+
+      const updatedItem = computeItem({ ...item, [field]: coerced });
+      const newBillItems = [...s.billItems];
+      newBillItems[index] = updatedItem;
+
+      return {
+        billItems: newBillItems,
+        isDirty: true,
+      };
+    }),
 
   addItem: () =>
     set((s) => ({
@@ -92,7 +100,7 @@ export const useBillStore = create<BillStore>((set, get) => ({
       isDirty: true,
       billItems: s.billItems
         .filter((i) => i.id !== id)
-        .map((i, idx) => ({ ...i, sort_order: idx })),
+        .map((i, idx) => ({ ...i, sort_order: idx, serial_no: String(idx + 1) })),
     })),
 
   currentJob: null,

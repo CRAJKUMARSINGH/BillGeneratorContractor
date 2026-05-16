@@ -12,7 +12,7 @@ from datetime import datetime
 from collections import defaultdict
 from pathlib import Path
 
-from fastapi import APIRouter, File, HTTPException, UploadFile, Request
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, Request
 from fastapi.responses import StreamingResponse
 import redis.asyncio as aioredis
 import redis
@@ -28,6 +28,8 @@ from database import engine
 from sqlmodel import Session, select
 
 logger = logging.getLogger(__name__)
+from services.bill_service import BillService
+
 router = APIRouter(prefix="/bills", tags=["bills"])
 
 UPLOAD_DIR = Path(__file__).parent.parent / "uploads"
@@ -91,6 +93,16 @@ async def upload_excel(file: UploadFile = File(...)):
         data = await asyncio.get_event_loop().run_in_executor(
             None, _parse_excel, save_path, file_id, file.filename
         )
+        
+        # Phase 12: Integrate Anomaly Detector
+        from ingestion.anomaly_detector import extract_features, detect_anomalies
+        rows_for_features = []
+        for item in data.billItems:
+            rows_for_features.append({"rate": item.rate, "quantity": item.quantity, "amount": item.amount})
+        
+        features = extract_features(rows_for_features)
+        data.anomaly_warnings = detect_anomalies(features)
+        
         return data
     except Exception as e:
         save_path.unlink(missing_ok=True)
@@ -117,11 +129,6 @@ async def upload_image(file: UploadFile = File(...)):
     logger.info(f"Saved image upload {file.filename} → {save_path}")
 
     try:
-        import sys
-        root_dir = Path(__file__).parent.parent.parent
-        if str(root_dir) not in sys.path:
-            sys.path.insert(0, str(root_dir))
-        
         from ingestion.ocr_extractor import extract_table_from_image
         from ingestion.normalizer import normalize_to_unified_model
 
@@ -142,6 +149,12 @@ async def upload_image(file: UploadFile = File(...)):
                 amount=row.amount
             ))
 
+        # Phase 12: Integrate Anomaly Detector for OCR
+        from ingestion.anomaly_detector import extract_features, detect_anomalies
+        rows_for_features = [{"rate": item.rate, "quantity": item.quantity, "amount": item.amount} for item in bill_items]
+        features = extract_features(rows_for_features)
+        warnings = detect_anomalies(features)
+
         return ParsedBillData(
             fileId=file_id,
             fileName=file.filename,
@@ -150,7 +163,8 @@ async def upload_image(file: UploadFile = File(...)):
             extraItems=[],
             totalAmount=unified.total_amount,
             hasExtraItems=False,
-            sheets=["OCR Output"]
+            sheets=["OCR Output"],
+            anomaly_warnings=warnings
         )
 
     except Exception as e:
@@ -166,11 +180,6 @@ async def export_excel(data: ParsedBillData):
     using the Reverse Excel Exporter utility. 
     This fulfills Option B of the Human-in-the-Loop OCR Refinement strategy.
     """
-    import sys
-    root_dir = Path(__file__).parent.parent.parent
-    if str(root_dir) not in sys.path:
-        sys.path.insert(0, str(root_dir))
-        
     from ingestion.excel_exporter import generate_excel_from_data
     
     try:
@@ -193,11 +202,8 @@ async def export_excel(data: ParsedBillData):
 
 def _parse_excel(path: Path, file_id: str, filename: str) -> ParsedBillData:
     """Parse using engine's EnterpriseExcelProcessor + bill_processor."""
-    import sys
-    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "engine"))
-
-    from calculation.excel_processor_enterprise import EnterpriseExcelProcessor
-    from calculation.bill_processor import process_bill
+    from engine.calculation.excel_processor_enterprise import EnterpriseExcelProcessor
+    from engine.calculation.bill_processor import process_bill
     import pandas as pd
 
     processor = EnterpriseExcelProcessor(sanitize_strings=True, validate_schemas=False)
@@ -292,11 +298,6 @@ def _parse_excel(path: Path, file_id: str, filename: str) -> ParsedBillData:
 @router.post("/generate-template")
 async def generate_template(req: TemplateRequest):
     """Takes a natural language prompt, runs it against the AI layer, and returns a JSON schema representation."""
-    import sys
-    root_dir = Path(__file__).parent.parent.parent
-    if str(root_dir) not in sys.path:
-        sys.path.insert(0, str(root_dir))
-    
     from ingestion.template_generator import generate_template_schema
     
     try:
@@ -328,9 +329,8 @@ async def generate_bill(req: GenerateRequest, request: Request, current_user: Us
     }
 
     # Initialize job in Redis
-    redis_client = aioredis.from_url(os.getenv("REDIS_URL", "redis://redis:6379/0"))
-    await redis_client.set(f"job:{job_id}", json.dumps(initial_job_state), ex=86400)
-    await redis_client.aclose()
+    await request.app.state.redis_client.set(f"job:{job_id}", json.dumps(initial_job_state), ex=86400)
+    
     with Session(engine) as session:
         bill_record = BillRecord(
             job_id=job_id,
@@ -350,15 +350,12 @@ async def generate_bill(req: GenerateRequest, request: Request, current_user: Us
 
 def _generate_documents(job_id: str, req: GenerateRequest):
     """Synchronous generation — calls engine directly."""
-    import sys
-    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "engine"))
-
-    from calculation.bill_processor import process_bill
-    from model.document import BillDocument
-    from rendering.html_renderer_enterprise import (
+    from engine.calculation.bill_processor import process_bill
+    from engine.model.document import BillDocument
+    from engine.rendering.html_renderer_enterprise import (
         EnterpriseHTMLRenderer, RenderConfig, DocumentType
     )
-    from rendering.pdf_generator import PDFGenerator
+    from engine.rendering.pdf_generator import PDFGenerator
     import pandas as pd
 
     out_dir = OUTPUT_DIR / job_id
@@ -375,145 +372,20 @@ def _generate_documents(job_id: str, req: GenerateRequest):
                 session.add(record)
                 session.commit()
 
+    async def _redis_progress_cb(jid: str, progress: int, message: str):
+        update_redis_job(jid, progress=progress, message=message)
+
     try:
-        update_redis_job(job_id, status="processing", progress=10, message="Building document model...")
-        update_db_status("processing", "Building document model...")
+        update_redis_job(job_id, status="processing", progress=10, message="Service-layer orchestration started...")
+        update_db_status("processing", "Service-layer orchestration started...")
 
-        # ── Reconstruct DataFrames from edited items ──────────────────────────
-        # Build minimal DataFrames that process_bill() can consume
-        wo_rows = []
-        bq_rows = []
-        for item in req.billItems:
-            wo_rows.append([
-                item.itemNo, item.description, item.unit,
-                item.quantityUpto, item.rate, item.amount, ""
-            ])
-            bq_rows.append([
-                item.itemNo, item.description, item.unit,
-                item.quantitySince, item.rate, item.amount, ""
-            ])
-
-        ws_wo = pd.DataFrame(wo_rows)
-        ws_bq = pd.DataFrame(bq_rows)
-
-        extra_rows = []
-        for ei in req.extraItems:
-            extra_rows.append([
-                ei.itemNo, ei.bsr, ei.description,
-                ei.quantity, ei.unit, ei.rate, ei.amount, ei.remark
-            ])
-        ws_extra = pd.DataFrame(extra_rows) if extra_rows else pd.DataFrame()
-
-        # ── Inject title header rows ──────────────────────────────────────────
-        header_rows = [[k, v] for k, v in req.titleData.items()]
-        # Pad to 19 rows (process_bill reads header as ws_wo.iloc[:19, :7])
-        while len(header_rows) < 19:
-            header_rows.append(["", ""])
-        # Prepend header rows to ws_wo and ws_bq (process_bill starts items at row 21)
-        header_df = pd.DataFrame(header_rows[:19])
-        spacer = pd.DataFrame([[""] * 7])  # row 20 spacer
-        ws_wo = pd.concat([header_df, spacer, ws_wo], ignore_index=True)
-        ws_bq = pd.concat([header_df, spacer, ws_bq], ignore_index=True)
-
-        update_redis_job(job_id, progress=25, message="Running calculation engine...")
-
-        first_page, _, deviation, extra_items_data, _ = process_bill(
-            ws_wo, ws_bq, ws_extra,
-            premium_percent=opts.premiumPercent,
-            premium_type=opts.premiumType,
-            previous_bill_amount=opts.previousBillAmount,
+        # Orchestrate via BillService (async API; run from sync worker context)
+        docs, data_hash = asyncio.run(
+            BillService.process_generation(job_id, req.model_dump(), _redis_progress_cb)
         )
 
-        # ── Build BillDocument ────────────────────────────────────────────────
-        from calculation.bill_processor import number_to_words
-        payable = float(first_page["totals"].get("payable", 0) or 0)
-        net_payable = float(first_page["totals"].get("net_payable", payable) or payable)
-        cheque = int(round(payable - (
-            round(payable * 0.10) + round(payable * 0.02) +
-            (int(round(payable * 0.02 + 0.5)) // 2 * 2) +
-            round(payable * 0.01)
-        )))
-
-        # Extract metadata from titleData
-        td = req.titleData
-        def _td(key): return td.get(key, "")
-        
-        update_db_status("processing", "Calculation complete", payable)
-
-        doc = BillDocument(
-            header=header_rows[:19],
-            items=first_page.get("items", []),
-            totals=first_page.get("totals", {}),
-            deviation_items=deviation.get("items", []),
-            deviation_summary=deviation.get("summary", {}),
-            extra_items=extra_items_data.get("items", []),
-            agreement_no=_td("Agreement No.") or _td("Agreement No"),
-            name_of_work=_td("Name of Work") or _td("Name of work"),
-            name_of_firm=_td("Name of Contractor or supplier") or _td("Contractor"),
-            work_order_amount=float(str(_td("WORK ORDER AMOUNT RS.") or "0").replace(",", "") or 0),
-            extra_item_amount=float(first_page["totals"].get("extra_items_sum", 0) or 0),
-        )
-
-        template_data = doc.to_template_dict()
-
-        update_redis_job(job_id, progress=40, message="Rendering HTML templates...")
-
-        # ── Render HTML ───────────────────────────────────────────────────────
-        engine_dir = Path(__file__).parent.parent.parent / "engine"
-        template_dir = engine_dir / "templates" / opts.templateVersion
-        if not template_dir.exists():
-            template_dir = engine_dir / "templates" / "v1"
-
-        config = RenderConfig(
-            template_dir=template_dir,
-            output_dir=out_dir,
-            enable_security_checks=True,
-            pdf_ready=True,
-        )
-        renderer = EnterpriseHTMLRenderer(config)
-
-        doc_types = [
-            DocumentType.FIRST_PAGE,
-            DocumentType.DEVIATION_STATEMENT,
-            DocumentType.NOTE_SHEET,
-            DocumentType.CERTIFICATE_II,
-            DocumentType.CERTIFICATE_III,
-            DocumentType.LAST_PAGE,
-        ]
-        if doc.extra_items:
-            doc_types.insert(2, DocumentType.EXTRA_ITEMS)
-
-        html_paths = []
-        for i, doc_type in enumerate(doc_types):
-            result = renderer.render(doc_type, {"data": template_data},
-                                     f"{doc_type.value}.html")
-            if result.success:
-                html_paths.append(result.output_path)
-            update_redis_job(job_id, progress=40 + int(30 * (i + 1) / len(doc_types)))
-
-        docs = [DocumentInfo(name=p.name, format="html",
-                             size=p.stat().st_size) for p in html_paths]
-
-        # ── Generate PDFs ─────────────────────────────────────────────────────
-        if opts.generatePdf and html_paths:
-            update_redis_job(job_id, progress=72, message="Generating PDFs...")
-            pdf_gen = PDFGenerator(orientation="portrait")
-            for html_path in html_paths:
-                pdf_path = out_dir / (html_path.stem + ".pdf")
-                html_content = html_path.read_text(encoding="utf-8")
-                try:
-                    engine_used = pdf_gen.generate_with_fallback(
-                        html_content, str(pdf_path)
-                    )
-                    docs.append(DocumentInfo(
-                        name=pdf_path.name, format="pdf",
-                        size=pdf_path.stat().st_size
-                    ))
-                    logger.info(f"PDF [{engine_used}] → {pdf_path.name}")
-                except Exception as e:
-                    logger.warning(f"PDF failed for {html_path.name}: {e}")
-
-        # ── ZIP ───────────────────────────────────────────────────────────────
+        # ZIP ───────────────────────────────────────────────────────────────
+        out_dir = OUTPUT_DIR / job_id
         update_redis_job(job_id, progress=92, message="Creating ZIP archive...")
         zip_path = out_dir / "bill_documents.zip"
         with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
@@ -527,8 +399,18 @@ def _generate_documents(job_id: str, req: GenerateRequest):
             message="Generation complete",
             documents=[d.model_dump() for d in docs],
         )
-        update_db_status("complete", "Generation complete")
-        log_job_event(job_id, "job completed", f"{len(docs)} documents generated")
+        
+        # Save to DB with hash
+        with Session(engine) as session:
+            record = session.exec(select(BillRecord).where(BillRecord.job_id == job_id)).first()
+            if record:
+                record.status = "complete"
+                record.message = "Generation complete"
+                record.data_hash = data_hash
+                session.add(record)
+                session.commit()
+
+        log_job_event(job_id, "job completed", f"{len(docs)} documents generated with hash {data_hash[:8]}")
 
     except Exception as e:
         update_db_status("error", f"Generation failed: {e}")
@@ -539,10 +421,18 @@ def _generate_documents(job_id: str, req: GenerateRequest):
 # ── Job Status & Download ─────────────────────────────────────────────────────
 
 @router.get("/jobs/{job_id}", response_model=JobStatus)
-async def get_job_status(job_id: str):
-    redis_client = aioredis.from_url(os.getenv("REDIS_URL", "redis://redis:6379/0"))
-    data = await redis_client.get(f"job:{job_id}")
-    await redis_client.aclose()
+async def get_job_status(job_id: str, request: Request, current_user: User = Depends(get_current_user)):
+    # Verify ownership in DB first
+    with Session(engine) as session:
+        record = session.exec(
+            select(BillRecord).where(BillRecord.job_id == job_id)
+        ).first()
+        if not record:
+            raise HTTPException(404, "Job record not found")
+        if record.user_id != current_user.id:
+            raise HTTPException(403, "Access denied: You do not own this job")
+
+    data = await request.app.state.redis_client.get(f"job:{job_id}")
     
     if not data:
         raise HTTPException(404, "Job not found in queue")
@@ -558,10 +448,18 @@ async def get_history(current_user: User = Depends(get_current_user)):
 
 
 @router.get("/jobs/{job_id}/download")
-async def download_result(job_id: str, format: str = "zip"):
-    redis_client = aioredis.from_url(os.getenv("REDIS_URL", "redis://redis:6379/0"))
-    data = await redis_client.get(f"job:{job_id}")
-    await redis_client.aclose()
+async def download_result(job_id: str, request: Request, format: str = "zip", current_user: User = Depends(get_current_user)):
+    # Verify ownership in DB
+    with Session(engine) as session:
+        record = session.exec(
+            select(BillRecord).where(BillRecord.job_id == job_id)
+        ).first()
+        if not record:
+            raise HTTPException(404, "Job record not found")
+        if record.user_id != current_user.id:
+            raise HTTPException(403, "Access denied: You do not own this job")
+
+    data = await request.app.state.redis_client.get(f"job:{job_id}")
     
     if not data:
         raise HTTPException(404, "Job not found")

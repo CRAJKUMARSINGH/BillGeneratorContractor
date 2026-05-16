@@ -81,6 +81,8 @@ export interface BillRecordAPI {
   created_at: string;
 }
 
+const DEFAULT_TIMEOUT_MS = 8000;
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const token = localStorage.getItem('token');
   const headers = new Headers(init?.headers);
@@ -88,15 +90,29 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     headers.set('Authorization', `Bearer ${token}`);
   }
 
-  const res = await fetch(`${BASE}${path}`, {
-    ...init,
-    headers
-  });
+  const controller = new AbortController();
+  const timeoutMs = (init as any)?.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+
+  let res: Response;
+  try {
+    res = await fetch(`${BASE}${path}`, {
+      ...init,
+      headers,
+      signal: controller.signal,
+    });
+  } catch (err: any) {
+    if (err?.name === 'AbortError') {
+      throw new Error(`Request timed out after ${timeoutMs}ms: ${path}`);
+    }
+    throw err;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
 
   if (!res.ok) {
     if (res.status === 401) {
       localStorage.removeItem('token');
-      window.location.reload();
     }
     const text = await res.text().catch(() => res.statusText);
     throw new Error(`${res.status} ${text}`);

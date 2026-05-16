@@ -17,7 +17,11 @@ from ingestion.excel_parser import parse_excel_to_raw
 from ingestion.normalizer import normalize_to_unified_model
 
 def discover_test_files() -> List[Path]:
-    fldrs = [f for f in ROOT_DIR.iterdir() if f.is_dir() and (f.name.startswith("INPUT") or f.name.startswith("TEST"))]
+    bench_root = ROOT_DIR / "MASTER_INPUT_BENCHMARKS"
+    if not bench_root.exists():
+        return []
+        
+    fldrs = [f for f in bench_root.iterdir() if f.is_dir()]
     files = []
     
     # Supported extensions

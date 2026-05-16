@@ -19,21 +19,26 @@ import sys
 import os
 from pathlib import Path
 
-import redis.asyncio as aioredis
-from arq import create_pool
-from arq.connections import RedisSettings
+try:
+    import redis.asyncio as aioredis
+    from arq import create_pool
+    from arq.connections import RedisSettings
+except ImportError:
+    # MOCK for restricted environments
+    aioredis = None
+    create_pool = None
+    RedisSettings = None
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# Ensure engine is importable
-ENGINE_DIR = Path(__file__).parent.parent / "engine"
-if str(ENGINE_DIR) not in sys.path:
-    sys.path.insert(0, str(ENGINE_DIR))
+from sqlmodel import Session, select
 
-from database import create_db_and_tables
+from database import create_db_and_tables, engine
 from routes.bills import router as bills_router
 from routes.auth import router as auth_router
-from models import HealthResponse
+from models import HealthResponse, User
+from auth_utils import get_password_hash
 
 logging.basicConfig(
     level=logging.INFO,
@@ -47,9 +52,14 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# Security: Restrict origins in production
+allowed_origins = os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:5173,http://127.0.0.1:5173",
+).split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],       # tighten in Phase 8
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -63,20 +73,20 @@ app.include_router(auth_router)
 async def health():
     """Health check — verifies engine and infrastructure."""
     try:
-        from calculation.bill_processor import process_bill  # noqa
+        from engine.calculation.bill_processor import process_bill  # noqa
         engine_status = "ok"
     except Exception as e:
         engine_status = f"error: {e}"
         
     redis_status = "unknown"
     try:
-        redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
-        r = aioredis.from_url(redis_url, socket_timeout=1)
-        if await r.ping():
-            redis_status = "connected"
+        if hasattr(app.state, "redis_client"):
+            if await app.state.redis_client.ping():
+                redis_status = "connected"
+            else:
+                redis_status = "failed"
         else:
-            redis_status = "failed"
-        await r.aclose()
+            redis_status = "not_initialized"
     except Exception:
         redis_status = "failed"
         
@@ -90,15 +100,47 @@ async def health():
 
 @app.on_event("startup")
 async def startup():
+    # Secret Validation
+    if not os.getenv("SECRET_KEY") and os.getenv("NODE_ENV") == "production":
+        logger.error("CRITICAL: SECRET_KEY not set in production!")
+        sys.exit(1)
+
     create_db_and_tables()
+    with Session(engine) as session:
+        if not session.exec(select(User).where(User.username == "guest")).first():
+            session.add(
+                User(
+                    username="guest",
+                    hashed_password=get_password_hash("noop"),
+                    role="operator",
+                )
+            )
+            session.commit()
+            logger.info("Created shared guest user for open access")
     logger.info("Bill Generator API starting up")
-    logger.info(f"Engine path: {ENGINE_DIR}")
     
     redis_url = os.getenv("REDIS_URL", "redis://redis:6379/0")
-    app.state.redis_pool = await create_pool(RedisSettings.from_dsn(redis_url))
+    if not redis_url:
+        logger.error("CRITICAL: REDIS_URL not set!")
+        sys.exit(1)
+
+    if aioredis:
+        try:
+            app.state.redis_client = aioredis.from_url(redis_url, decode_responses=True)
+        except Exception as e:
+            logger.warning("Redis async client unavailable: %s", e)
+    if create_pool and RedisSettings:
+        try:
+            app.state.redis_pool = await create_pool(RedisSettings.from_dsn(redis_url))
+        except Exception as e:
+            logger.warning("Redis ARQ pool unavailable (jobs may fail): %s", e)
+    else:
+        logger.warning("Worker/Redis infrastructure mocked (Dependencies missing)")
 
 @app.on_event("shutdown")
 async def shutdown():
-    if hasattr(app.state, "redis_pool"):
-        app.state.redis_pool.close()
-        await app.state.redis_pool.wait_closed()
+    if hasattr(app.state, "redis_client") and app.state.redis_client:
+        await app.state.redis_client.aclose()
+    if hasattr(app.state, "redis_pool") and app.state.redis_pool:
+        await app.state.redis_pool.close()
+        # await app.state.redis_pool.wait_closed()

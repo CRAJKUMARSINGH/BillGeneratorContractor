@@ -2,123 +2,147 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Extra Items</title>
+    <title>Extra Items Slip</title>
     <style>
-        @page { 
-            size: A4 portrait; 
+        @page {
+            size: A4 portrait;
             margin: 10mm;
+            @top-left { content: none; }
+            @top-center { content: none; }
+            @top-right { content: none; }
+            @bottom-left { content: none; }
+            @bottom-center { content: none; }
+            @bottom-right { content: none; }
         }
         @media print {
-            html, body {
-                width: 190mm !important;
-                min-width: 190mm !important;
-                max-width: 190mm !important;
-            }
-            table {
-                width: 190mm !important;
-                min-width: 190mm !important;
-                max-width: 190mm !important;
-            }
+            html, body { width: 190mm !important; min-width: 190mm !important; max-width: 190mm !important; }
+            table { width: 190mm !important; min-width: 190mm !important; max-width: 190mm !important; }
         }
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
+        * { margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        html { zoom: 1.0 !important; -webkit-text-size-adjust: none !important; text-size-adjust: none !important; }
+        body {
+            font-family: Calibri, sans-serif; font-size: 8pt; margin: 0; line-height: 1.2;
+            width: 190mm !important; max-width: 190mm !important; min-width: 190mm !important;
         }
-        html {
-            zoom: 1.0;
-            -webkit-text-size-adjust: none;
+        .container { width: 190mm !important; max-width: 190mm !important; min-width: 190mm !important; min-height: 277mm; margin: 0; padding: 0; }
+        table {
+            width: 190mm !important; min-width: 190mm !important; max-width: 190mm !important;
+            border-collapse: collapse; table-layout: fixed !important; font-size: 8pt;
         }
-        body { 
-            font-family: Calibri, sans-serif; 
-            font-size: 8pt; 
-            margin: 0; 
-            line-height: 1.2;
-            width: 190mm;
-            max-width: 190mm;
+        th, td {
+            border: 1px solid black; padding: 3px 4px;
+            text-align: left; vertical-align: top; word-wrap: break-word; white-space: normal;
         }
-        .container { 
-            width: 190mm; 
-            max-width: 190mm;
-            min-height: 277mm; 
-            margin: 0; 
-            padding: 0; 
+        th { text-align: center !important; font-weight: bold; }
+        .header { text-align: left; margin-bottom: 8px; }
+        .header h2 {
+            font-size: 13pt; margin-bottom: 6px; text-align: center;
+            font-weight: bold; border: 2px solid #000; padding: 8px;
         }
-        table { 
-            width: 190mm !important;
-            min-width: 190mm !important;
-            max-width: 190mm !important;
-            border-collapse: collapse; 
-            table-layout: fixed !important; 
-            font-size: 8pt;
-            transform: scale(1.0) !important;
-        }
-        /* FORCE exact column widths for extra items - NO SHRINKING */
-        table th:nth-child(1), table td:nth-child(1) { width: 25mm !important; min-width: 25mm !important; max-width: 25mm !important; }
-        table th:nth-child(2), table td:nth-child(2) { width: 70mm !important; min-width: 70mm !important; max-width: 70mm !important; }
-        table th:nth-child(3), table td:nth-child(3) { width: 15mm !important; min-width: 15mm !important; max-width: 15mm !important; }
-        table th:nth-child(4), table td:nth-child(4) { width: 20mm !important; min-width: 20mm !important; max-width: 20mm !important; }
-        table th:nth-child(5), table td:nth-child(5) { width: 20mm !important; min-width: 20mm !important; max-width: 20mm !important; }
-        table th:nth-child(6), table td:nth-child(6) { width: 25mm !important; min-width: 25mm !important; max-width: 25mm !important; }
-        table th:nth-child(7), table td:nth-child(7) { width: 15mm !important; min-width: 15mm !important; max-width: 15mm !important; }
-        th, td { 
-            border: 1px solid black; 
-            padding: 3px 2px; 
-            text-align: left; 
-            vertical-align: top; 
-            overflow: hidden; 
-            word-wrap: break-word;
-            white-space: normal;
-        }
-        .header { text-align: center; margin-bottom: 8px; }
-        .header h2 { font-size: 11pt; margin-bottom: 4px; }
+        .header-item { margin: 2px 0; font-size: 9pt; }
+        .header-item strong { font-weight: bold; }
+        .bold { font-weight: bold; }
+        .center-align { text-align: center; }
+        .right-align { text-align: right; }
+        .bg-total { background-color: #f0f0f0; }
+        .sig-row { display: flex; justify-content: space-between; margin-top: 30px; }
+        .sig-block { width: 45%; }
+        .sig-block p { margin: 4px 0; font-size: 9pt; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h2>Extra Items</h2>
-        </div>
-        <table>
-            <colgroup>
-                <col style="width: 12mm;">
-                <col style="width: 15mm;">
-                <col style="width: 80mm;">
-                <col style="width: 18mm;">
-                <col style="width: 12mm;">
-                <col style="width: 18mm;">
-                <col style="width: 35mm;">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th style="width: 12mm;">S. No.</th>
-                    <th style="width: 15mm;">Remarks</th>
-                    <th style="width: 80mm;">Description</th>
-                    <th style="width: 18mm;">Quantity</th>
-                    <th style="width: 12mm;">Unit</th>
-                    <th style="width: 18mm;">Rate</th>
-                    <th style="width: 35mm;">Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in data["items"] %}
-                    <tr>
-                        <td>{{ item.serial_no | default("") }}</td>
-                        <td>{{ item.remark | default("") }}</td>
-                        <td>{{ item.description | default("") }}</td>
-                        <td>{{ item.quantity | default("") }}</td>
-                        <td>{{ item.unit | default("") }}</td>
-                        <td>{{ item.rate | default("") }}</td>
-                        <td>{{ item.amount | default("") }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="container">
+    <div class="header">
+        <h2>EXTRA ITEMS SLIP</h2>
+        <div class="header-item"><strong>Name of Work :-</strong> {{ data.name_of_work }}</div>
+        <div class="header-item"><strong>Name of Contractor or supplier :</strong> {{ data.name_of_firm }}</div>
+        <div class="header-item"><strong>Agreement No.</strong> {{ data.agreement_no }}</div>
     </div>
+
+    <table>
+        <colgroup>
+            <col style="width: 11mm;">
+            <col style="width: 16mm;">
+            <col style="width: 70mm;">
+            <col style="width: 16mm;">
+            <col style="width: 11mm;">
+            <col style="width: 22mm;">
+            <col style="width: 24mm;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>S. No.</th>
+                <th>Ref. BSR No.</th>
+                <th>Item of Work / Supplies</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Rate</th>
+                <th>Amount (Rs.)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in data.extra_items %}
+            <tr>
+                <td class="center-align">{{ item.serial_no | default("") }}</td>
+                <td>{{ item.remark | default("") }}</td>
+                <td>{{ item.description | default("") }}</td>
+                <td class="right-align">{{ item.quantity | default("") }}</td>
+                <td class="center-align">{{ item.unit | default("") }}</td>
+                <td class="right-align">{{ item.rate | default("") }}</td>
+                <td class="right-align">{{ item.amount | default("") }}</td>
+            </tr>
+            {% endfor %}
+            {# Total row #}
+            <tr>
+                <td colspan="6" class="bold">Total Rs.</td>
+                <td class="right-align bold">{{ data.totals.extra_items_sum | default(0) }}</td>
+            </tr>
+            {# Premium row #}
+            {% set prem = data.totals.premium if data.totals.premium is defined else {} %}
+            <tr>
+                <td colspan="6">Add Tender Premium @ {{ "%.2f" | format((prem.percent | default(0)) * 100) }}% {{ (prem.type | default("")) | upper }}</td>
+                <td class="right-align">{{ prem.amount | default(0) }}</td>
+            </tr>
+            {# Grand Total row #}
+            <tr class="bg-total">
+                <td colspan="6" class="bold">Grand Total Rs.</td>
+                <td class="right-align bold">{{ data.totals.payable | default(0) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 20px;">
+        <p><strong>Certified that:</strong></p>
+        <ol style="margin-left: 16px; margin-top: 6px; font-size: 8pt; line-height: 1.6;">
+            <li>The extra items listed above have been actually executed and measured.</li>
+            <li>The rates quoted are as per the schedule of rates of the work order or as agreed.</li>
+            <li>The work has been carried out in accordance with the terms and conditions of the agreement.</li>
+            <li>All deductions as per rules have been made.</li>
+        </ol>
+    </div>
+
+    <div class="sig-row">
+        <div class="sig-block">
+            <p><strong>Prepared by:</strong> _____________________</p>
+            <p>Name: _____________________</p>
+            <p>Designation: _____________________</p>
+            <p>Date: _____________________</p>
+        </div>
+        <div class="sig-block">
+            <p><strong>Checked by:</strong> _____________________</p>
+            <p>Name: _____________________</p>
+            <p>Designation: _____________________</p>
+            <p>Date: _____________________</p>
+        </div>
+    </div>
+
+    <div style="margin-top: 30px; text-align: right;">
+        <p><strong>Authorized Signatory:</strong> _____________________</p>
+        <p>Name: _____________________</p>
+        <p>Designation: _____________________</p>
+        <p>Date: _____________________</p>
+    </div>
+</div>
 </body>
 </html>
-{% macro format_percent(value) %}
-    {{ "{:.2%}".format(value) if value is not none else "" }}
-{% endmacro %}

@@ -41,10 +41,10 @@ class FileType(Enum):
 
 class SheetName(Enum):
     """Standard sheet names."""
-    WORK_ORDER = "Work Order"
-    BILL_QUANTITY = "Bill Quantity"
-    EXTRA_ITEMS = "Extra Items"
-    TITLE = "Title"
+    WORK_ORDER = "WORK ORDER"
+    BILL_QUANTITY = "BILL QUANTITY"
+    EXTRA_ITEMS = "EXTRA ITEMS"
+    TITLE = "TITLE"
     DEVIATION = "Deviation"
 
 

@@ -23,5 +23,5 @@ worker:
 	cd worker && arq worker.WorkerSettings
 
 clean:
-	@echo "Purging legacy artifacts..."
-	powershell -Command "Remove-Item -Recurse -Force Bill-Contractor-Git4, Bill-Contractor-Git5, BillGeneratorContractor, BillGeneratorHistorical, BillGeneratorUnified"
+	@echo "Cleaning temporary build artifacts..."
+	powershell -Command "Remove-Item -Recurse -Force *.pyc, __pycache__, .pytest_cache"

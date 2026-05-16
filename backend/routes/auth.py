@@ -18,6 +18,8 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+# KERO-002: Add Rate-Limiting guards for sensitive endpoints
+# TODO: Integrate slowapi/limits for /register and /login to prevent brute-force
 @router.post("/register", response_model=Token)
 def register(user_in: UserCreate, session: Session = Depends(get_session)):
     user = session.exec(select(User).where(User.username == user_in.username)).first()

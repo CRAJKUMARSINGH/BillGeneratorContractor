@@ -37,9 +37,9 @@ logger = logging.getLogger(__name__)
 
 
 # ── Constants ─────────────────────────────────────────────────────────────────
-SHEET_WORK_ORDER   = "Work Order"
-SHEET_BILL_QTY     = "Bill Quantity"
-SHEET_EXTRA_ITEMS  = "Extra Items"
+SHEET_WORK_ORDER   = "WORK ORDER"
+SHEET_BILL_QTY     = "BILL QUANTITY"
+SHEET_EXTRA_ITEMS  = "EXTRA ITEMS"
 
 DOCUMENT_TYPES = [
     DocumentType.FIRST_PAGE,
@@ -53,20 +53,46 @@ DOCUMENT_TYPES = [
 
 
 # ── Excel loading ─────────────────────────────────────────────────────────────
+def _resolve_sheet_names(input_path: Path) -> dict:
+    """
+    Return a mapping from canonical uppercase name → actual sheet name in the file.
+    Handles both 'WORK ORDER' and 'Work Order' style naming.
+    """
+    from openpyxl import load_workbook
+    wb = load_workbook(input_path, read_only=True, data_only=True)
+    actual = {s.upper(): s for s in wb.sheetnames}
+    wb.close()
+    canonical = {
+        SHEET_WORK_ORDER: actual.get(SHEET_WORK_ORDER),
+        SHEET_BILL_QTY:   actual.get(SHEET_BILL_QTY),
+        SHEET_EXTRA_ITEMS: actual.get(SHEET_EXTRA_ITEMS),
+    }
+    return canonical  # value is None if sheet not found
+
+
 def load_excel_sheets(input_path: Path) -> dict:
-    """Load Work Order, Bill Quantity, Extra Items sheets via EnterpriseExcelProcessor."""
+    """Load Work Order, Bill Quantity, Extra Items sheets via EnterpriseExcelProcessor.
+    Handles both uppercase ('WORK ORDER') and title-case ('Work Order') sheet names.
+    """
+    name_map = _resolve_sheet_names(input_path)
+    # Build the list of actual sheet names to request
+    sheets_to_load = [v for v in name_map.values() if v is not None]
+
     processor = EnterpriseExcelProcessor(sanitize_strings=True, validate_schemas=False)
-    result = processor.process_file(
-        input_path,
-        sheet_names=[SHEET_WORK_ORDER, SHEET_BILL_QTY, SHEET_EXTRA_ITEMS]
-    )
+    result = processor.process_file(input_path, sheet_names=sheets_to_load)
     if not result.success:
         logger.error(f"Excel processing failed: {result.errors}")
         raise RuntimeError(f"Excel load failed: {result.errors}")
     if result.warnings:
         for w in result.warnings:
             logger.warning(w)
-    return result.data  # dict[sheet_name → DataFrame]
+
+    # Re-key result.data to canonical uppercase names so downstream code is consistent
+    canonical_data = {}
+    for canonical, actual in name_map.items():
+        if actual and actual in result.data:
+            canonical_data[canonical] = result.data[actual]
+    return canonical_data  # dict[CANONICAL_NAME → DataFrame]
 
 
 # ── Extract metadata from header rows ────────────────────────────────────────
@@ -182,13 +208,9 @@ def render_html(doc: BillDocument, output_dir: Path,
     template_data = doc.to_template_dict()
 
     rendered_paths = []
-    has_extra = bool(doc.extra_items)
 
     for doc_type in DOCUMENT_TYPES:
-        # Skip extra_items and deviation if no extra items
-        if doc_type == DocumentType.EXTRA_ITEMS and not has_extra:
-            logger.info("Skipping extra_items — no extra items in this bill")
-            continue
+        # extra_items is always rendered (PWD statutory requirement) — empty table when no items
 
         filename = f"{doc_type.value}.html"
         result = renderer.render(doc_type, {"data": template_data}, filename)

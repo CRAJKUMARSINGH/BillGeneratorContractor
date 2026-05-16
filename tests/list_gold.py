@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 gold_dir = Path("BillGeneratorUnified/OUTPUT")
-test_dir = Path("BillGeneratorUnified/TEST_INPUT_FILES")
+test_dir = Path(__file__).parent.parent / "archived_apps" / "BillGeneratorUnified" / "TEST_INPUT_FILES"
 
 print("--- EXCEL TEST FILES ---")
 for f in test_dir.glob("*.xlsx"):
