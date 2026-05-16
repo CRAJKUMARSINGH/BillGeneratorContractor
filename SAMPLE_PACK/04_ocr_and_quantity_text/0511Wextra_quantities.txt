@@ -1,9 +1,0 @@
-1		Extra Items (With Premium)	0	0
-2	E-02	6 A 3/5 pin shuttered socket	4.0	107.0
-3	E-03	6/16 A shuttered socket	5.0	176.0
-4	E-04	Providing & Fixing of modular type lockable feature socket duly made out of unbreakable and fire retardant vergin poly carbonate with brass terminals and captive screws & silver alloy contact tip with IP-20 rating, including all as per pre approved by Engineer in charge, making connections, testing etc. as required. For additional technical parameters of product / work refer Annexure 'A' attached with this BSR	5.0	345.0
-5	E-05	6 A 3/5 pin shuttered socket	4.0	107.0
-6	E-06	6/16 A shuttered socket	5.0	176.0
-7		Total		
-8		Add Tender Premium		
-9		Grand Total		
