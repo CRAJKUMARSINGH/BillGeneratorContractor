@@ -1,53 +1,46 @@
-# Unified Construction Billing Pipeline: Master Instruction Set
-## Senior Principal Engineer + Strict Refactoring Guardian Mode
+# GENIUS PROMPT: Senior Principal Engineer + Strict Refactoring Guardian
 
-Project: [BillGeneratorContractor](https://github.com/CRAJKUMARSINGH/BillGeneratorContractor)
+## Goal
+Deliver one clean, production-ready application that fully supports all three input modes with shared downstream pipeline (editable workflow → auto-calculation → preview → final print edit → PDF/HTML output).
 
-### 1. Goal
-Deliver one clean, production-ready application supporting all four input modes feeding into a shared robust pipeline (Editable Table → Auto-Calculation → Preview → Final Export).
+### 1. Mandatory Core Rule: PRESERVE MODE 1 100%
+*   The existing Excel workbook upload (work order + quantity together) must continue to work exactly as today with zero regression.
+*   Add new code in parallel; use feature flags or clear route/module separation.
 
-### 2. Mandatory Input Modes (Haphazard-Robust)
-The system MUST correctly handle messy, non-sequentially arranged items. Item codes (e.g., 1.2.3c) are treated as unique primary keys.
+### 2. Supported Input Modes
+1.  **Mode 1 (Strict)**: Full Excel workbook upload (WO + BQ sheets).
+2.  **Mode 2 (Hybrid)**: Excel Work Order upload + Manual web entry for quantities.
+3.  **Mode 3 (AI/OCR)**: Image/PDF scan ingestion or irregular Excel parsing via LLM/Heuristics.
+4.  **Mode 4 (Previous Bill)**: Drafting a new bill by using a previous bill's cumulative data.
 
-*   **Mode 1 (Strict Excel)**: Full workbook upload (Work Order + Quantities). **Zero Regression Rule**: Existing workflows must remain 100% functional.
-*   **Mode 2 (Hybrid)**: Work Order Excel upload only → Quantity/Rate entry in a rich web-based editable table.
-*   **Mode 3 (AI-OCR)**: Image/PDF upload → OCR Extraction → Intelligent parsing of item codes → Confidence scoring.
-*   **Mode 4 (Previous Bill)**: RA Bill upload (Excel/PDF/Image/Doc/Txt) → Extract previous quantities → Draft new bill by adding "This Bill" quantities.
+### 3. Key Robustness Features (Haphazard-Tolerant)
+*   **Hierarchical Sorting**: Smart numeric-aware sorting (e.g., 1.2 < 1.10).
+*   **Smart Merging**: Intelligent aggregation of duplicate item codes.
+*   **Parent Synthesis**: Auto-generation of missing headers for orphaned sub-items.
+*   **Hierarchical Pruning**: Removal of unused headers where all descendants are zero.
+*   **PWD Compliance**: GST even-number rounding and professional report structures.
 
-### 3. Core Intelligence Requirements
-*   **Item Code Normalization**: Standardize inconsistent codes (e.g., `1.2.3c`, `1-2-3c`, `1.2.3 C`) into a canonical key.
-*   **Smart Merging**: Automatically sum quantities if the same item code appears multiple times across haphazard inputs.
-*   **Hierarchical Sorting**: Sort items in proper PWD order (1.1, 1.2, 1.2.3c, 2.1) regardless of input sequence.
-*   **Conflict Detection**: Flag quantity/rate conflicts or duplicate items with high visibility for user review.
-
-### 4. Architecture & Technology Stack
-*   **Backend**: FastAPI (Python)
-*   **Frontend**: React + TypeScript + Tailwind CSS (Premium, responsive, glassmorphism UI).
-*   **Logic**: 
-    *   Unified internal data model (`UnifiedBillDocument`) with support for `previous_qty`, `this_bill_qty`, and `cumulative_qty`.
-    *   Shared downstream calculation and rendering pipeline (PDF, HTML, DOCX).
-    *   Background workers for heavy OCR/processing.
-*   **Assets**: Reuse best components from `Bill-Contractor-Git4/` and templates from `BillGeneratorHistorical/`.
+### 4. Technical Stack & Assets
+*   **Backend**: FastAPI, Pandas, Openpyxl, Jinja2 (PDF/HTML templates).
+*   **Frontend**: React, TypeScript, Tailwind CSS, Zustand (State).
+*   **Design**: 2025 Premium Trends: Glassmorphism, Bento Grids, Neon Accents.
 
 ### 5. Organized Input Structure (Master Repository)
-To manage the 125+ project samples and training data:
 *   **INPUT/seed_tutorials/**: Clean, curated samples for training and onboarding.
-    *   `excel/`, `images/`, `pdf/`, `previous_bills/`
-*   **INPUT/recent_projects/**: Real-world, haphazard data from active projects.
-    *   `work_orders/`, `previous_bills/`, `haphazard/` (Contains messy/non-sequential files).
+*   **INPUT/recent_projects/**: Real-world, haphazard data from 125+ active projects.
 
 ### 6. Execution Roadmap
-*   **Phase 0**: Audit full repo + Reorganize INPUT folders. Baseline test Mode 1.
-*   **Phase 1**: Unified Data Model + Robust Ingestion Layer (Excel + OCR) handling haphazard inputs.
-*   **Phase 2**: Mode 2, 3, and 4 (Previous Bill) with strong normalization & merging logic.
-*   **Phase 3**: Premium Frontend: Editable table (Previous vs Current columns) + Auto-sorting + Conflict highlighting.
-*   **Phase 4**: Shared Calculation & Output Pipeline (Correct final bill regardless of input messiness).
-*   **Phase 5**: Comprehensive Regression Suite using haphazard test files.
+*   **Phase 0**: Audit full repo + Reorganize INPUT folders.
+*   **Phase 1**: Unified Data Model + Robust Ingestion Layer (Excel + OCR).
+*   **Phase 2**: Normalization & Merging logic for haphazard inputs.
+*   **Phase 3**: Premium Frontend: Editable table + Auto-sorting + Conflict highlighting.
+*   **Phase 4**: Shared Calculation & Output Pipeline (6 Statutory PDFs).
+*   **Phase 5**: World-Standard Polish: Robotic Simulation + PWD Compliance.
 
-### 6. Critical Non-Negotiable Rules
-*   **PRESERVE MODE 1 100%**: Do not break the legacy Excel path.
-*   **AESTHETICS MATTER**: Use rich, premium web design (Tailwind, modern typography, animations).
-*   **DOCUMENTATION**: Reply with `=== PHASE X COMPLETE ===` after each phase and wait for `PROCEED`.
+### 7. Core Technical Differentiators
+1.  **Robotic Filler**: Automated simulation of billing scenarios (`tests/robotic_filler.py`).
+2.  **Parent Synthesis**: Structural auto-correction for haphazard inputs.
+3.  **Advanced Ingestion**: Multi-modal section detection (WO vs BQ vs Extra).
 
 ---
-*Status: Phase 1-5 functionally implemented. Regression verified.*
+*Status: Production Ready. World-Standard Features Implemented.*
